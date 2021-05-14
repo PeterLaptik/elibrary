@@ -1,0 +1,122 @@
+package pl.model.entities;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Entity
+@Table (name="users")
+public class User {
+	private static final String FIELD_USER_ID = "user_id";
+	private static final String FIELD_USER_NAME = "user_name";
+	private static final String FIELD_USER_LOGIN = "login";
+	private static final String FIELD_USER_PASS = "user_password";
+	private static final String FIELD_SALT = "salt";
+	private static final String FIELD_REGISTRATION_STAMP = "registration_date";
+	private static final String FIELD_IS_ADMIN = "is_admin";
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(name=FIELD_USER_ID)
+	private int id;
+
+	@Column(name=FIELD_USER_NAME)
+	private String name;
+	
+	@Column(name=FIELD_USER_LOGIN, unique=true)
+	private String login;
+	
+	@Column(name=FIELD_USER_PASS)
+	private String password;
+	
+	@Column(name=FIELD_SALT)
+	private String salt;
+	
+	@Column(name=FIELD_REGISTRATION_STAMP)
+	private String registrationDate;
+	
+	@Column(name=FIELD_IS_ADMIN)
+	private boolean admin = false;
+
+//	@OneToOne(optional=true, cascade=CascadeType.ALL)
+//	@JoinColumn(name="user_id")
+//	private UserSession userSession;
+//	
+	public User() {
+		
+	}
+	
+	public User(String name, String login, String password) {
+		this.name = name;
+		this.login = login;
+		this.password = password;
+//		if(login.equals("admin"))
+//			admin = true;
+	}
+	
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+	
+	public String getLogin() {
+		return login;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+	
+	public String getSalt() {
+		return salt;
+	}
+	
+	public String getRegistrationDate() {
+		return registrationDate;
+	}
+
+	public void setRegistrationDate(String registrationDate) {
+		this.registrationDate = registrationDate;
+	}
+	
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean isAdmin) {
+		this.admin = isAdmin;
+	}
+	
+	@Override
+	public String toString() {
+		return id + ": " + name;
+	}
+}
