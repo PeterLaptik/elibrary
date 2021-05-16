@@ -11,13 +11,13 @@ import javax.persistence.Table;
 @Entity
 @Table (name="users")
 public class User {
-	private static final String FIELD_USER_ID = "user_id";
-	private static final String FIELD_USER_NAME = "user_name";
-	private static final String FIELD_USER_LOGIN = "login";
-	private static final String FIELD_USER_PASS = "user_password";
-	private static final String FIELD_SALT = "salt";
-	private static final String FIELD_REGISTRATION_STAMP = "registration_date";
-	private static final String FIELD_IS_ADMIN = "is_admin";
+	public static final String FIELD_USER_ID = "user_id";
+	public static final String FIELD_USER_NAME = "user_name";
+	public static final String FIELD_USER_LOGIN = "login";
+	public static final String FIELD_USER_PASS = "user_password";
+	public static final String FIELD_SALT = "salt";
+	public static final String FIELD_REGISTRATION_STAMP = "registration_date";
+	public static final String FIELD_IS_ADMIN = "is_admin";
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)

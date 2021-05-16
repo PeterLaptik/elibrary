@@ -15,8 +15,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Table (name="user_sessions")
 public class UserSession {
-	private static final String FIELD_USER_ID = "user_id";
-	private static final String FIELD_SESSION_UUID = "session_uuid";
+	public static final String FIELD_USER_ID = "user_id";
+	public static final String FIELD_SESSION_UUID = "session_uuid";
 	
 	@Column(name=FIELD_USER_ID)
 	private int userId;
