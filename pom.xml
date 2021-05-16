@@ -50,6 +50,13 @@
 		    <artifactId>postgresql</artifactId>
 		    <version>42.2.20</version>
 		</dependency>
+		<!-- EJB -->
+		<dependency>
+		    <groupId>javax.ejb</groupId>
+		    <artifactId>javax.ejb-api</artifactId>
+		    <version>3.2</version>
+		</dependency>
+		<!-- Tests -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
