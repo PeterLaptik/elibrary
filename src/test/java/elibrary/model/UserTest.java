@@ -1,18 +1,21 @@
 package elibrary.model;
 
+import javax.servlet.http.Cookie;
+
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import pl.model.credentials.AuthentificationManager;
 import pl.model.dao.UserDao;
 import pl.model.dao.UserDaoImpl;
 import pl.model.dao.UserSessionDao;
 import pl.model.dao.UserSessionDaoImpl;
 import pl.model.entities.User;
 import pl.model.entities.UserSession;
+
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserTest {
@@ -41,7 +44,6 @@ public class UserTest {
 		Assert.assertTrue(dao.create(UserTest.user));
 		// Trying to add a user with duplicating login
 		Assert.assertFalse(dao.create(UserTest.user));
-		
 	}
 	
 	@Test
@@ -57,12 +59,39 @@ public class UserTest {
 		UserSession foundSession = dao.findSessionByUserId(UserTest.user.getId());
 		// Has the session been appended
 		Assert.assertNotNull(foundSession);
+		
+		// Check session by uuid
+		String sessionId = foundSession.getUuid();
+		UserSession sessionByUuid = dao.findSessionByUuid(sessionId);
+		Assert.assertNotNull(sessionByUuid);
+		
+		// Not existing session uuid
+		UserSession noSession = dao.findSessionByUuid(sessionId + "xyz");
+		Assert.assertNull(noSession);
 	}
 	
 	@Test
-	@Ignore
-	public void test3_userPasswordCheck() {
+	public void test3_cookieCheck() {
+		UserSessionDao dao = new UserSessionDaoImpl();
+		UserSession foundSession = dao.findSessionByUserId(UserTest.user.getId());
+		// Does a session exists
+		Assert.assertNotNull(foundSession);
 		
+		// Cookie check
+		Cookie cookie = new Cookie(UserSession.FIELD_SESSION_UUID, foundSession.getUuid());
+		Cookie[] cookies = new Cookie[1];
+		cookies[0] = cookie;
+		AuthentificationManager mgr = new AuthentificationManager();
+		Assert.assertTrue(mgr.hasSession(cookies));
+	}
+	
+	@Test
+	public void test3_userPasswordCheck() {
+		AuthentificationManager mgr = new AuthentificationManager();
+		Assert.assertTrue(mgr.isPasswordOk(testLogin, testPass));
+		Assert.assertFalse(mgr.isPasswordOk(testLogin, testPass + "a"));
+		Assert.assertFalse(mgr.isPasswordOk(testLogin + "b", testPass));
+		Assert.assertFalse(mgr.isPasswordOk(testLogin + "x", testPass + "y"));
 	}
 	
 	@Test
