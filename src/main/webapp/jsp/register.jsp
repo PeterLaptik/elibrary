@@ -7,7 +7,7 @@
 	  <link rel="stylesheet" type="text/css" href="css/register.css" />
    </head>
    <body>
-		<form name="loginform" action="/register" method="POST">
+		<form name="loginform" action="register" method="POST">
 			<div class="login_form">
 				<script>
 					let msg_row = 4;

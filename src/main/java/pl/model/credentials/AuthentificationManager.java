@@ -1,7 +1,9 @@
 package pl.model.credentials;
 
+
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.enterprise.context.Dependent;
 import javax.servlet.http.Cookie;
 
 import pl.model.dao.UserDao;
@@ -11,8 +13,9 @@ import pl.model.dao.UserSessionDaoImpl;
 import pl.model.entities.User;
 import pl.model.entities.UserSession;
 
-@Stateless
+
 @LocalBean
+@Stateless
 public class AuthentificationManager {
 	
 	public AuthentificationManager() {
@@ -23,16 +26,26 @@ public class AuthentificationManager {
 	 * Checks a password
 	 * @param login - user login
 	 * @param pass - user password
-	 * @return is password OK or not
+	 * @return session UUID if logged in, otherwise null
 	 */
-	public boolean isPasswordOk(String login, String pass) {
+	public String login(String login, String pass) {
+		String sessionUuid = null;
+		
 		UserDao dao = new UserDaoImpl();
 		User foundUser = dao.findUserByLogin(login);
 		if(foundUser==null)
-			return false;
+			return sessionUuid;
 		
 		String hash = PasswordProcessor.createPasswordHash(pass, foundUser.getSalt());
-		return hash.equals(foundUser.getPassword());
+		if(hash.equals(foundUser.getPassword())) {
+			UserSession session = new UserSession(foundUser);
+			UserSessionDao sessionDao = new UserSessionDaoImpl();
+			sessionDao.create(session);
+			session = sessionDao.findSessionByUserId(foundUser.getId());
+			sessionUuid = session.getUuid();
+		}
+		
+		return sessionUuid;
 	}
 	
 	/**
