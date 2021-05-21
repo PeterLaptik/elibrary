@@ -88,10 +88,10 @@ public class UserTest {
 	@Test
 	public void test3_userPasswordCheck() {
 		AuthentificationManager mgr = new AuthentificationManager();
-		Assert.assertTrue(mgr.isPasswordOk(testLogin, testPass));
-		Assert.assertFalse(mgr.isPasswordOk(testLogin, testPass + "a"));
-		Assert.assertFalse(mgr.isPasswordOk(testLogin + "b", testPass));
-		Assert.assertFalse(mgr.isPasswordOk(testLogin + "x", testPass + "y"));
+		Assert.assertNotNull(mgr.login(testLogin, testPass));
+		Assert.assertNull(mgr.login(testLogin, testPass + "a"));
+		Assert.assertNull(mgr.login(testLogin + "b", testPass));
+		Assert.assertNull(mgr.login(testLogin + "x", testPass + "y"));
 	}
 	
 	@Test
