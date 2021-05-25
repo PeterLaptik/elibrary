@@ -44,13 +44,11 @@ public class LoginServlet extends HttpServlet {
 		if(hello==null)
 			System.out.println("hello = NULL");
 		
-//		if(mgr.login(login, pass)!=null)
-//			response.sendRedirect(PARAM_HOME);
-//		else
-//			response.sendRedirect(PAGE_LOGIN);
-		
 		// TODO Check if logged in
-		response.getWriter().append("POST: ").append(request.getContextPath());
-		// doGet(request, response);
+		if(mgr.login(login, pass)!=null) {
+			response.getWriter().append("POST OK: ").append(request.getContextPath());
+		} else {
+			response.getWriter().append("POST: WRONG").append(request.getContextPath());
+		}
 	}
 }

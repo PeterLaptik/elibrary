@@ -4,7 +4,7 @@
 <html>
    <head>
       <title>Login page</title>
-	  <link rel="stylesheet" type="text/css" href="../css/login.css" />
+	  <link rel="stylesheet" type="text/css" href="css/login.css" />
    </head>
    <body>
 		<form name="loginform" method="POST">

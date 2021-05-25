@@ -1,26 +1,25 @@
 package pl.model.credentials;
 
 
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
+import javax.ejb.Singleton;
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 
+import pl.model.dao.IDaoProvider;
 import pl.model.dao.UserDao;
-import pl.model.dao.UserDaoImpl;
 import pl.model.dao.UserSessionDao;
 import pl.model.dao.UserSessionDaoImpl;
 import pl.model.entities.User;
 import pl.model.entities.UserSession;
 
 
-@LocalBean
-@Stateless
+@Singleton
+@Dependent
 public class AuthentificationManager {
 	
-	public AuthentificationManager() {
-		
-	}
+	@Inject
+	private IDaoProvider provider;
 	
 	/**
 	 * Checks a password
@@ -31,7 +30,7 @@ public class AuthentificationManager {
 	public String login(String login, String pass) {
 		String sessionUuid = null;
 		
-		UserDao dao = new UserDaoImpl();
+		UserDao dao = provider.getUserDao();
 		User foundUser = dao.findUserByLogin(login);
 		if(foundUser==null)
 			return sessionUuid;
@@ -70,7 +69,7 @@ public class AuthentificationManager {
     	if(sessionUuid==null)
     		return false;
     	
-    	UserSessionDao sessionDao = new UserSessionDaoImpl();
+    	UserSessionDao sessionDao = provider.getSessionDao();
     	UserSession session = sessionDao.findSessionByUuid(sessionUuid);
     	return session!=null;
 	}
