@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	 <h:head>
+	 </h:head>
+	 <h:body>
+	 	<div class="topMenu">
+	 		<p:menubar>
+            	<p:submenu label="Users"/>
+            	<p:submenu label="Chapters"/>
+            	<p:submenu label="Books"/>
+            </p:menubar>
+	 	</div>
+	 	<!-- selection="#{dtContextMenuView.selectedProduct}" -->
+	 	<div class="table">
+	 		<h:form id="form">
+	 			<p:dataTable id="users" var="user" value="#{userServiceImpl.users}" rowKey="#{user.id}"
+                     selectionMode="single">
+		 			<p:column headerText="id">
+	                	<h:outputText value="#{user.id}" />
+		            </p:column>
+		            <p:column headerText="Name">
+		                <h:outputText value="#{user.name}" />
+		            </p:column>
+		            <p:column headerText="Login">
+		                <h:outputText value="#{user.login}" />
+		            </p:column>
+		            <p:column headerText="Registration date">
+		                <h:outputText value="#{user.registrationDate}" />
+		            </p:column>
+		            <p:column headerText="Is admin">
+		                <h:outputText value="#{user.admin}" />
+		            </p:column>
+		        </p:dataTable>
+	 		</h:form>
+	 	</div>
+	 </h:body>
+</html>

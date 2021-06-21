@@ -46,4 +46,12 @@
 	    <servlet-name>Faces Servlet</servlet-name>
 	    <url-pattern>*.xhtml</url-pattern>
 	  </servlet-mapping>
+	  <servlet>
+	    <servlet-name>home</servlet-name>
+	    <jsp-file>/html/home.html</jsp-file>
+	  </servlet>
+	  <servlet-mapping>
+	    <servlet-name>home</servlet-name>
+	    <url-pattern>/home</url-pattern>
+	  </servlet-mapping>
 </web-app>

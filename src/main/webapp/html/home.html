@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>E-Library</title>
+      <link rel="stylesheet" type="text/css" href="css/home.css" />
+   </head>
+   <script src="js/sweetalert2.all.min.js"></script>
+   <script type="text/javascript">
+	   function openNav() {
+	     document.getElementById("mySidenav").style.width = "250px";
+	     document.getElementById("topBar").style.paddingLeft = "250px";
+	     document.getElementById("main").style.paddingLeft = "250px";
+	   }
+	
+	   function closeNav() {
+	     document.getElementById("mySidenav").style.width = "0";
+	     document.getElementById("topBar").style.paddingLeft = "0";
+	     document.getElementById("main").style.paddingLeft = "10px";
+	   }
+	   
+	   function logOut(){
+		   Swal.fire({
+			   text: 'Logout from the library?',
+			   showCancelButton: true,
+			   confirmButtonText: 'Yes',
+			   cancelButtonText: 'No'
+			 }).then((result) => {
+			   if (result.isConfirmed) {
+				   window.location.href = "logout"
+			   } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+			   }
+			 })
+	   }
+	   
+   </script>
+   <body>
+	   <div id="mySidenav" class="sidenav">
+		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		  <a href="#">About</a>
+		  <a href="#">Services</a>
+		  <a href="#">Clients</a>
+		  <a href="#">Contact</a>
+		</div>
+		
+		<div id="topBar" class="topbar">
+		  <a id="showMenu" href="#menu" onclick="openNav()">Menu</a>
+		  <a class="active" href="#home">Home</a>
+		  <a href="#news">News</a>
+		  <a href="admin/admin.xhtml">Admin</a>
+		  <a href="#" onclick="logOut()">Logout</a>
+		</div>
+
+		<div id="main">
+		  ...
+		</div>
+   </body>
+</html>

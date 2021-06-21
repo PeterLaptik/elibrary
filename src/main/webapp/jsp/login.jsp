@@ -28,11 +28,12 @@
 						login.disabled = false;
 					}
 				</script>
+	
 				<p> Login: </p>
 				<input id="input_name" name="login" type="text" size="25" maxlength="30" 
 							value="user" onclick="cleanMsg()" /> <br />
 				<input id="input_password" name="pass" type="password" size="25" maxlength="30" value="user" onclick="cleanMsg()" /> <br />
-				<p id="error_field"> &nbsp; </p>
+				<p id="error_field"> <%=request.getAttribute("error")!=null ? request.getAttribute("error") : "&nbsp;" %> </p>
 				<p style="margin-top:0px;"> 
 					<button name="action" value="sign_up" formaction="registration"> Sign up </button> 
 					<button id="login" name="action" value="login" onclick="checkData()" formaction="logging"> Login </button> 
