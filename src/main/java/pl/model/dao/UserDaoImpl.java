@@ -2,6 +2,8 @@ package pl.model.dao;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -10,6 +12,7 @@ import pl.model.credentials.PasswordProcessor;
 import pl.model.entities.User;
 import pl.model.session.HibernateSessionFactory;
 
+@Stateless
 public class UserDaoImpl implements UserDao {
 	
 	public UserDaoImpl(){
@@ -45,6 +48,12 @@ public class UserDaoImpl implements UserDao {
 		List<User> users = query.list();
 		session.close();
 		return users.size()>0 ? users.get(0) : null;
+	}
+	
+	public List<User> getAllUsers() {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Query<User> query = session.createQuery("FROM User", User.class);
+		return query.list();
 	}
 	
 	public boolean deleteUser(User user) {

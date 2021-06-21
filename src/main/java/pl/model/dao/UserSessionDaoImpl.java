@@ -2,6 +2,9 @@ package pl.model.dao;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+import javax.inject.Named;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -9,6 +12,7 @@ import org.hibernate.query.Query;
 import pl.model.entities.UserSession;
 import pl.model.session.HibernateSessionFactory;
 
+@Stateless
 public class UserSessionDaoImpl implements UserSessionDao {
 	
 	public UserSessionDaoImpl(){

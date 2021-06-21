@@ -1,58 +1,47 @@
 package pl.model.credentials;
 
 
+import javax.ejb.EJB;
 import javax.ejb.Singleton;
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import javax.ejb.Startup;
 import javax.servlet.http.Cookie;
 
-import pl.model.dao.IDaoProvider;
 import pl.model.dao.UserDao;
 import pl.model.dao.UserSessionDao;
-import pl.model.dao.UserSessionDaoImpl;
 import pl.model.entities.User;
 import pl.model.entities.UserSession;
 
 
 @Singleton
-@Dependent
-public class AuthentificationManager {
+@Startup
+public class AuthentificationManager implements IAuthentification {
+	private static final long serialVersionUID = 1225409457256072688L;
+
+	@EJB
+	private UserDao userDao;
 	
-	@Inject
-	private IDaoProvider provider;
+	@EJB
+	private UserSessionDao sessionDao;
 	
-	/**
-	 * Checks a password
-	 * @param login - user login
-	 * @param pass - user password
-	 * @return session UUID if logged in, otherwise null
-	 */
-	public String login(String login, String pass) {
-		String sessionUuid = null;
-		
-		UserDao dao = provider.getUserDao();
-		User foundUser = dao.findUserByLogin(login);
+	@Override
+	public Cookie login(String login, String pass) {
+		Cookie sessionCookie = null;
+		User foundUser = userDao.findUserByLogin(login);
 		if(foundUser==null)
-			return sessionUuid;
+			return sessionCookie;
 		
 		String hash = PasswordProcessor.createPasswordHash(pass, foundUser.getSalt());
 		if(hash.equals(foundUser.getPassword())) {
 			UserSession session = new UserSession(foundUser);
-			UserSessionDao sessionDao = new UserSessionDaoImpl();
 			sessionDao.create(session);
-			session = sessionDao.findSessionByUserId(foundUser.getId());
-			sessionUuid = session.getUuid();
+			String sessionUuid = sessionDao.findSessionByUserId(foundUser.getId()).getUuid();
+			sessionCookie = new Cookie(UserSession.FIELD_SESSION_UUID, sessionUuid);
 		}
 		
-		return sessionUuid;
+		return sessionCookie;
 	}
 	
-	/**
-	 * Checks whether a session exists (cookie check).
-	 * Session uuid is being kept in a cookies
-	 * @param request
-	 * @return true is a session exists, otherwise false
-	 */
+	@Override
 	public boolean hasSession(Cookie[] cookies) {
 		String sessionUuid = null;
     	if(cookies==null)
@@ -69,8 +58,27 @@ public class AuthentificationManager {
     	if(sessionUuid==null)
     		return false;
     	
-    	UserSessionDao sessionDao = provider.getSessionDao();
     	UserSession session = sessionDao.findSessionByUuid(sessionUuid);
     	return session!=null;
+	}
+	
+	@Override
+	public void logout(Cookie[] cookies) {
+		String sessionUuid = null;
+    	if(cookies==null)
+    		return;
+    	
+    	for(Cookie cookie: cookies) {
+    		if(cookie==null)
+    			continue;
+    		
+    		if(cookie.getName().equals(UserSession.FIELD_SESSION_UUID)) {
+    			sessionUuid = cookie.getValue();
+    		}
+    	}
+    	if(sessionUuid==null)
+    		return;
+    	
+    	sessionDao.deleteSessionByUuid(sessionUuid);
 	}
 }

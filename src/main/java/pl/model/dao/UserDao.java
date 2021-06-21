@@ -1,5 +1,7 @@
 package pl.model.dao;
 
+import java.util.List;
+
 import pl.model.entities.User;
 
 public interface UserDao {
@@ -15,4 +17,6 @@ public interface UserDao {
 	public User findUserByName(String name);
 	
 	public User findUserByLogin(String login);
+	
+	public List<User> getAllUsers();
 }

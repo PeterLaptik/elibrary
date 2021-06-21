@@ -13,25 +13,23 @@ import pl.model.credentials.IAuthentification;
 import pl.route.IRoutes;
 
 
-@WebServlet("start")
-public class StartServlet extends HttpServlet {
-	private static final long serialVersionUID = 3274802373502246333L;
-
+@WebServlet("/logout")
+public class LogoutServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
 	@EJB
 	IAuthentification mgr;
 	
 	@EJB
 	IRoutes router;
 	
-	public StartServlet() {
+    public LogoutServlet() {
         super();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(mgr.hasSession(request.getCookies()))
-			response.sendRedirect(router.getHome());
-		else
-			response.sendRedirect(router.getLogin());
+		mgr.logout(request.getCookies());
+		response.sendRedirect(router.getLogin());
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

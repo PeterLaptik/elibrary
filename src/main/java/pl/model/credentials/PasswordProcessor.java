@@ -13,7 +13,7 @@ public class PasswordProcessor {
 	}
 	
 	/**
-	 * Create password hash
+	 * Creates password hash
 	 * @param password
 	 * @param salt
 	 * @return MD5 hash

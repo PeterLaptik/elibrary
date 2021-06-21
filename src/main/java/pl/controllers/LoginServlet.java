@@ -4,51 +4,50 @@ import java.io.IOException;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import pl.model.credentials.AuthentificationManager;
-import pl.model.entities.IHelloWorld;
+import pl.model.credentials.IAuthentification;
+import pl.model.entities.UserSession;
+import pl.route.IRoutes;
 
 //@WebServlet("/logging")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = -8299013065276922113L;
-	private static final String PAGE_LOGIN = "/login";
 	private static final String PARAM_LOGIN = "login";
-	private static final String PARAM_HOME = "home";
 	private static final String PARAM_PASS = "pass";
+	private static final String PARAM_ERROR = "error";
 	
 	@EJB
-	private AuthentificationManager mgr;
-
-	@EJB 
-    private IHelloWorld hello;
+	private IAuthentification mgr;
+	
+	@EJB
+	IRoutes router;
 	
     public LoginServlet() {
         super();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.sendRedirect(PAGE_LOGIN);
+		response.sendRedirect(router.getLogin());
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String login = request.getParameter(PARAM_LOGIN);
 		String pass = request.getParameter(PARAM_PASS);
 		
-		if(mgr==null)
-			System.out.println("NULL");
+		Cookie sessionCookie = mgr.login(login, pass);
 		
-		if(hello==null)
-			System.out.println("hello = NULL");
-		
-		// TODO Check if logged in
-		if(mgr.login(login, pass)!=null) {
-			response.getWriter().append("POST OK: ").append(request.getContextPath());
+		// Is logged OK
+		if(sessionCookie!=null) {
+	    	response.addCookie(sessionCookie);
+			response.sendRedirect(router.getHome());
 		} else {
-			response.getWriter().append("POST: WRONG").append(request.getContextPath());
+			request.setAttribute(PARAM_ERROR, "Wrong login or password");
+			request.getRequestDispatcher(router.getLogin()).forward(request, response);
 		}
 	}
 }

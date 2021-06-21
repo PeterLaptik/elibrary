@@ -1,12 +1,10 @@
 package pl.model.credentials;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
-import javax.inject.Inject;
 
-import pl.model.dao.IDaoProvider;
 import pl.model.dao.UserDao;
-import pl.model.dao.UserDaoImpl;
 import pl.model.entities.User;
 import pl.model.entities.UserRegBean;
 
@@ -23,8 +21,8 @@ public class RegistrationManager {
 	
 	private String errorString = "";
 	
-	@Inject
-	IDaoProvider provider;
+	@EJB
+	UserDao userDao;
 	
 	public RegistrationManager() {
 		
@@ -61,7 +59,6 @@ public class RegistrationManager {
 			return false;
 		}
 		
-		UserDao userDao = provider.getUserDao();
 		if(userDao.findUserByLogin(user.getLogin())!=null) {
 			errorString = MSG_LOGIN_EXISTS;
 			return false;
@@ -84,11 +81,10 @@ public class RegistrationManager {
 	 * @param user
 	 */
 	public void register(UserRegBean user) {
-		UserDao dao = provider.getUserDao();
 		User userToCreate = new User();
 		userToCreate.setLogin(user.getLogin());
 		userToCreate.setPassword(user.getPass());
 		userToCreate.setName(user.getName());
-		dao.create(userToCreate);
+		userDao.create(userToCreate);
 	}
 }

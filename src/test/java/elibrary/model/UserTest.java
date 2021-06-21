@@ -1,5 +1,8 @@
 package elibrary.model;
 
+import java.lang.reflect.Field;
+
+import javax.ejb.EJB;
 import javax.servlet.http.Cookie;
 
 import org.junit.Assert;
@@ -19,15 +22,34 @@ import pl.model.entities.UserSession;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserTest {
-	final static String testLogin = "test_user";
-	final static String testPass = "qwerty";
+	private final static String testLogin = "test_user";
+	private final static String testPass = "qwerty";
 	private static User user = null;
+	private static AuthentificationManager mgr = new AuthentificationManager();
 	
 	static {
 		UserTest.user = new User();
 		UserTest.user.setName(testLogin);
 		UserTest.user.setPassword(testPass);
 		UserTest.user.setLogin(testLogin);
+		
+		// Init authentification manager manager via reflection
+		try {
+			// User DAO
+			Field field = mgr.getClass().getDeclaredField("userDao");
+			field.setAccessible(true);
+			field.set(mgr, new UserDaoImpl());
+			// Session DAO
+			field = mgr.getClass().getDeclaredField("sessionDao");
+			field.setAccessible(true);
+			field.set(mgr, new UserSessionDaoImpl());
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@BeforeClass
@@ -81,13 +103,11 @@ public class UserTest {
 		Cookie cookie = new Cookie(UserSession.FIELD_SESSION_UUID, foundSession.getUuid());
 		Cookie[] cookies = new Cookie[1];
 		cookies[0] = cookie;
-		AuthentificationManager mgr = new AuthentificationManager();
 		Assert.assertTrue(mgr.hasSession(cookies));
 	}
 	
 	@Test
 	public void test3_userPasswordCheck() {
-		AuthentificationManager mgr = new AuthentificationManager();
 		Assert.assertNotNull(mgr.login(testLogin, testPass));
 		Assert.assertNull(mgr.login(testLogin, testPass + "a"));
 		Assert.assertNull(mgr.login(testLogin + "b", testPass));

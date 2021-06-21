@@ -54,8 +54,6 @@ public class User {
 		this.name = name;
 		this.login = login;
 		this.password = password;
-//		if(login.equals("admin"))
-//			admin = true;
 	}
 	
 	
