@@ -15,6 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.servlet>3.0.1</version.servlet>
         <jsf.version>2.2.20</jsf.version>
+        <primefaces.version>5.0</primefaces.version>
     </properties>
 
     <dependencyManagement>
@@ -83,7 +84,12 @@
 	    <dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-			<version>5.0</version>
+			<version>${primefaces.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.primefaces.themes</groupId>
+		    <artifactId>bootstrap</artifactId>
+		    <version>1.0.10</version>
 		</dependency>
 	    <!--
 		<dependency>
@@ -97,7 +103,22 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        <!-- JS Libraries -->
+        <!-- <dependency>
+		    <groupId>org.webjars.bower</groupId>
+		    <artifactId>sweetalert2</artifactId>
+		    <version>8.15.3</version>
+		</dependency>
+		-->
     </dependencies>
+    
+    <repositories>
+        <repository>
+            <id>prime-repo</id>
+            <name>PrimeFaces Maven Repository</name>
+            <url>http://repository.primefaces.org</url>
+        </repository>
+    </repositories>
 
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>

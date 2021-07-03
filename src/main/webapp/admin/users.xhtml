@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	 <h:head>
+	 </h:head>
+	 <h:body>
+	 
+	 	<div class="topMenu">
+	 		<p:tabMenu activeIndex="0">
+		        <p:menuitem value="Users" outcome="/admin/users.xhtml">
+		        </p:menuitem>
+		        <p:menuitem value="Chapters" outcome="/admin/users.xhtml">
+		        </p:menuitem>
+		        <p:menuitem value="Home" url="#{pageContext.contextPath}/home">
+		        </p:menuitem>
+		    </p:tabMenu>
+	 	</div>
+	 	
+	 	<div class="table">
+	 		<h:form id="form">
+	 			<p:dataTable id="users" var="user" value="#{userServiceImpl.users}" 
+	 						selection="#{userServiceImpl.selectedUser}" rowKey="#{user.id}" selectionMode="single">
+		 			<p:column style="width:50px;" headerText="id">
+	                	<h:outputText value="#{user.id}" />
+		            </p:column>
+		            <p:column headerText="Name">
+		                <h:outputText value="#{user.name}" />
+		            </p:column>
+		            <p:column headerText="Login">
+		                <h:outputText value="#{user.login}" />
+		            </p:column>
+		            <p:column style="width:120px;" headerText="Registration date">
+		                <h:outputText value="#{user.registrationDate}" />
+		            </p:column>
+		            <p:column style="width:50px;" headerText="Is admin">
+		                <h:outputText value="#{user.admin}" />
+		            </p:column>
+		        </p:dataTable>
+		        
+		        <!-- Popup menu -->
+		        <p:contextMenu for="users">
+		        	<p:menuitem value="Sort by name" update="users" action="#{userServiceImpl.sortByName}"/>
+		        	<p:menuitem value="Sort by login" update="users" action="#{userServiceImpl.sortByLogin}"/>
+		        	<p:menuitem value="Sort by id" update="users" action="#{userServiceImpl.sortById}"/>
+		        	<p:menuitem value="Sort admins" update="users" action="#{userServiceImpl.sortByIsAdmin}"/>
+		            <p:menuitem value="Grant admin rights" update="users" action="#{userServiceImpl.grantAdminRights}"/>
+		            <p:menuitem value="Remove admin rights" update="users" action="#{userServiceImpl.removeAdminRights}"/>
+		            <p:menuitem value="Delete user" update="users">
+			            		<p:commandLink styleClass="ui-menuitem-link" action="#{userServiceImpl.deleteSelectedUser}" ajax="false">
+									<h:outputText styleClass="ui-menuitem-icon ui-icon ui-icon-close" />
+									<h:outputText styleClass="ui-menuitem-text" value="Delete" />
+									<p:confirm header="Confirmation" message="Delete selected user?" icon="ui-icon-alert" />
+								</p:commandLink>
+		            </p:menuitem>
+		        </p:contextMenu>
+		        
+		        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				    <p:commandButton value="Yes" type="button"
+				        styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				    <p:commandButton value="No" type="button"
+				        styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+	 		</h:form>
+	 	</div>
+	 	
+	 </h:body>
+</html>

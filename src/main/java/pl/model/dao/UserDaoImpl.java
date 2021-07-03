@@ -50,10 +50,16 @@ public class UserDaoImpl implements UserDao {
 		return users.size()>0 ? users.get(0) : null;
 	}
 	
-	public List<User> getAllUsers() {
+	public void setAdmin(User user, boolean isAdmin) {
+		if(user==null)
+			return;
+		
+		user.setAdmin(isAdmin);
 		Session session = HibernateSessionFactory.getSession().openSession();
-		Query<User> query = session.createQuery("FROM User", User.class);
-		return query.list();
+		Transaction transaction = session.beginTransaction();
+		session.update(user);
+		transaction.commit();
+		session.close();
 	}
 	
 	public boolean deleteUser(User user) {
@@ -66,6 +72,12 @@ public class UserDaoImpl implements UserDao {
 		transaction.commit();
 		session.close();
 		return true;
+	}
+	
+	public List<User> getAllUsers() {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Query<User> query = session.createQuery("FROM User", User.class);
+		return query.list();
 	}
 	
 	private void createHashes(User user) {

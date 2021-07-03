@@ -8,4 +8,6 @@ import pl.model.entities.User;
 public interface UserService extends Serializable{
 	
 	public List<User> getUsers();
+	
+	//public setAdmin(boolean isAdmin);
 }
