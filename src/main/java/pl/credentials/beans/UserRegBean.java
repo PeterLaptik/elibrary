@@ -1,4 +1,4 @@
-package pl.model.entities;
+package pl.credentials.beans;
 
 import java.io.Serializable;
 import javax.ejb.Local;

@@ -1,4 +1,4 @@
-package pl.model.dao;
+package pl.model.dao.views;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -10,12 +10,13 @@ import javax.ejb.Stateful;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import pl.model.dao.UserDao;
 import pl.model.entities.User;
 
-@Named("userServiceImpl")
+@Named("userService")
 @Stateful
 @ViewScoped
-public class UserServiceImpl implements Serializable {
+public class UserService implements Serializable {
 	private static final long serialVersionUID = 4211888101576176371L;
 	
 	private List<User> users;

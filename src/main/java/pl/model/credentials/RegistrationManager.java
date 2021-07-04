@@ -4,9 +4,9 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
 
+import pl.credentials.beans.UserRegBean;
 import pl.model.dao.UserDao;
 import pl.model.entities.User;
-import pl.model.entities.UserRegBean;
 
 @LocalBean
 @Stateful

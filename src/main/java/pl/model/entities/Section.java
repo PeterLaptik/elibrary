@@ -1,5 +1,6 @@
 package pl.model.entities;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -9,14 +10,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table (name="chapters")
-public class Chapter {
-	public static final String FIELD_ID = "chapter_id";
-	public static final String FIELD_NAME = "chapter_name";
+@Table 
+(name="sections",
+uniqueConstraints = @UniqueConstraint(columnNames={"section_name"}))
+public class Section implements Serializable{
+	private static final long serialVersionUID = -6957062912046512337L;
+	public static final String FIELD_ID = "section_id";
+	public static final String FIELD_NAME = "section_name";
 	public static final String FIELD_PARENT = "parent_id";
+	public static final String ROOT_NAME = "root";
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -26,14 +33,14 @@ public class Chapter {
 	@Column(name=FIELD_NAME)
 	private String name;
 	
-	@Column(name=FIELD_PARENT)
-	private String parentId;
-	
+	@OneToOne(cascade=CascadeType.ALL)
+	private Section parent;
+
 	@OneToMany(cascade=CascadeType.ALL)
-	private List<Chapter> children;
+	private List<Section> children;
 
 	
-	public Chapter(){
+	public Section(){
 		
 	}
 	
@@ -53,20 +60,20 @@ public class Chapter {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public String getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
-	}
 	
-	public List<Chapter> getChildren() {
+	public List<Section> getChildren() {
 		return children;
 	}
 
-	public void setChildren(List<Chapter> children) {
+	public void setChildren(List<Section> children) {
 		this.children = children;
+	}
+	
+	public Section getParent() {
+		return parent;
+	}
+
+	public void setParent(Section parent) {
+		this.parent = parent;
 	}
 }

@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import pl.credentials.beans.UserRegBean;
 import pl.model.credentials.RegistrationManager;
-import pl.model.entities.UserRegBean;
 
 @WebServlet("/register")
 public class RegistrationServlet extends HttpServlet {
@@ -67,5 +67,4 @@ public class RegistrationServlet extends HttpServlet {
 		mgr.register(user);
 		response.sendRedirect("register-redirect.html");
 	}
-
 }

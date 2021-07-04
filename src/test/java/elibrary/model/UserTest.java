@@ -2,7 +2,6 @@ package elibrary.model;
 
 import java.lang.reflect.Field;
 
-import javax.ejb.EJB;
 import javax.servlet.http.Cookie;
 
 import org.junit.Assert;
@@ -13,9 +12,9 @@ import org.junit.runners.MethodSorters;
 
 import pl.model.credentials.AuthentificationManager;
 import pl.model.dao.UserDao;
-import pl.model.dao.UserDaoImpl;
 import pl.model.dao.UserSessionDao;
-import pl.model.dao.UserSessionDaoImpl;
+import pl.model.dao.impl.UserDaoImpl;
+import pl.model.dao.impl.UserSessionDaoImpl;
 import pl.model.entities.User;
 import pl.model.entities.UserSession;
 

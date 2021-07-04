@@ -7,20 +7,17 @@
 	 <h:body>
 	 
 	 	<div class="topMenu">
-	 		<p:tabMenu activeIndex="0">
-		        <p:menuitem value="Users" outcome="/admin/users.xhtml">
-		        </p:menuitem>
-		        <p:menuitem value="Chapters" outcome="/admin/users.xhtml">
-		        </p:menuitem>
-		        <p:menuitem value="Home" url="#{pageContext.contextPath}/home">
-		        </p:menuitem>
+	 		<p:tabMenu activeIndex="1">
+	 			<p:menuitem value="Sections" outcome="/admin/sections.xhtml"></p:menuitem>
+		        <p:menuitem value="Users" outcome="/admin/users.xhtml"></p:menuitem>
+		        <p:menuitem value="Home" url="#{pageContext.contextPath}/home"></p:menuitem>
 		    </p:tabMenu>
 	 	</div>
 	 	
 	 	<div class="table">
 	 		<h:form id="form">
-	 			<p:dataTable id="users" var="user" value="#{userServiceImpl.users}" 
-	 						selection="#{userServiceImpl.selectedUser}" rowKey="#{user.id}" selectionMode="single">
+	 			<p:dataTable id="users" var="user" value="#{userService.users}" 
+	 						selection="#{userServicel.selectedUser}" rowKey="#{user.id}" selectionMode="single">
 		 			<p:column style="width:50px;" headerText="id">
 	                	<h:outputText value="#{user.id}" />
 		            </p:column>
@@ -40,14 +37,14 @@
 		        
 		        <!-- Popup menu -->
 		        <p:contextMenu for="users">
-		        	<p:menuitem value="Sort by name" update="users" action="#{userServiceImpl.sortByName}"/>
-		        	<p:menuitem value="Sort by login" update="users" action="#{userServiceImpl.sortByLogin}"/>
-		        	<p:menuitem value="Sort by id" update="users" action="#{userServiceImpl.sortById}"/>
-		        	<p:menuitem value="Sort admins" update="users" action="#{userServiceImpl.sortByIsAdmin}"/>
-		            <p:menuitem value="Grant admin rights" update="users" action="#{userServiceImpl.grantAdminRights}"/>
-		            <p:menuitem value="Remove admin rights" update="users" action="#{userServiceImpl.removeAdminRights}"/>
+		        	<p:menuitem value="Sort by name" update="users" action="#{userService.sortByName}"/>
+		        	<p:menuitem value="Sort by login" update="users" action="#{userService.sortByLogin}"/>
+		        	<p:menuitem value="Sort by id" update="users" action="#{userService.sortById}"/>
+		        	<p:menuitem value="Sort admins" update="users" action="#{userService.sortByIsAdmin}"/>
+		            <p:menuitem value="Grant admin rights" update="users" action="#{userService.grantAdminRights}"/>
+		            <p:menuitem value="Remove admin rights" update="users" action="#{userService.removeAdminRights}"/>
 		            <p:menuitem value="Delete user" update="users">
-			            		<p:commandLink styleClass="ui-menuitem-link" action="#{userServiceImpl.deleteSelectedUser}" ajax="false">
+			            		<p:commandLink styleClass="ui-menuitem-link" action="#{userService.deleteSelectedUser}" ajax="false">
 									<h:outputText styleClass="ui-menuitem-icon ui-icon ui-icon-close" />
 									<h:outputText styleClass="ui-menuitem-text" value="Delete" />
 									<p:confirm header="Confirmation" message="Delete selected user?" icon="ui-icon-alert" />

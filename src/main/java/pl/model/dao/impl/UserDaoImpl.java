@@ -1,4 +1,4 @@
-package pl.model.dao;
+package pl.model.dao.impl;
 
 import java.util.List;
 
@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import pl.model.credentials.PasswordProcessor;
+import pl.model.dao.UserDao;
 import pl.model.entities.User;
 import pl.model.session.HibernateSessionFactory;
 
