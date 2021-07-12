@@ -10,6 +10,7 @@
 	 		<p:tabMenu activeIndex="1">
 	 			<p:menuitem value="Sections" outcome="/admin/sections.xhtml"></p:menuitem>
 		        <p:menuitem value="Users" outcome="/admin/users.xhtml"></p:menuitem>
+		        <p:menuitem value="Books" outcome="/admin/books.xhtml"></p:menuitem>
 		        <p:menuitem value="Home" url="#{pageContext.contextPath}/home"></p:menuitem>
 		    </p:tabMenu>
 	 	</div>
@@ -17,7 +18,7 @@
 	 	<div class="table">
 	 		<h:form id="form">
 	 			<p:dataTable id="users" var="user" value="#{userService.users}" 
-	 						selection="#{userServicel.selectedUser}" rowKey="#{user.id}" selectionMode="single">
+	 						selection="#{userService.selectedUser}" rowKey="#{user.id}" selectionMode="single">
 		 			<p:column style="width:50px;" headerText="id">
 	                	<h:outputText value="#{user.id}" />
 		            </p:column>

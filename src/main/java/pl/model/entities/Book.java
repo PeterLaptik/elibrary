@@ -1,11 +1,20 @@
 package pl.model.entities;
 
-public class Book {
+import java.io.Serializable;
+
+import javax.persistence.CascadeType;
+import javax.persistence.OneToOne;
+
+public class Book implements Serializable {
 	private int id;
 	private String name;
 	private String description;
 	private String format;
-	
+	private String fileName;
+
+	@OneToOne(cascade=CascadeType.ALL)
+	private Section section;
+
 	public Book() {
 		
 	}
@@ -40,5 +49,21 @@ public class Book {
 
 	public void setFormat(String format) {
 		this.format = format;
+	}
+	
+	public Section getSection() {
+		return section;
+	}
+
+	public void setSection(Section section) {
+		this.section = section;
+	}
+	
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 }

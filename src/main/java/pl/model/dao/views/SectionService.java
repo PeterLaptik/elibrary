@@ -11,6 +11,7 @@ import javax.inject.Named;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -24,6 +25,7 @@ public class SectionService implements Serializable {
 	private static final long serialVersionUID = 7694019109747343749L;
 	private TreeNode root;
 	private TreeNode selectedNode;
+	private String sectionName;
 
 	@EJB
 	SectionDao sectionDao;
@@ -51,7 +53,18 @@ public class SectionService implements Serializable {
 	}
 	
 	public void appendNode() {
-		System.out.println("Append node");
+		if(selectedNode==null)
+			return;
+
+		SectionNode parentNode = (SectionNode)selectedNode.getData();
+		Section parentSection = sectionDao.findSectionById(parentNode.getId());
+		if(parentSection==null)
+			return;	// TODO log as error
+		
+		Section sectionToAdd = new Section();
+		sectionToAdd.setName(sectionName);
+		sectionDao.addChild(parentSection, sectionToAdd);
+		System.out.println("Append node: " + sectionName);
 	}
 	
 	private TreeNode buildStructure() {
@@ -87,5 +100,18 @@ public class SectionService implements Serializable {
 			addSubTreeFor(i, subNode);
 		}
 		session.close();
+	}
+	
+	public String getSectionName() {
+		return sectionName;
+	}
+
+	public void setSectionName(String sectionName) {
+		this.sectionName = sectionName;
+	}
+	
+	public void onNodeSelect(NodeSelectEvent event) {
+		TreeNode node = (TreeNode) event.getTreeNode();
+	    setSelectedNode(node);
 	}
 }

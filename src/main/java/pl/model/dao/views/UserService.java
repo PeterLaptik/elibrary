@@ -31,7 +31,6 @@ public class UserService implements Serializable {
 	@EJB
 	UserDao userDao;
 	
-	//@Override
 	public List<User> getUsers() {
 		users = userDao.getAllUsers();
 		Collections.sort(users, new Comparator<User>() {

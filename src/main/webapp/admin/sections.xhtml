@@ -11,6 +11,7 @@
 		 		<p:tabMenu activeIndex="0">
 			 		<p:menuitem value="Sections" outcome="/admin/users.xhtml"></p:menuitem>
 			        <p:menuitem value="Users" outcome="/admin/users.xhtml"></p:menuitem>
+			        <p:menuitem value="Books" outcome="/admin/books.xhtml"></p:menuitem>
 			        <p:menuitem value="Home" url="#{pageContext.contextPath}/home"></p:menuitem>
 			    </p:tabMenu>
 		 	</div>
@@ -25,24 +26,22 @@
 		                <h:outputText value="#{node.id}"/>
 		            </p:column>
 		        </p:treeTable>
-		        <div id="inputNode">
-			        <p:outputLabel value="Node name: " />
-			 		<p:inputText id="newNodeName" />
-			 	</div>
 		 	</div>
-		 	
-		 	
+		
 		 	<p:contextMenu for="nodes">
 	            <p:menuitem value="Add section" onclick="PF('inputDlg').show()" />
 	            <p:menuitem value="Delete section" update="nodes" action="#{sectionService.deleteNode}"/>
 	        </p:contextMenu>
-	        
-	        <p:dialog for="nodes" header="Add section" widgetVar="inputDlg" minHeight="40" width="350" showEffect="fade">
-			    <p class="p-m-0">Input section name:</p>
-			    <p:inputText/>
-			    <p:button value="OK" onclick="alert('ddd')"/>
-			</p:dialog>
-
 	 	</h:form>
+	 	
+	 	<p:dialog id="inputDialog" for="nodes" header="Add section" widgetVar="inputDlg" minHeight="40" width="350" showEffect="fade">
+	        	<h:form>
+				    <p class="p-m-0">Input section name:</p>
+				    <p:inputText value="#{sectionService.sectionName}"/>
+				    <p:commandButton value="OK" onclick="dialog.hide();"
+				    actionListener="#{sectionService.appendNode}"/>
+			    </h:form>
+		</p:dialog>
+			
 	 </h:body>
 </html>

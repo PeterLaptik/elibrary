@@ -97,4 +97,19 @@ public class SectionDaoImpl implements SectionDao {
 		
 		return result;
 	}
+	
+	public Section findSectionById(int id) {
+		Section result = null;
+		Session session = HibernateSessionFactory.getSession().openSession();
+		//Transaction transaction = session.beginTransaction();
+		Query<Section> query = session.createQuery("FROM Section WHERE section_id = :param", Section.class);
+		query.setParameter("param", id);
+		List<Section> list = query.getResultList();
+		//transaction.commit();
+		session.close();
+		if(list.size()>0)
+			result = list.get(0);
+		
+		return result;
+	}
 }

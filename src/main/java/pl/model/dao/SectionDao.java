@@ -12,4 +12,6 @@ public interface SectionDao extends Serializable {
 	public void deleteSection(Section section);
 	
 	public Section findSectionByName(String name);
+	
+	public Section findSectionById(int id);
 }

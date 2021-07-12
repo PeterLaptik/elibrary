@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	 <h:head>
+	 	<link rel="stylesheet" type="text/css" href="css/books.css" />
+	 </h:head>
+	 <h:body>
+	 
+	 	<div class="topMenu">
+	 		<p:tabMenu activeIndex="2">
+	 			<p:menuitem value="Sections" outcome="/admin/sections.xhtml"></p:menuitem>
+		        <p:menuitem value="Users" outcome="/admin/users.xhtml"></p:menuitem>
+		        <p:menuitem value="Books" outcome="/admin/books.xhtml"></p:menuitem>
+		        <p:menuitem value="Home" url="#{pageContext.contextPath}/home"></p:menuitem>
+		    </p:tabMenu>
+	 	</div>
+
+	 	
+	 		<h:form id="sections_form">
+	 			<div class="leftMenu">
+			 		<div>
+					 	<p:treeTable id="nodes" value="#{sectionService.root}" var="node" selectionMode="single"
+				                     expanded="true" selection="#{sectionService.selectedNode}">
+				            <p:column headerText="Section" expandedIcon="pi pi-folder-open" collapsedIcon="pi pi-folder">
+				                <h:outputText value="#{node.name}"/>
+				            </p:column>
+				            <p:ajax event="select" listener="#{sectionService.onNodeSelect}" />
+				        </p:treeTable>
+				 	</div>
+			 	</div>
+	 		</h:form>
+	 	
+	 	
+	 </h:body>
+</html>

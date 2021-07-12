@@ -8,6 +8,7 @@ import org.junit.runners.MethodSorters;
 
 import pl.model.dao.impl.SectionDaoImpl;
 import pl.model.dao.views.SectionService;
+import pl.model.entities.Book;
 import pl.model.entities.Section;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -75,6 +76,12 @@ public class SectionsTest {
 		subChild = new Section();
 		subChild.setName("sub_child_3");
 		dao.addChild(child, subChild);
+		
+		Book book = new Book();
+		book.setName("Tes book");
+		book.setDescription("abc def ...");
+		book.setFormat("pdf");
+		
 	}
 	
 	@Test
