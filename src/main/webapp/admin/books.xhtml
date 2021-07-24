@@ -6,31 +6,54 @@
 	 	<link rel="stylesheet" type="text/css" href="css/books.css" />
 	 </h:head>
 	 <h:body>
-	 
-	 	<div class="topMenu">
-	 		<p:tabMenu activeIndex="2">
-	 			<p:menuitem value="Sections" outcome="/admin/sections.xhtml"></p:menuitem>
-		        <p:menuitem value="Users" outcome="/admin/users.xhtml"></p:menuitem>
-		        <p:menuitem value="Books" outcome="/admin/books.xhtml"></p:menuitem>
-		        <p:menuitem value="Home" url="#{pageContext.contextPath}/home"></p:menuitem>
-		    </p:tabMenu>
-	 	</div>
-
-	 	
-	 		<h:form id="sections_form">
-	 			<div class="leftMenu">
-			 		<div>
-					 	<p:treeTable id="nodes" value="#{sectionService.root}" var="node" selectionMode="single"
-				                     expanded="true" selection="#{sectionService.selectedNode}">
-				            <p:column headerText="Section" expandedIcon="pi pi-folder-open" collapsedIcon="pi pi-folder">
-				                <h:outputText value="#{node.name}"/>
-				            </p:column>
-				            <p:ajax event="select" listener="#{sectionService.onNodeSelect}" />
-				        </p:treeTable>
-				 	</div>
-			 	</div>
-	 		</h:form>
-	 	
-	 	
+	 	<h:form id="sections_form">
+		 	<div class="topMenu">
+		 		<p:tabMenu activeIndex="2">
+		 			<p:menuitem value="Sections" outcome="/admin/sections.xhtml"></p:menuitem>
+			        <p:menuitem value="Users" outcome="/admin/users.xhtml"></p:menuitem>
+			        <p:menuitem value="Books" outcome="/admin/books.xhtml"></p:menuitem>
+			        <p:menuitem value="Home" url="#{pageContext.contextPath}/home"></p:menuitem>
+			    </p:tabMenu>
+		 	</div>
+			<div class="leftMenu">
+				<div>
+					<p:treeTable id="nodes" value="#{sectionService.root}" var="node"
+						selectionMode="single" expanded="true"
+						selection="#{sectionService.selectedNode}">
+						<p:column headerText="Section" expandedIcon="pi pi-folder-open"
+							collapsedIcon="pi pi-folder">
+							<h:outputText value="#{node.name}" />
+						</p:column>
+						<p:ajax event="select" listener="#{sectionService.onNodeSelect}" update=":sections_form:books"/>
+					</p:treeTable>
+					<p:contextMenu for="nodes">
+						<p:menuitem value="Add section" onclick="PF('inputDlg').show()" />
+						<p:menuitem value="Delete section" update="nodes"
+							action="#{sectionService.deleteNode}" />
+					</p:contextMenu>
+				</div>
+			</div>
+			<div class="booksContent">
+				<p:dataTable id="books" var="book" value="#{sectionService.books}" 
+	 						selection="#{sectionService.selectedBook}" rowKey="#{book.id}" selectionMode="single">
+		 			<p:column style="width:50px;" headerText="id">
+	                	<h:outputText value="#{book.id}" />
+		            </p:column>
+		            <p:column headerText="Name">
+		                <h:outputText value="#{book.name}" />
+		            </p:column>
+		        </p:dataTable>
+			</div>
+			
+		</h:form>
+		<!-- Dialogue for form creating -->
+	 	<p:dialog id="inputDialog" for="nodes" header="Add section" widgetVar="inputDlg" minHeight="40" width="350" showEffect="fade">
+	        	<h:form>
+				    <p class="p-m-0">Input section name:</p>
+				    <p:inputText value="#{sectionService.sectionName}"/>
+				    <p:commandButton value="OK" onclick="dialog.hide();"
+				    actionListener="#{sectionService.appendNode}"/>
+			    </h:form>
+		</p:dialog>
 	 </h:body>
 </html>

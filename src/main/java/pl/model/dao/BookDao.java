@@ -1,8 +1,16 @@
 package pl.model.dao;
 
-import pl.model.entities.Book;
+import java.io.Serializable;
+import java.util.List;
 
-public interface BookDao {
+import pl.model.entities.Book;
+import pl.model.entities.Section;
+
+public interface BookDao extends Serializable{
 	
-	public void createBook(Book book);
+	public boolean createBook(Book book);
+	
+	public List<Book> findBooksByName(String name);
+	
+	public List<Book> getBooksBySection(Section section);
 }

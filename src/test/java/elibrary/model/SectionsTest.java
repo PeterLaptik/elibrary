@@ -1,11 +1,14 @@
 package elibrary.model;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
+import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import pl.model.dao.impl.BookDaoImpl;
 import pl.model.dao.impl.SectionDaoImpl;
 import pl.model.dao.views.SectionService;
 import pl.model.entities.Book;
@@ -82,6 +85,23 @@ public class SectionsTest {
 		book.setDescription("abc def ...");
 		book.setFormat("pdf");
 		
+	}
+	
+	@Test
+	public void test2_createBooks() {
+		SectionDaoImpl dao = new SectionDaoImpl();
+		Section bookSection = dao.findSectionByName("test_section");
+		BookDaoImpl bookDao = new BookDaoImpl();
+		Book book = new Book();
+		book.setName("book");
+		book.setDescription("desc");
+		book.setFormat("pdf");
+		book.setFileName("001.pdf");
+		book.setSection(bookSection);
+		Assert.assertTrue(bookDao.createBook(book));
+		
+		List<Book> createdBook = bookDao.findBooksByName(book.getName());
+		Assert.assertTrue(createdBook.size()>0);
 	}
 	
 	@Test

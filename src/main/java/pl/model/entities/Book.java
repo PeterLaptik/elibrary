@@ -3,16 +3,43 @@ package pl.model.entities;
 import java.io.Serializable;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
+@Entity
+@Table (name="books")
 public class Book implements Serializable {
+	private static final long serialVersionUID = -2333712729066071996L;
+	public static final String FIELD_ID = "id";
+	public static final String FIELD_NAME = "book_name";
+	public static final String FIELD_DESCR = "book_description";
+	public static final String FIELD_FILE_FORMAT = "file_format";
+	public static final String FIELD_FILE_NAME = "file_name";
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(name=FIELD_ID)
 	private int id;
+	
+	@Column(name=FIELD_NAME)
 	private String name;
+	
+	@Column(name=FIELD_DESCR)
 	private String description;
+	
+	@Column(name=FIELD_FILE_FORMAT)
 	private String format;
+	
+	@Column(name=FIELD_FILE_NAME)
 	private String fileName;
 
-	@OneToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade=CascadeType.ALL)
 	private Section section;
 
 	public Book() {

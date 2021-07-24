@@ -1,21 +1,26 @@
 package pl.model.dao.views;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import pl.model.dao.BookDao;
 import pl.model.dao.SectionDao;
+import pl.model.entities.Book;
 import pl.model.entities.Section;
 import pl.model.session.HibernateSessionFactory;
 
@@ -26,9 +31,14 @@ public class SectionService implements Serializable {
 	private TreeNode root;
 	private TreeNode selectedNode;
 	private String sectionName;
+	private Book selectedBook;
+	private List<Book> books = new ArrayList<Book>(0);
 
 	@EJB
 	SectionDao sectionDao;
+	
+	@EJB
+	BookDao bookDao;
 	
 	public TreeNode getRoot() {
 		root = buildStructure();
@@ -110,8 +120,28 @@ public class SectionService implements Serializable {
 		this.sectionName = sectionName;
 	}
 	
+	public List<Book> getBooks() {
+		return books;
+	}
+
+	public void setBooks(List<Book> books) {
+		this.books = books;
+	}
+	
+	public Book getSelectedBook() {
+		return selectedBook;
+	}
+
+	public void setSelectedBook(Book selectedBook) {
+		this.selectedBook = selectedBook;
+	}
+	
 	public void onNodeSelect(NodeSelectEvent event) {
 		TreeNode node = (TreeNode) event.getTreeNode();
 	    setSelectedNode(node);
+	    SectionNode nodeForBookList = (SectionNode) selectedNode.getData();
+	    Section section = sectionDao.findSectionById(nodeForBookList.getId());
+	    List<Book> bookList = bookDao.getBooksBySection(section);
+	    setBooks(bookList);
 	}
 }
