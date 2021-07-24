@@ -1,5 +1,6 @@
 package pl.model.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -32,6 +33,9 @@ public class BookDaoImpl implements BookDao {
 
 	@Override
 	public List<Book> findBooksByName(String name) {
+		if(name==null)
+			return new ArrayList<Book>();
+		
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Query<Book> query = session.createQuery("FROM Book WHERE book_name = :param", Book.class);
 		query.setParameter("param", name);
@@ -42,11 +46,23 @@ public class BookDaoImpl implements BookDao {
 	
 	@Override
 	public List<Book> getBooksBySection(Section section) {
+		if(section==null)
+			return new ArrayList<Book>();
+		
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Query<Book> query = session.createQuery("FROM Book WHERE section_section_id = :param", Book.class);
 		query.setParameter("param", section.getId());
 		List<Book> books = query.list();
 		session.close();
 		return books;
+	}
+
+	@Override
+	public void deleteBook(Book book) {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Transaction transaction = session.beginTransaction();
+		session.delete(book);
+		transaction.commit();
+		session.close();
 	}
 }

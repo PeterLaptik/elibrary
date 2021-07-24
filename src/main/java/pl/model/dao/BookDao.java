@@ -10,6 +10,8 @@ public interface BookDao extends Serializable{
 	
 	public boolean createBook(Book book);
 	
+	public void deleteBook(Book book);
+	
 	public List<Book> findBooksByName(String name);
 	
 	public List<Book> getBooksBySection(Section section);

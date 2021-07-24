@@ -18,6 +18,11 @@ import pl.model.entities.Section;
 public class SectionsTest {
 	
 	static {
+		BookDaoImpl bookDao = new BookDaoImpl();
+		List<Book> books = bookDao.findBooksByName("Test book");
+		for(Book book: books)
+			bookDao.deleteBook(book);
+		
 		SectionDaoImpl dao = new SectionDaoImpl();
 		Section section = dao.findSectionByName("sub_child_3");
 		dao.deleteSection(section);
@@ -79,12 +84,6 @@ public class SectionsTest {
 		subChild = new Section();
 		subChild.setName("sub_child_3");
 		dao.addChild(child, subChild);
-		
-		Book book = new Book();
-		book.setName("Tes book");
-		book.setDescription("abc def ...");
-		book.setFormat("pdf");
-		
 	}
 	
 	@Test
@@ -93,7 +92,7 @@ public class SectionsTest {
 		Section bookSection = dao.findSectionByName("test_section");
 		BookDaoImpl bookDao = new BookDaoImpl();
 		Book book = new Book();
-		book.setName("book");
+		book.setName("Test book");
 		book.setDescription("desc");
 		book.setFormat("pdf");
 		book.setFileName("001.pdf");
