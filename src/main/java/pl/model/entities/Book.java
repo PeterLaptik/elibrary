@@ -39,7 +39,7 @@ public class Book implements Serializable {
 	@Column(name=FIELD_FILE_NAME)
 	private String fileName;
 
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade=CascadeType.DETACH)
 	private Section section;
 
 	public Book() {

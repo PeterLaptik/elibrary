@@ -11,6 +11,7 @@ public class RoutesKeeper implements IRoutes {
 	private String login = "login";
 	private String home = "home";
 	private String register = "register";
+	private String applicationPath = null;
 	
 	public String getLogin() {
 		return login;
@@ -29,5 +30,9 @@ public class RoutesKeeper implements IRoutes {
 	}
 	public void setRegister(String register) {
 		this.register = register;
+	}
+	
+	public String getApplicationPath() {
+		return applicationPath;
 	}
 }

@@ -4,6 +4,8 @@
 	xmlns:p="http://primefaces.org/ui">
 	 <h:head>
 	 	<link rel="stylesheet" type="text/css" href="css/books.css" />
+	 	<title>E-library: admin</title>
+	 	<h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
 	 </h:head>
 	 <h:body>
 	 	<h:form id="sections_form">
@@ -12,7 +14,7 @@
 		 			<p:menuitem value="Sections" outcome="/admin/sections.xhtml"></p:menuitem>
 			        <p:menuitem value="Users" outcome="/admin/users.xhtml"></p:menuitem>
 			        <p:menuitem value="Books" outcome="/admin/books.xhtml"></p:menuitem>
-			        <p:menuitem value="Home" url="#{pageContext.contextPath}/home"></p:menuitem>
+			        <p:menuitem value="Home" url="../home"></p:menuitem>
 			    </p:tabMenu>
 		 	</div>
 			<div class="leftMenu">
@@ -20,11 +22,12 @@
 					<p:treeTable id="nodes" value="#{sectionService.root}" var="node"
 						selectionMode="single" expanded="true"
 						selection="#{sectionService.selectedNode}">
-						<p:column headerText="Section" expandedIcon="pi pi-folder-open"
-							collapsedIcon="pi pi-folder">
+						<p:column headerText="Section">
 							<h:outputText value="#{node.name}" />
 						</p:column>
-						<p:ajax event="select" listener="#{sectionService.onNodeSelect}" update=":sections_form:books"/>
+						<p:ajax event="select" listener="#{sectionService.onNodeSelect}" 
+								update=":sections_form:books"
+								onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
 					</p:treeTable>
 					<p:contextMenu for="nodes">
 						<p:menuitem value="Add section" onclick="PF('inputDlg').show()" />
@@ -34,6 +37,7 @@
 				</div>
 			</div>
 			<div class="booksContent">
+				<p>#{root}<i class="pi pi-folder-open"></i></p>
 				<p:dataTable id="books" var="book" value="#{sectionService.books}" 
 	 						selection="#{sectionService.selectedBook}" rowKey="#{book.id}" selectionMode="single">
 		 			<p:column style="width:50px;" headerText="id">
@@ -46,6 +50,13 @@
 			</div>
 			
 		</h:form>
+		<!-- AJAX waiting -->
+		<p:dialog widgetVar="statusDialog" modal="false" draggable="false" closable="false" resizable="false" showHeader="false">
+	        <div class="p-text-center">
+	            <i class="pi pi-spinner loading-icon" aria-hidden="true"></i>
+	        </div>
+	    </p:dialog>
+    
 		<!-- Dialogue for form creating -->
 	 	<p:dialog id="inputDialog" for="nodes" header="Add section" widgetVar="inputDlg" minHeight="40" width="350" showEffect="fade">
 	        	<h:form>

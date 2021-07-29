@@ -7,8 +7,11 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
+import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+
+import org.primefaces.PrimeFaces;
 
 import pl.model.dao.UserDao;
 import pl.model.entities.User;
@@ -91,7 +94,7 @@ public class UserService implements Serializable {
 	public void deleteSelectedUser() {
 		if(selectedUser==null)
 			return;
-		
+
 		userDao.deleteUser(selectedUser);
 		selectedUser = null;
 	}

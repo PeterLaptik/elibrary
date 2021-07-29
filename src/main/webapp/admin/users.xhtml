@@ -11,7 +11,7 @@
 	 			<p:menuitem value="Sections" outcome="/admin/sections.xhtml"></p:menuitem>
 		        <p:menuitem value="Users" outcome="/admin/users.xhtml"></p:menuitem>
 		        <p:menuitem value="Books" outcome="/admin/books.xhtml"></p:menuitem>
-		        <p:menuitem value="Home" url="#{pageContext.contextPath}/home"></p:menuitem>
+		        <p:menuitem value="Home" url="../home"></p:menuitem>
 		    </p:tabMenu>
 	 	</div>
 	 	
@@ -44,22 +44,15 @@
 		        	<p:menuitem value="Sort admins" update="users" action="#{userService.sortByIsAdmin}"/>
 		            <p:menuitem value="Grant admin rights" update="users" action="#{userService.grantAdminRights}"/>
 		            <p:menuitem value="Remove admin rights" update="users" action="#{userService.removeAdminRights}"/>
-		            <p:menuitem value="Delete user" update="users">
-			            		<p:commandLink styleClass="ui-menuitem-link" action="#{userService.deleteSelectedUser}" ajax="false">
-									<h:outputText styleClass="ui-menuitem-icon ui-icon ui-icon-close" />
-									<h:outputText styleClass="ui-menuitem-text" value="Delete" />
-									<p:confirm header="Confirmation" message="Delete selected user?" icon="ui-icon-alert" />
-								</p:commandLink>
-		            </p:menuitem>
+		            <p:menuitem value="Delete user" update="users" action="#{userService.deleteSelectedUser}"/>
 		        </p:contextMenu>
 		        
-		        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		        <p:confirmDialog id="dDial" global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
 				    <p:commandButton value="Yes" type="button"
 				        styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
 				    <p:commandButton value="No" type="button"
 				        styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
 				</p:confirmDialog>
-
 	 		</h:form>
 	 	</div>
 	 	
