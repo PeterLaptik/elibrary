@@ -5,6 +5,7 @@
 	 <h:head>
 	 	<link rel="stylesheet" type="text/css" href="css/books.css" />
 	 	<title>E-library: admin</title>
+	 	<h:outputStylesheet library="primefaces-omega" name="theme.css" />
 	 	<h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
 	 </h:head>
 	 <h:body>
@@ -37,7 +38,7 @@
 				</div>
 			</div>
 			<div class="booksContent">
-				<p>#{root}<i class="pi pi-folder-open"></i></p>
+				<div><p:commandButton value="Load book" onclick="PF('createBookDlg').show()"/></div>
 				<p:dataTable id="books" var="book" value="#{sectionService.books}" 
 	 						selection="#{sectionService.selectedBook}" rowKey="#{book.id}" selectionMode="single">
 		 			<p:column style="width:50px;" headerText="id">
@@ -48,15 +49,33 @@
 		            </p:column>
 		        </p:dataTable>
 			</div>
-			
 		</h:form>
-		<!-- AJAX waiting -->
-		<p:dialog widgetVar="statusDialog" modal="false" draggable="false" closable="false" resizable="false" showHeader="false">
-	        <div class="p-text-center">
-	            <i class="pi pi-spinner loading-icon" aria-hidden="true"></i>
-	        </div>
-	    </p:dialog>
-    
+		
+		<!-- Book create dialog -->
+			<p:dialog id="createBookDialog" for="booksContent" header="Create book" widgetVar="createBookDlg" 
+					responsive="true" showEffect="fade">
+		        <h:form>
+		        	<table>
+		        		<tr>
+		        			<td>Name</td>
+		        			<td><p:inputText id="bookName" value="#{sectionService.createBookName}"/></td>
+		        		</tr>
+		        		<tr>
+		        			<td>Description</td>
+		        			<td><p:inputText id="bookDescr" value="#{sectionService.createBookDescr}"/></td>
+		        		</tr>
+		        	</table>
+		        	<p:fileUpload mode="advanced"
+		                      multiple="false"
+		                      sizeLimit="136314880" 
+		                      invalidSizeMessage="Maximum file size allowed is 130 MB"
+		                      invalidFileMessage="only gif | jpg | jpeg | png is allowed"
+		                      fileUploadListener="#{sectionService.uploadBook}"
+		                      closable="true"/>
+		            <p:commandButton value="OK" actionListener="#{sectionService.appendBook}"/>
+			    </h:form>
+			</p:dialog>
+
 		<!-- Dialogue for form creating -->
 	 	<p:dialog id="inputDialog" for="nodes" header="Add section" widgetVar="inputDlg" minHeight="40" width="350" showEffect="fade">
 	        	<h:form>
@@ -66,5 +85,12 @@
 				    actionListener="#{sectionService.appendNode}"/>
 			    </h:form>
 		</p:dialog>
+		
+		<!-- AJAX waiting clock -->
+		<p:dialog widgetVar="statusDialog" modal="false" draggable="false" closable="false" resizable="false" showHeader="false">
+	        <div class="p-text-center">
+	            <i class="pi pi-clock fa-2x" aria-hidden="true"></i>
+	        </div>
+	    </p:dialog>
 	 </h:body>
 </html>

@@ -1,8 +1,20 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3c.org/1999/xhtml"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
 	 <h:head>
+	 	<title>E-library: admin</title>
+	 	<h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
+	 	<h:outputStylesheet library="primefaces-omega" name="theme.css" />
+	 	<!--
+	 	<h:outputStylesheet  name="primefaces.css" library="primefaces"/>
+	 	<h:outputStylesheet name="css/bootstrap.min.css"/>
+        <h:outputStylesheet name="css/bootstrap-theme.min.css"/>
+        <h:outputStylesheet name="css/main.css"/>
+        <h:outputScript name="js/vendor/modernizr-2.8.3.min.js"></h:outputScript>
+        <h:outputStylesheet name="css/font-awesome.css"></h:outputStylesheet>
+        -->
 	 </h:head>
 	 <h:body>
 	 
@@ -44,15 +56,16 @@
 		        	<p:menuitem value="Sort admins" update="users" action="#{userService.sortByIsAdmin}"/>
 		            <p:menuitem value="Grant admin rights" update="users" action="#{userService.grantAdminRights}"/>
 		            <p:menuitem value="Remove admin rights" update="users" action="#{userService.removeAdminRights}"/>
-		            <p:menuitem value="Delete user" update="users" action="#{userService.deleteSelectedUser}"/>
+		            <p:menuitem value="Delete user" update="users" onclick="PF('dlg3').show()"/>
 		        </p:contextMenu>
 		        
-		        <p:confirmDialog id="dDial" global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
-				    <p:commandButton value="Yes" type="button"
-				        styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-				    <p:commandButton value="No" type="button"
-				        styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-				</p:confirmDialog>
+		        <p:dialog header="Confirm" widgetVar="dlg3" minHeight="40" width="350" showEffect="fade">
+				    <p class="p-m-0">Delete selected record?</p>
+				    <f:facet name="footer">
+				    	<p:commandButton value="Yes" style="width: 5rem" action="#{userService.deleteSelectedUser}" onclick="hide()"/>
+				        <p:commandButton value="No" styleClass="ui-button-flat p-mr-2" style="width: 6rem" onclick="hide()"/>
+				    </f:facet>
+				</p:dialog>
 	 		</h:form>
 	 	</div>
 	 	
