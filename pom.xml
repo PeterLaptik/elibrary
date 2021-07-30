@@ -15,6 +15,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.servlet>3.0.1</version.servlet>
         <jsf.version>2.2.20</jsf.version>
+        <junit.version>4.12</junit.version>
+        
+        <hibernate.version>5.4.31.Final</hibernate.version>
+        <postgres.connector.ver>42.2.20</postgres.connector.ver>
         <primefaces.version>7.0</primefaces.version>
     </properties>
 
@@ -29,7 +33,7 @@
           <dependency>
               <groupId>junit</groupId>
               <artifactId>junit</artifactId>
-              <version>4.12</version>
+              <version>${junit.version}</version>
               <scope>test</scope>
           </dependency>
       </dependencies>
@@ -44,13 +48,13 @@
         <dependency>
 		    <groupId>org.hibernate</groupId>
 		    <artifactId>hibernate-core</artifactId>
-		    <version>5.4.31.Final</version>
+		    <version>${hibernate.version}</version>
 		</dependency>
 		<!--  JDBC Connector  -->
 		<dependency>
 		    <groupId>org.postgresql</groupId>
 		    <artifactId>postgresql</artifactId>
-		    <version>42.2.20</version>
+		    <version>${postgres.connector.ver}</version>
 		</dependency>
 		<!-- EJB -->
 		<dependency>
@@ -100,7 +104,7 @@
 		<dependency>
 	        <groupId>commons-io</groupId>
 	        <artifactId>commons-io</artifactId>
-	        <version>2.0</version>
+	        <version>2.6</version>
 	    </dependency>
 	    <dependency>
 		    <groupId>org.owasp.esapi</groupId>

@@ -61,7 +61,7 @@
 	  <!-- Primefaces file uploading -->
 	  <context-param>
 	    <param-name>fileUploadDirectory</param-name>
-	    <param-value>C:/Java/tmp</param-value>
+	    <param-value>C:/Java/tmp/</param-value>
 	  </context-param>
 	  <context-param>
 	    <param-name>primefaces.UPLOADER</param-name>

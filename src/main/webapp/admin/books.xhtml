@@ -51,18 +51,18 @@
 			</div>
 		</h:form>
 		
-		<!-- Book create dialog -->
+		<!-- Book create dialogue -->
 			<p:dialog id="createBookDialog" for="booksContent" header="Create book" widgetVar="createBookDlg" 
 					responsive="true" showEffect="fade">
 		        <h:form>
 		        	<table>
 		        		<tr>
 		        			<td>Name</td>
-		        			<td><p:inputText id="bookName" value="#{sectionService.createBookName}"/></td>
+		        			<td><p:inputText id="bookName" value="#{sectionService.bookService.name}"/></td>
 		        		</tr>
 		        		<tr>
 		        			<td>Description</td>
-		        			<td><p:inputText id="bookDescr" value="#{sectionService.createBookDescr}"/></td>
+		        			<td><p:inputText id="bookDescr" value="#{sectionService.bookService.description}"/></td>
 		        		</tr>
 		        	</table>
 		        	<p:fileUpload mode="advanced"
@@ -70,9 +70,10 @@
 		                      sizeLimit="136314880" 
 		                      invalidSizeMessage="Maximum file size allowed is 130 MB"
 		                      invalidFileMessage="only gif | jpg | jpeg | png is allowed"
-		                      fileUploadListener="#{sectionService.uploadBook}"
+		                      fileUploadListener="#{sectionService.bookService.uploadBook}"
 		                      closable="true"/>
-		            <p:commandButton value="OK" actionListener="#{sectionService.appendBook}"/>
+		            <p:commandButton value="OK" actionListener="#{sectionService.bookService.appendBook}"
+		            		onclick="PF('createBookDlg').hide()"/>
 			    </h:form>
 			</p:dialog>
 
