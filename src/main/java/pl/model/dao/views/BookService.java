@@ -10,12 +10,10 @@ import java.io.Serializable;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.io.IOUtils;
@@ -38,7 +36,11 @@ public class BookService implements Serializable{
 	private String description;
 	private String format;
 	private String fileName;
+	private String authors;
+	private String code;
+	private String magazine;
 	private Section section;
+	
 	Section selectedSection = null;
 	private UploadedFile file = null;
 	BookDao bookDao = new BookDaoImpl();
@@ -91,6 +93,31 @@ public class BookService implements Serializable{
 	public void setBookDao(BookDao bookDao) {
 		this.bookDao = bookDao;
 	}
+	
+	public String getAuthors() {
+		return authors;
+	}
+
+	public void setAuthors(String authors) {
+		this.authors = authors;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getMagazine() {
+		return magazine;
+	}
+
+	public void setMagazine(String magazine) {
+		this.magazine = magazine;
+	}
+
 	
 	/**
 	 * Uploads file.
@@ -166,7 +193,7 @@ public class BookService implements Serializable{
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		String directory = externalContext.getInitParameter("fileUploadDirectory");
 		String fileName = generateFileName(file.getFileName(), directory);
-		File targetFile = new File("C:\\Java\\tmp\\" + fileName);
+		File targetFile = new File(directory + fileName);
 		OutputStream out = null;
 		try {
 			out = new FileOutputStream(targetFile);
@@ -198,10 +225,7 @@ public class BookService implements Serializable{
 			IOUtils.closeQuietly(out);
 			IOUtils.closeQuietly(out);
 		}
-		setName("");
-		setDescription("");
 		file = null;
-		
 		
 		Book book = new Book();
 		book.setName(name);
@@ -209,6 +233,9 @@ public class BookService implements Serializable{
 		book.setFileName(fileName);
 		book.setFormat(fileName.substring(fileName.lastIndexOf("."), fileName.length()));
 		book.setSection(section);
+		book.setCode(code);
+		book.setAuthors(authors);
+		book.setMagazine(magazine);
 		
 		try {
 			bookDao.createBook(book);
@@ -220,14 +247,30 @@ public class BookService implements Serializable{
 					"Error on book writing to db...");
 			PrimeFaces.current().dialog().showMessageDynamic(message);
 			e.printStackTrace();
+		} finally {
+			setName("");
+			setDescription("");
+			book.setCode("");
+			book.setAuthors("");
+			book.setMagazine("");
 		}
 	}
 	
+	/**
+	 * Returns new file name on a volume.
+	 * Names margin: 000000...1000000
+	 * @param currentName - name and extension for extension extracting
+	 * @param dir - directory
+	 * @return - generated unique name
+	 */
 	private String generateFileName(String currentName, String dir) {
 		Set<Integer> names = new TreeSet<Integer>();
 		File directory = new File(dir);
 		File[] list = directory.listFiles();
 		for(File file: list) {
+			if(file.isDirectory())
+				continue;
+			
 			String name = file.getName();
 			String idValue = name.substring(0, name.lastIndexOf(".")-1);
 			System.out.println(name.substring(0, name.lastIndexOf(".")-1));

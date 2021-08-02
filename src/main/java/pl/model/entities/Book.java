@@ -18,6 +18,9 @@ public class Book implements Serializable {
 	private static final long serialVersionUID = -2333712729066071996L;
 	public static final String FIELD_ID = "id";
 	public static final String FIELD_NAME = "book_name";
+	public static final String FIELD_AUTHORS = "authors";
+	public static final String FIELD_CODE = "book_code";
+	public static final String FIELD_MAGAZINE = "magazine";
 	public static final String FIELD_DESCR = "book_description";
 	public static final String FIELD_FILE_FORMAT = "file_format";
 	public static final String FIELD_FILE_NAME = "file_name";
@@ -28,16 +31,28 @@ public class Book implements Serializable {
 	private int id;
 	
 	@Column(name=FIELD_NAME)
-	private String name;
+	private String name = "";
 	
 	@Column(name=FIELD_DESCR)
-	private String description;
+	private String description = "";
 	
 	@Column(name=FIELD_FILE_FORMAT)
-	private String format;
+	private String format = "";
 	
 	@Column(name=FIELD_FILE_NAME)
-	private String fileName;
+	private String fileName = "";
+	
+	/** Denormalized **/
+	@Column(name=FIELD_AUTHORS)
+	private String authors = "";
+	
+	@Column(name=FIELD_CODE)
+	private String code = "";
+	
+	/** Attribute is only for articles: 
+	 * name - article name, code - issue **/
+	@Column(name=FIELD_MAGAZINE)
+	private String magazine = "";
 
 	@ManyToOne(cascade=CascadeType.DETACH)
 	private Section section;
@@ -92,5 +107,29 @@ public class Book implements Serializable {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+	
+	public String getAuthors() {
+		return authors;
+	}
+
+	public void setAuthors(String authors) {
+		this.authors = authors;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getMagazine() {
+		return magazine;
+	}
+
+	public void setMagazine(String magazine) {
+		this.magazine = magazine;
 	}
 }

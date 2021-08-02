@@ -1,11 +1,5 @@
 package pl.model.dao.views;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,20 +8,15 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import org.apache.commons.io.IOUtils;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.primefaces.PrimeFaces;
-import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-import org.primefaces.model.UploadedFile;
 
 import pl.model.dao.BookDao;
 import pl.model.dao.SectionDao;
@@ -152,6 +141,14 @@ public class SectionService implements Serializable {
 
 	public void setSelectedBook(Book selectedBook) {
 		this.selectedBook = selectedBook;
+	}
+	
+	public void deleteSelectedBook() {
+		System.out.println("In check...");
+		if(selectedBook==null)
+			return;
+		
+		System.out.println("In delete...");
 	}
 	
 	public BookService getBookService() {

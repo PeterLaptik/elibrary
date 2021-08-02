@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3c.org/1999/xhtml"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
 	 <h:head>
 	 	<link rel="stylesheet" type="text/css" href="css/books.css" />
 	 	<title>E-library: admin</title>
@@ -47,8 +48,31 @@
 		            <p:column headerText="Name">
 		                <h:outputText value="#{book.name}" />
 		            </p:column>
+		            <p:column headerText="Authors">
+		                <h:outputText value="#{book.authors}" />
+		            </p:column>
+		            <p:column headerText="Code">
+		                <h:outputText value="#{book.code}" />
+		            </p:column>
+		            <p:column headerText="Magazine">
+		                <h:outputText value="#{book.magazine}" />
+		            </p:column>
 		        </p:dataTable>
+		        <!-- Popup menu for books -->
+		        <p:contextMenu for="books">
+		            <p:menuitem value="Delete book" update="sections_form"  onclick="PF('dlgc').show()"/>
+		        </p:contextMenu>
 			</div>
+		        
+		        <!-- Confirm dialogue for book delete -->
+		        <p:dialog header="Confirm" widgetVar="dlgc" minHeight="40" width="350" showEffect="fade">
+				    <p class="p-m-0">Delete selected record?</p>
+				    <f:facet name="footer">
+				    	<p:commandButton value="Yes" style="width: 5rem" action="#{sectionService.deleteSelectedBook}" 
+				    		onclick="hide()"/>
+				        <p:commandButton value="No" styleClass="ui-button-flat p-mr-2" style="width: 6rem" onclick="hide()"/>
+				    </f:facet>
+				</p:dialog>
 		</h:form>
 		
 		<!-- Book create dialogue -->
@@ -61,8 +85,20 @@
 		        			<td><p:inputText id="bookName" value="#{sectionService.bookService.name}"/></td>
 		        		</tr>
 		        		<tr>
+		        			<td>Authors</td>
+		        			<td><p:inputText id="bookAuthors" value="#{sectionService.bookService.authors}"/></td>
+		        		</tr>
+		        		<tr>
+		        			<td>Code</td>
+		        			<td><p:inputText id="bookCode" value="#{sectionService.bookService.code}"/></td>
+		        		</tr>
+		        		<tr>
 		        			<td>Description</td>
 		        			<td><p:inputText id="bookDescr" value="#{sectionService.bookService.description}"/></td>
+		        		</tr>
+		        		<tr>
+		        			<td>Magazine</td>
+		        			<td><p:inputText id="magazine" value="#{sectionService.bookService.magazine}"/></td>
 		        		</tr>
 		        	</table>
 		        	<p:fileUpload mode="advanced"
@@ -72,7 +108,7 @@
 		                      invalidFileMessage="only gif | jpg | jpeg | png is allowed"
 		                      fileUploadListener="#{sectionService.bookService.uploadBook}"
 		                      closable="true"/>
-		            <p:commandButton value="OK" actionListener="#{sectionService.bookService.appendBook}"
+		            <p:commandButton value="OK" style="float: right;" actionListener="#{sectionService.bookService.appendBook}"
 		            		onclick="PF('createBookDlg').hide()"/>
 			    </h:form>
 			</p:dialog>
