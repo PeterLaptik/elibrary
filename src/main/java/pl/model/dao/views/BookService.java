@@ -40,6 +40,7 @@ public class BookService implements Serializable{
 	private String code;
 	private String magazine;
 	private Section section;
+	private Book selectedBook = null;
 	
 	Section selectedSection = null;
 	private UploadedFile file = null;
@@ -117,7 +118,23 @@ public class BookService implements Serializable{
 	public void setMagazine(String magazine) {
 		this.magazine = magazine;
 	}
+	
+	public Book getSelectedBook() {
+		return selectedBook;
+	}
 
+	public void setSelectedBook(Book selectedBook) {
+		this.selectedBook = selectedBook;
+	}
+
+	public void deleteSelectedBook() {
+		if(selectedBook==null)
+			return;
+		
+		System.out.println("Deleting:" + selectedBook.getFileName() + "." + selectedBook.getFormat());
+		bookDao.deleteBook(selectedBook);
+		System.out.println("In delete...");
+	}
 	
 	/**
 	 * Uploads file.
@@ -140,6 +157,7 @@ public class BookService implements Serializable{
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void appendBook() {
 		if(file==null) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, 
@@ -258,7 +276,7 @@ public class BookService implements Serializable{
 	
 	/**
 	 * Returns new file name on a volume.
-	 * Names margin: 000000...1000000
+	 * Names margin: 000000...1000000 + extension
 	 * @param currentName - name and extension for extension extracting
 	 * @param dir - directory
 	 * @return - generated unique name

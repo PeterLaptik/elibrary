@@ -40,7 +40,6 @@ public class SectionService implements Serializable {
 	
 	@EJB
 	BookDao bookDao;
-
 	
 	public TreeNode getRoot() {
 		root = buildStructure();
@@ -141,14 +140,6 @@ public class SectionService implements Serializable {
 
 	public void setSelectedBook(Book selectedBook) {
 		this.selectedBook = selectedBook;
-	}
-	
-	public void deleteSelectedBook() {
-		System.out.println("In check...");
-		if(selectedBook==null)
-			return;
-		
-		System.out.println("In delete...");
 	}
 	
 	public BookService getBookService() {

@@ -41,7 +41,7 @@
 			<div class="booksContent">
 				<div><p:commandButton value="Load book" onclick="PF('createBookDlg').show()"/></div>
 				<p:dataTable id="books" var="book" value="#{sectionService.books}" 
-	 						selection="#{sectionService.selectedBook}" rowKey="#{book.id}" selectionMode="single">
+	 						selection="#{sectionService.bookService.selectedBook}" rowKey="#{book.id}" selectionMode="single">
 		 			<p:column style="width:50px;" headerText="id">
 	                	<h:outputText value="#{book.id}" />
 		            </p:column>
@@ -60,7 +60,7 @@
 		        </p:dataTable>
 		        <!-- Popup menu for books -->
 		        <p:contextMenu for="books">
-		            <p:menuitem value="Delete book" update="sections_form"  onclick="PF('dlgc').show()"/>
+		            <p:menuitem value="Delete book" onclick="PF('dlgc').show()" update="books"/>
 		        </p:contextMenu>
 			</div>
 		        
@@ -68,8 +68,9 @@
 		        <p:dialog header="Confirm" widgetVar="dlgc" minHeight="40" width="350" showEffect="fade">
 				    <p class="p-m-0">Delete selected record?</p>
 				    <f:facet name="footer">
-				    	<p:commandButton value="Yes" style="width: 5rem" action="#{sectionService.deleteSelectedBook}" 
-				    		onclick="hide()"/>
+				    	<p:commandButton value="Yes" style="width: 5rem" 
+					    	action="#{sectionService.bookService.deleteSelectedBook}" 
+					    	onclick="hide()"/>
 				        <p:commandButton value="No" styleClass="ui-button-flat p-mr-2" style="width: 6rem" onclick="hide()"/>
 				    </f:facet>
 				</p:dialog>
@@ -77,7 +78,7 @@
 		
 		<!-- Book create dialogue -->
 			<p:dialog id="createBookDialog" for="booksContent" header="Create book" widgetVar="createBookDlg" 
-					responsive="true" showEffect="fade">
+					responsive="true" showEffect="fade" update=":sections_form:books">
 		        <h:form>
 		        	<table>
 		        		<tr>
