@@ -3,6 +3,7 @@ package elibrary.model;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -101,6 +102,36 @@ public class SectionsTest {
 		
 		List<Book> createdBook = bookDao.findBooksByName(book.getName());
 		Assert.assertTrue(createdBook.size()>0);
+	}
+	
+	@Test
+	public void test3_deleteTestData() {
+		BookDaoImpl bookDao = new BookDaoImpl();
+		List<Book> books = bookDao.findBooksByName("Test book");
+		for(Book book: books)
+			bookDao.deleteBook(book);
+		
+		SectionDaoImpl dao = new SectionDaoImpl();
+		Section section = dao.findSectionByName("sub_child_3");
+		dao.deleteSection(section);
+		section = dao.findSectionByName("sub_child_1");
+		dao.deleteSection(section);
+		section = dao.findSectionByName("sub_child_11");
+		dao.deleteSection(section);
+		section = dao.findSectionByName("sub_child_12");
+		dao.deleteSection(section);
+		section = dao.findSectionByName("test_child_1");
+		dao.deleteSection(section);
+		section = dao.findSectionByName("test_child_2");
+		dao.deleteSection(section);
+		section = dao.findSectionByName("test_child_3");
+		dao.deleteSection(section);
+		section = dao.findSectionByName("test_child");
+		dao.deleteSection(section);
+		section = dao.findSectionByName("test_section");
+		dao.deleteSection(section);
+		section = dao.findSectionByName("test_section_5");
+		dao.deleteSection(section);
 	}
 	
 	@Test

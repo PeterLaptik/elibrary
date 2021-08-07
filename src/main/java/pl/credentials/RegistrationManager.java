@@ -1,4 +1,4 @@
-package pl.model.credentials;
+package pl.credentials;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;

@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import pl.credentials.RegistrationManager;
 import pl.credentials.beans.UserRegBean;
-import pl.model.credentials.RegistrationManager;
 
 @WebServlet("/register")
 public class RegistrationServlet extends HttpServlet {

@@ -1,4 +1,4 @@
-package pl.model.credentials;
+package pl.credentials;
 
 
 import javax.ejb.EJB;
@@ -11,7 +11,9 @@ import pl.model.dao.UserSessionDao;
 import pl.model.entities.User;
 import pl.model.entities.UserSession;
 
-
+/**
+ * Description: see IAuthentification
+ */
 @Singleton
 @Startup
 public class AuthentificationManager implements IAuthentification {

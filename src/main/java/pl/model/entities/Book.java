@@ -1,6 +1,7 @@
 package pl.model.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -34,16 +37,20 @@ public class Book implements Serializable {
 	public static final String FIELD_DESCR = "book_description";
 	public static final String FIELD_FILE_FORMAT = "file_format";
 	public static final String FIELD_FILE_NAME = "file_name";
+	public static final String FIELD_FILE_CREATED = "created_date";
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@SequenceGenerator(name = "book_seq",
+						sequenceName = "SEQ_BOOK")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+					generator = "book_seq")
 	@Column(name=FIELD_ID)
 	private int id;
 	
 	@Column(name=FIELD_NAME)
 	private String name = "";
 	
-	@Column(name=FIELD_DESCR)
+	@Column(name=FIELD_DESCR, columnDefinition="TEXT")
 	private String description = "";
 	
 	@Column(name=FIELD_FILE_FORMAT)
@@ -63,6 +70,9 @@ public class Book implements Serializable {
 	 * name - article name, code - issue **/
 	@Column(name=FIELD_MAGAZINE)
 	private String magazine = "";
+	
+	@Column(name=FIELD_FILE_CREATED)
+	private Date bookCreated;
 
 	@ManyToOne(cascade=CascadeType.DETACH)
 	private Section section;
@@ -141,5 +151,18 @@ public class Book implements Serializable {
 
 	public void setMagazine(String magazine) {
 		this.magazine = magazine;
+	}
+	
+	public Date getBookCreated() {
+		return bookCreated;
+	}
+
+	public void setBookCreated(Date bookCreated) {
+		this.bookCreated = bookCreated;
+	}
+	
+	@PrePersist
+	public void bookCreated() {
+		this.bookCreated = new Date();
 	}
 }

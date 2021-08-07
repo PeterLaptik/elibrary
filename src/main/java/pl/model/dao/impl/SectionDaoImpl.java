@@ -77,7 +77,7 @@ public class SectionDaoImpl implements SectionDao {
 		Section parent = sectionToDelete.getParent();
 		List<Section> siblings = parent.getChildren();
 		siblings.remove(sectionToDelete);
-		sectionToDelete.setParent(null);
+		//sectionToDelete.setParent(null);
 		session.delete(sectionToDelete);
 		transaction.commit();
 		session.close();

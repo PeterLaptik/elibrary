@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -33,7 +34,7 @@ public class Section implements Serializable{
 	@Column(name=FIELD_NAME)
 	private String name;
 	
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade=CascadeType.DETACH)
 	private Section parent;
 
 	@OneToMany(cascade=CascadeType.ALL)

@@ -94,7 +94,14 @@ public class SectionService implements Serializable {
 		
 		Section sectionToAdd = new Section();
 		sectionToAdd.setName(sectionName);
-		sectionDao.addChild(parentSection, sectionToAdd);
+		try {
+			sectionDao.addChild(parentSection, sectionToAdd);
+		} catch (Exception e) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, 
+					"Error!", 
+					"Cannot add section. Check if the section name is unique.");
+			PrimeFaces.current().dialog().showMessageDynamic(message);
+		}
 		setSectionName("");
 	}
 	
@@ -110,25 +117,29 @@ public class SectionService implements Serializable {
 	
 	private void addSubTreeFor(Section section, TreeNode parentNode) {
 		Session session = HibernateSessionFactory.getSession().openSession();
-		Query<Section> query = session.createQuery("FROM Section WHERE section_name = :param", Section.class);
-		query.setParameter("param", section.getName());
-		List<Section> list = query.getResultList();
-		if(list.size()<1)
-			return;
-		
-		Section sectionObject = list.get(0);
-		List<Section> children = sectionObject.getChildren();
-		Collections.sort(children, new Comparator<Section>() {
-			@Override
-			public int compare(Section o1, Section o2) {
-				return o1.getName().compareTo(o2.getName());
+		try {
+			Query<Section> query = session.createQuery("FROM Section WHERE section_name = :param", Section.class);
+			query.setParameter("param", section.getName());
+			List<Section> list = query.getResultList();
+			if (list.size() < 1)
+				return;
+
+			Section sectionObject = list.get(0);
+			List<Section> children = sectionObject.getChildren();
+			Collections.sort(children, new Comparator<Section>() {
+				@Override
+				public int compare(Section o1, Section o2) {
+					return o1.getName().compareTo(o2.getName());
+				}
+			});
+
+			for (Section i : children) {
+				TreeNode subNode = new DefaultTreeNode(new SectionNode(i.getName(), i.getId()), parentNode);
+				subNode.setExpanded(true);
+				addSubTreeFor(i, subNode);
 			}
-		});
-		
-		for(Section i: children) {
-			TreeNode subNode = new DefaultTreeNode(new SectionNode(i.getName(), i.getId()), parentNode);
-			subNode.setExpanded(true);
-			addSubTreeFor(i, subNode);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		session.close();
 	}

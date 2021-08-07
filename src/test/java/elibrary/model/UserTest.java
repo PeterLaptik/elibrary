@@ -10,7 +10,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import pl.model.credentials.AuthentificationManager;
+import pl.credentials.AuthentificationManager;
 import pl.model.dao.UserDao;
 import pl.model.dao.UserSessionDao;
 import pl.model.dao.impl.UserDaoImpl;

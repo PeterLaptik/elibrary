@@ -1,10 +1,14 @@
 package pl.model.entities;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
@@ -20,7 +24,10 @@ public class User {
 	public static final String FIELD_IS_ADMIN = "is_admin";
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@SequenceGenerator(name = "user_seq",
+						sequenceName = "SEQ_USER")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+					generator = "user_seq")
 	@Column(name=FIELD_USER_ID)
 	private int id;
 
@@ -37,15 +44,12 @@ public class User {
 	private String salt;
 	
 	@Column(name=FIELD_REGISTRATION_STAMP)
-	private String registrationDate;
+	private Date registrationDate;
 	
 	@Column(name=FIELD_IS_ADMIN)
 	private boolean admin = false;
-
-//	@OneToOne(optional=true, cascade=CascadeType.ALL)
-//	@JoinColumn(name="user_id")
-//	private UserSession userSession;
-//	
+	
+	
 	public User() {
 		
 	}
@@ -97,12 +101,17 @@ public class User {
 		return salt;
 	}
 	
-	public String getRegistrationDate() {
+	public Date  getRegistrationDate() {
 		return registrationDate;
 	}
 
-	public void setRegistrationDate(String registrationDate) {
+	public void setRegistrationDate(Date registrationDate) {
 		this.registrationDate = registrationDate;
+	}
+	
+	@PrePersist
+	public void registrationDate() {
+		this.registrationDate = new Date();
 	}
 	
 	public boolean isAdmin() {

@@ -9,7 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-import pl.model.credentials.PasswordProcessor;
+import pl.credentials.PasswordProcessor;
 import pl.model.dao.UserDao;
 import pl.model.entities.User;
 import pl.model.session.HibernateSessionFactory;
