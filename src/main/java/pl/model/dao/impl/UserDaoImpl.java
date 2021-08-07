@@ -1,5 +1,6 @@
 package pl.model.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -84,5 +85,24 @@ public class UserDaoImpl implements UserDao {
 	private void createHashes(User user) {
 		user.setSalt(PasswordProcessor.generateStaticSalt());
 		user.setPassword(PasswordProcessor.createPasswordHash(user.getPassword(), user.getSalt()));
+	}
+
+	@Override
+	public int getUserQuantity() {
+		int result = 0;
+		Session session = HibernateSessionFactory.getSession().openSession();
+		
+		@SuppressWarnings("unchecked")
+		List<BigInteger> counter = session.createSQLQuery("SELECT count(*) FROM users").list();
+		if(counter.size()>0) {
+			try {
+				result = counter.get(0).intValue();
+			} catch (Exception e) {
+				// Could not count
+				// do nothing (zero-value returns)
+			}
+		}
+		session.close();
+		return result;
 	}
 }

@@ -1,4 +1,4 @@
-package pl.model.dao.views;
+package pl.view.jsf.beans;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,6 +19,7 @@ import javax.inject.Named;
 import org.apache.commons.io.IOUtils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
 import pl.model.dao.BookDao;
@@ -46,6 +47,17 @@ public class BookService implements Serializable{
 	private UploadedFile file = null;
 	BookDao bookDao = new BookDaoImpl();
 
+	private TreeNode node; 
+
+	public TreeNode getNode() {
+		return node;
+	}
+
+	public void setNode(TreeNode node) {
+		this.node = node;
+	}
+	
+	
 
 	public String getName() {
 		return name;
@@ -129,11 +141,24 @@ public class BookService implements Serializable{
 
 	public void deleteSelectedBook() {
 		if(selectedBook==null)
-			return;
-		
-		System.out.println("Deleting:" + selectedBook.getFileName() + "." + selectedBook.getFormat());
-		bookDao.deleteBook(selectedBook);
-		System.out.println("In delete...");
+			return;	
+		try {
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			String directory = externalContext.getInitParameter(Book.BOOKS_VOLUME);
+			if (directory.charAt(directory.length()-1)!='\\' && directory.charAt(directory.length()-1)!='/')
+				directory += File.separator;
+
+			String filePath = directory + selectedBook.getFileName();
+			File file = new File(filePath);
+			bookDao.deleteBook(selectedBook);
+			file.delete();
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, 
+					"Error!", 
+					"Internal error on book deleting.");
+			PrimeFaces.current().dialog().showMessageDynamic(message);
+		}
 	}
 	
 	/**
@@ -209,7 +234,11 @@ public class BookService implements Serializable{
 		}
 
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String directory = externalContext.getInitParameter("fileUploadDirectory");
+		String directory = externalContext.getInitParameter(Book.BOOKS_VOLUME);
+		if (directory.charAt(directory.length()-1)!='\\' && directory.charAt(directory.length()-1)!='/')
+			directory += File.separator;
+		
+		
 		String fileName = generateFileName(file.getFileName(), directory);
 		File targetFile = new File(directory + fileName);
 		OutputStream out = null;
@@ -245,6 +274,7 @@ public class BookService implements Serializable{
 		}
 		file = null;
 		
+		/** Make record in DB **/
 		Book book = new Book();
 		book.setName(name);
 		book.setDescription(description);
@@ -290,8 +320,7 @@ public class BookService implements Serializable{
 				continue;
 			
 			String name = file.getName();
-			String idValue = name.substring(0, name.lastIndexOf(".")-1);
-			System.out.println(name.substring(0, name.lastIndexOf(".")-1));
+			String idValue = name.substring(0, name.lastIndexOf("."));
 			try {
 				Integer id = Integer.parseInt(idValue);
 				names.add(id);
@@ -306,7 +335,9 @@ public class BookService implements Serializable{
 			if(names.contains(fileId)==false)
 				break;
 		}
-		return String.format("%06d", fileId) + "." 
+		String generatedFileName = String.format("%06d", fileId)
 				+ currentName.substring(currentName.lastIndexOf("."), currentName.length());
+		
+		return generatedFileName;
 	}
 }

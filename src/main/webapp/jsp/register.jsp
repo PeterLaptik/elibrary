@@ -20,7 +20,7 @@
 				<table id="table">
 				<tr>
 					<td>User name </td>
-					<td><input label="name" name="name" onclick="cleanMsg()" type="text" size="25" maxlength="30" 
+					<td><input name="name" onclick="cleanMsg()" type="text" size="25" maxlength="30" 
 					value="<%=request.getParameter("name")!=null ? request.getParameter("name") : "" %>" /> </td>
 				</tr>
 				<tr>

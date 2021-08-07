@@ -21,4 +21,6 @@ public interface UserDao {
 	public void setAdmin(User user, boolean isAdmin);
 	
 	public List<User> getAllUsers();
+	
+	public int getUserQuantity();
 }

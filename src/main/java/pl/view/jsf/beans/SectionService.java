@@ -1,4 +1,4 @@
-package pl.model.dao.views;
+package pl.view.jsf.beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,11 +30,12 @@ public class SectionService implements Serializable {
 	private static final long serialVersionUID = 7694019109747343749L;
 	private TreeNode root;
 	private TreeNode selectedNode;
+	private String nodeName;
 	private String sectionName;
 	private Book selectedBook;
-	private List<Book> books = new ArrayList<Book>(0);
+	private List<Book> books = new ArrayList<Book>();
 	private BookService bookService = new BookService();
-
+	
 	@EJB
 	SectionDao sectionDao;
 	
@@ -51,7 +52,21 @@ public class SectionService implements Serializable {
 	}
 
 	public void setSelectedNode(TreeNode selectedNode) {
+		if(selectedNode==null) {
+			return;
+		}
+		SectionNode node = (SectionNode)selectedNode.getData();
+		nodeName = node.getName();
+		bookService.setNode(selectedNode);
 		this.selectedNode = selectedNode;
+	}
+	
+	public String getNodeName() {
+		return nodeName;
+	}
+
+	public void setNodeName(String nodeName) {
+		this.nodeName = nodeName;
 	}
 	
 	public void deleteNode() {
@@ -63,7 +78,7 @@ public class SectionService implements Serializable {
 		try {
 			sectionDao.deleteSection(sectionToDelete);
 		} catch (Exception e) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Error!", "Error on deleting. Section must be empty before deleting.");
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Error!", "Error. Section must be empty before deleting.");
 	        PrimeFaces.current().dialog().showMessageDynamic(message);
 		}
 	}
@@ -142,6 +157,17 @@ public class SectionService implements Serializable {
 		this.selectedBook = selectedBook;
 	}
 	
+	public void deleteSelectedBook() {
+		bookService.setSelectedBook(selectedBook);
+		bookService.deleteSelectedBook();
+		updateBooks();
+	}
+	
+	public void appendBook() {
+		bookService.appendBook();
+		updateBooks();
+	}
+	
 	public BookService getBookService() {
 		return bookService;
 	}
@@ -153,7 +179,14 @@ public class SectionService implements Serializable {
 	public void onNodeSelect(NodeSelectEvent event) {
 		TreeNode node = (TreeNode) event.getTreeNode();
 	    setSelectedNode(node);
-	    SectionNode nodeForBookList = (SectionNode) selectedNode.getData();
+	    updateBooks();
+	}
+	
+	private void updateBooks() {
+		if(selectedNode==null)
+			return;
+		
+		SectionNode nodeForBookList = (SectionNode) selectedNode.getData();
 	    Section section = sectionDao.findSectionById(nodeForBookList.getId());
 	    bookService.setSection(section);
 	    List<Book> bookList = bookDao.getBooksBySection(section);

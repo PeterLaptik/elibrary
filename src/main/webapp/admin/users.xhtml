@@ -17,10 +17,9 @@
         -->
 	 </h:head>
 	 <h:body>
-	 
 	 	<div class="topMenu">
 	 		<p:tabMenu activeIndex="1">
-	 			<p:menuitem value="Sections" outcome="/admin/sections.xhtml"></p:menuitem>
+	 			<p:menuitem value="Stats" outcome="/admin/stats.xhtml"></p:menuitem>
 		        <p:menuitem value="Users" outcome="/admin/users.xhtml"></p:menuitem>
 		        <p:menuitem value="Books" outcome="/admin/books.xhtml"></p:menuitem>
 		        <p:menuitem value="Home" url="../home"></p:menuitem>
@@ -56,10 +55,10 @@
 		        	<p:menuitem value="Sort admins" update="users" action="#{userService.sortByIsAdmin}"/>
 		            <p:menuitem value="Grant admin rights" update="users" action="#{userService.grantAdminRights}"/>
 		            <p:menuitem value="Remove admin rights" update="users" action="#{userService.removeAdminRights}"/>
-		            <p:menuitem value="Delete user" update="users" onclick="PF('dlg3').show()"/>
+		            <p:menuitem value="Delete user" update="users" onclick="PF('confirmDlg').show()"/>
 		        </p:contextMenu>
 		        
-		        <p:dialog header="Confirm" widgetVar="dlg3" minHeight="40" width="350" showEffect="fade">
+		        <p:dialog header="Confirm" widgetVar="confirmDlg" minHeight="40" width="350" showEffect="fade">
 				    <p class="p-m-0">Delete selected record?</p>
 				    <f:facet name="footer">
 				    	<p:commandButton value="Yes" style="width: 5rem" action="#{userService.deleteSelectedUser}" onclick="hide()"/>
@@ -68,6 +67,5 @@
 				</p:dialog>
 	 		</h:form>
 	 	</div>
-	 	
 	 </h:body>
 </html>

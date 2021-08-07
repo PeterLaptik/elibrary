@@ -9,13 +9,23 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table (name="books")
 public class Book implements Serializable {
 	private static final long serialVersionUID = -2333712729066071996L;
+	
+	/** Web.xml parameter name:
+	 *  keeps folder path to books storage.
+	 *  Example:
+	 *  	<context-param>
+	 *  		<param-name>fileUploadDirectory</param-name>
+	 *  		<param-value>C:/tmp/</param-value>
+	 *  	</context-param>
+	 **/
+	public static final String BOOKS_VOLUME = "fileUploadDirectory";
+	
 	public static final String FIELD_ID = "id";
 	public static final String FIELD_NAME = "book_name";
 	public static final String FIELD_AUTHORS = "authors";

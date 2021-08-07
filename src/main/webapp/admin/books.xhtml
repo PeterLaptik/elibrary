@@ -13,7 +13,7 @@
 	 	<h:form id="sections_form">
 		 	<div class="topMenu">
 		 		<p:tabMenu activeIndex="2">
-		 			<p:menuitem value="Sections" outcome="/admin/sections.xhtml"></p:menuitem>
+		 			<p:menuitem value="Stats" outcome="/admin/stats.xhtml"></p:menuitem>
 			        <p:menuitem value="Users" outcome="/admin/users.xhtml"></p:menuitem>
 			        <p:menuitem value="Books" outcome="/admin/books.xhtml"></p:menuitem>
 			        <p:menuitem value="Home" url="../home"></p:menuitem>
@@ -28,7 +28,7 @@
 							<h:outputText value="#{node.name}" />
 						</p:column>
 						<p:ajax event="select" listener="#{sectionService.onNodeSelect}" 
-								update=":sections_form:books"
+								update=":sections_form:books :sections_form:sectionName"
 								onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
 					</p:treeTable>
 					<p:contextMenu for="nodes">
@@ -39,9 +39,18 @@
 				</div>
 			</div>
 			<div class="booksContent">
-				<div><p:commandButton value="Load book" onclick="PF('createBookDlg').show()"/></div>
+				<div>
+					
+				</div>
+				<div>
+					<p:commandButton value="Load book" style="margin-bottom: 10px;"
+						onclick="PF('createBookDlg').show()" update="books"/>
+					<h:outputText id="sectionName" style="font-size: 1.2em;"
+						value="  Section: #{sectionService.nodeName}" />
+				</div>
 				<p:dataTable id="books" var="book" value="#{sectionService.books}" 
-	 						selection="#{sectionService.bookService.selectedBook}" rowKey="#{book.id}" selectionMode="single">
+	 						selection="#{sectionService.selectedBook}" rowKey="#{book.id}" 
+	 						selectionMode="single">
 		 			<p:column style="width:50px;" headerText="id">
 	                	<h:outputText value="#{book.id}" />
 		            </p:column>
@@ -57,6 +66,9 @@
 		            <p:column headerText="Magazine">
 		                <h:outputText value="#{book.magazine}" />
 		            </p:column>
+		            <p:column headerText="Filename">
+		                <h:outputText value="#{book.fileName}" />
+		            </p:column>
 		        </p:dataTable>
 		        <!-- Popup menu for books -->
 		        <p:contextMenu for="books">
@@ -65,57 +77,65 @@
 			</div>
 		        
 		        <!-- Confirm dialogue for book delete -->
-		        <p:dialog header="Confirm" widgetVar="dlgc" minHeight="40" width="350" showEffect="fade">
+		        <p:dialog header="Confirm" widgetVar="dlgc" minHeight="40" width="350" 
+		        		modal="true" showEffect="fade">
 				    <p class="p-m-0">Delete selected record?</p>
 				    <f:facet name="footer">
 				    	<p:commandButton value="Yes" style="width: 5rem" 
-					    	action="#{sectionService.bookService.deleteSelectedBook}" 
-					    	onclick="hide()"/>
+					    	action="#{sectionService.deleteSelectedBook}" 
+					    	onclick="hide()" update=":sections_form:books"/>
 				        <p:commandButton value="No" styleClass="ui-button-flat p-mr-2" style="width: 6rem" onclick="hide()"/>
 				    </f:facet>
 				</p:dialog>
 		</h:form>
-		
-		<!-- Book create dialogue -->
-			<p:dialog id="createBookDialog" for="booksContent" header="Create book" widgetVar="createBookDlg" 
-					responsive="true" showEffect="fade" update=":sections_form:books">
-		        <h:form>
-		        	<table>
-		        		<tr>
-		        			<td>Name</td>
-		        			<td><p:inputText id="bookName" value="#{sectionService.bookService.name}"/></td>
-		        		</tr>
-		        		<tr>
-		        			<td>Authors</td>
-		        			<td><p:inputText id="bookAuthors" value="#{sectionService.bookService.authors}"/></td>
-		        		</tr>
-		        		<tr>
-		        			<td>Code</td>
-		        			<td><p:inputText id="bookCode" value="#{sectionService.bookService.code}"/></td>
-		        		</tr>
-		        		<tr>
-		        			<td>Description</td>
-		        			<td><p:inputText id="bookDescr" value="#{sectionService.bookService.description}"/></td>
-		        		</tr>
-		        		<tr>
-		        			<td>Magazine</td>
-		        			<td><p:inputText id="magazine" value="#{sectionService.bookService.magazine}"/></td>
-		        		</tr>
-		        	</table>
-		        	<p:fileUpload mode="advanced"
-		                      multiple="false"
-		                      sizeLimit="136314880" 
-		                      invalidSizeMessage="Maximum file size allowed is 130 MB"
-		                      invalidFileMessage="only gif | jpg | jpeg | png is allowed"
-		                      fileUploadListener="#{sectionService.bookService.uploadBook}"
-		                      closable="true"/>
-		            <p:commandButton value="OK" style="float: right;" actionListener="#{sectionService.bookService.appendBook}"
-		            		onclick="PF('createBookDlg').hide()"/>
-			    </h:form>
-			</p:dialog>
 
-		<!-- Dialogue for form creating -->
-	 	<p:dialog id="inputDialog" for="nodes" header="Add section" widgetVar="inputDlg" minHeight="40" width="350" showEffect="fade">
+		<!-- Book create dialogue -->
+		<p:dialog id="createBookDialog" for="books" header="Create book"
+			widgetVar="createBookDlg" responsive="true" showEffect="fade"
+			update=":sections_form:books" modal="true">
+			<h:form>
+				<table>
+					<tr>
+						<td>Name</td>
+						<td><p:inputText id="bookName"
+								value="#{sectionService.bookService.name}" /></td>
+					</tr>
+					<tr>
+						<td>Authors</td>
+						<td><p:inputText id="bookAuthors"
+								value="#{sectionService.bookService.authors}" /></td>
+					</tr>
+					<tr>
+						<td>Code</td>
+						<td><p:inputText id="bookCode"
+								value="#{sectionService.bookService.code}" /></td>
+					</tr>
+					<tr>
+						<td>Description</td>
+						<td><p:inputText id="bookDescr"
+								value="#{sectionService.bookService.description}" /></td>
+					</tr>
+					<tr>
+						<td>Magazine</td>
+						<td><p:inputText id="magazine"
+								value="#{sectionService.bookService.magazine}" /></td>
+					</tr>
+				</table>
+				<p:fileUpload mode="advanced" multiple="false" sizeLimit="136314880"
+					invalidSizeMessage="Maximum file size allowed is 130 MB"
+					invalidFileMessage="only gif | jpg | jpeg | png is allowed"
+					fileUploadListener="#{sectionService.bookService.uploadBook}"
+					closable="true" />
+				<p:commandButton value="OK" style="float: right;"
+					actionListener="#{sectionService.appendBook}"
+					onclick="PF('createBookDlg').hide()" 
+					update=":sections_form:books"/>
+			</h:form>
+		</p:dialog>
+	
+		<!-- Dialogue for section creating -->
+	 	<p:dialog id="inputDialog" for="nodes" header="Add section" widgetVar="inputDlg" 
+	 			minHeight="40" width="350" showEffect="fade">
 	        	<h:form>
 				    <p class="p-m-0">Input section name:</p>
 				    <p:inputText value="#{sectionService.sectionName}"/>

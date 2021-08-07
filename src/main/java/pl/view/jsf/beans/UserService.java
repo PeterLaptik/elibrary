@@ -1,4 +1,4 @@
-package pl.model.dao.views;
+package pl.view.jsf.beans;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -9,8 +9,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-
-import org.primefaces.PrimeFaces;
 
 import pl.model.dao.UserDao;
 import pl.model.entities.User;

@@ -15,4 +15,6 @@ public interface BookDao extends Serializable{
 	public List<Book> findBooksByName(String name);
 	
 	public List<Book> getBooksBySection(Section section);
+	
+	public int getBooksQuantity();
 }

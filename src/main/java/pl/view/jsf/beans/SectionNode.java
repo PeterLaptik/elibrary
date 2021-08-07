@@ -1,4 +1,4 @@
-package pl.model.dao.views;
+package pl.view.jsf.beans;
 
 public class SectionNode {
 	private String name;

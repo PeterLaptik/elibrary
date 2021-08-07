@@ -1,5 +1,6 @@
 package pl.model.dao.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,5 +65,24 @@ public class BookDaoImpl implements BookDao {
 		session.delete(book);
 		transaction.commit();
 		session.close();
+	}
+
+	@Override
+	public int getBooksQuantity() {
+		int result = 0;
+		Session session = HibernateSessionFactory.getSession().openSession();
+		
+		@SuppressWarnings("unchecked")
+		List<BigInteger> counter = session.createSQLQuery("SELECT count(*) FROM books").list();
+		if(counter.size()>0) {
+			try {
+				result = counter.get(0).intValue();
+			} catch (Exception e) {
+				// Could not count
+				// do nothing (zero-value returns)
+			}
+		}
+		session.close();
+		return result;
 	}
 }

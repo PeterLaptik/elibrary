@@ -9,9 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import pl.model.credentials.AuthentificationManager;
 import pl.model.credentials.IAuthentification;
-import pl.model.entities.UserSession;
 import pl.route.IRoutes;
 
 //@WebServlet("/logging")
