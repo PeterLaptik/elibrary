@@ -41,7 +41,8 @@ public class Book implements Serializable {
 	
 	@Id
 	@SequenceGenerator(name = "book_seq",
-						sequenceName = "SEQ_BOOK")
+						sequenceName = "SEQ_BOOK",
+						allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 					generator = "book_seq")
 	@Column(name=FIELD_ID)

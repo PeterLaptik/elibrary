@@ -40,7 +40,9 @@
 		                <h:outputText value="#{user.login}" />
 		            </p:column>
 		            <p:column style="width:120px;" headerText="Registration date">
-		                <h:outputText value="#{user.registrationDate}" />
+		                <h:outputText value="#{user.registrationDate}">
+		                	<f:convertDateTime pattern="dd.MM.yyyy" />
+		                </h:outputText>
 		            </p:column>
 		            <p:column style="width:50px;" headerText="Is admin">
 		                <h:outputText value="#{user.admin}" />

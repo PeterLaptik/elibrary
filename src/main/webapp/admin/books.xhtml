@@ -70,7 +70,9 @@
 		                <h:outputText value="#{book.fileName}" />
 		            </p:column>
 		            <p:column headerText="Created">
-		                <h:outputText value="#{book.bookCreated}" />
+		                <h:outputText value="#{book.bookCreated}">
+		                	<f:convertDateTime pattern="dd.MM.yyyy" />
+		                </h:outputText>
 		            </p:column>
 		        </p:dataTable>
 		        <!-- Popup menu for books -->

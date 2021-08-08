@@ -16,10 +16,10 @@
         <version.servlet>3.0.1</version.servlet>
         <jsf.version>2.2.20</jsf.version>
         <junit.version>4.12</junit.version>
-        
         <hibernate.version>5.4.31.Final</hibernate.version>
         <postgres.connector.ver>42.2.20</postgres.connector.ver>
         <primefaces.version>7.0</primefaces.version>
+        <jersey.version>2.34</jersey.version>
     </properties>
 
     <dependencyManagement>
@@ -111,7 +111,29 @@
 		    <artifactId>esapi</artifactId>
 		    <version>2.2.3.0</version>
 		</dependency>
-		<!-- Tests -->
+		<!-- REST -->
+		<dependency>
+		    <groupId>org.glassfish.jersey.core</groupId>
+		    <artifactId>jersey-client</artifactId>
+		    <version>${jersey.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.glassfish.jersey.containers</groupId>
+		    <artifactId>jersey-container-servlet</artifactId>
+		    <version>${jersey.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.glassfish.jersey.inject</groupId>
+		    <artifactId>jersey-hk2</artifactId>
+		    <version>${jersey.version}</version>
+		</dependency>
+		<!-- JSON -->
+		<dependency>
+		   <groupId>org.glassfish</groupId>
+		   <artifactId>javax.json</artifactId>
+		   <version>1.0.4</version>
+		</dependency>
+		<!-- Testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

@@ -56,8 +56,6 @@ public class BookService implements Serializable{
 	public void setNode(TreeNode node) {
 		this.node = node;
 	}
-	
-	
 
 	public String getName() {
 		return name;
