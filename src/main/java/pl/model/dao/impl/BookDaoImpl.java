@@ -62,7 +62,11 @@ public class BookDaoImpl implements BookDao {
 	public void deleteBook(Book book) {
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Transaction transaction = session.beginTransaction();
-		session.delete(book);
+		Query<Book> query = session.createQuery("FROM Book WHERE id = :param", Book.class);
+		query.setParameter("param", book.getId());
+		List<Book> books = query.list();
+		if(books.size()>0)
+			session.delete(books.get(0));
 		transaction.commit();
 		session.close();
 	}

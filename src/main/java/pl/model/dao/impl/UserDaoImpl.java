@@ -70,7 +70,11 @@ public class UserDaoImpl implements UserDao {
 		
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Transaction transaction = session.beginTransaction();
-		session.delete(user);
+		Query<User> query = session.createQuery("FROM User WHERE user_id = :param", User.class);
+		query.setParameter("param", user.getId());
+		List<User> users = query.list();
+		if(users.size()>0)
+			session.delete(users.get(0));
 		transaction.commit();
 		session.close();
 		return true;

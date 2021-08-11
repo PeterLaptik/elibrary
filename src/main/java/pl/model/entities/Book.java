@@ -22,10 +22,12 @@ public class Book implements Serializable {
 	/** Web.xml parameter name:
 	 *  keeps folder path to books storage.
 	 *  Example:
+	 *  	...
 	 *  	<context-param>
 	 *  		<param-name>fileUploadDirectory</param-name>
 	 *  		<param-value>C:/tmp/</param-value>
 	 *  	</context-param>
+	 *  	...
 	 **/
 	public static final String BOOKS_VOLUME = "fileUploadDirectory";
 	
