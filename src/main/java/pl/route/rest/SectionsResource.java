@@ -1,6 +1,7 @@
 package pl.route.rest;
 
 import javax.ejb.EJB;
+import javax.json.JsonObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -9,7 +10,7 @@ import pl.model.cache.SectionCache;
 import pl.model.dao.SectionDao;
 
 
-@Path("/helloworld")
+@Path("/sections")
 public class SectionsResource {
 	@EJB
 	SectionDao sectionDao;
@@ -18,10 +19,10 @@ public class SectionsResource {
 	SectionCache sectionCache;
 	
     @GET
-    @Produces("text/plain")
-    public String getClichedMessage() {
+    @Produces("application/json")
+    public JsonObject getClichedMessage() {
     	sectionCache.updateSections();
-        return sectionCache.getSectionsJson().toString();
+        return sectionCache.getSectionsJson();
     }
     
 }

@@ -23,6 +23,7 @@ import pl.model.dao.SectionDao;
 import pl.model.entities.Book;
 import pl.model.entities.Section;
 import pl.model.session.HibernateSessionFactory;
+import pl.view.jsf.beans.objects.SectionNode;
 
 @Named("sectionService")
 @ViewScoped

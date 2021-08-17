@@ -3,12 +3,14 @@ package pl.model.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import pl.model.cache.SectionCache;
 import pl.model.dao.SectionDao;
 import pl.model.entities.Section;
 import pl.model.session.HibernateSessionFactory;
@@ -17,6 +19,9 @@ import pl.model.session.HibernateSessionFactory;
 public class SectionDaoImpl implements SectionDao {
 	private static final long serialVersionUID = 2624986924936925684L;
 
+	@EJB
+	SectionCache cache;
+	
 	public SectionDaoImpl() {
 		
 	}
@@ -57,6 +62,7 @@ public class SectionDaoImpl implements SectionDao {
 		session.save(child);
 		transaction.commit();
 		session.close();
+		cache.updateSections();
 		return true;
 	}
 	
@@ -81,6 +87,7 @@ public class SectionDaoImpl implements SectionDao {
 		session.delete(sectionToDelete);
 		transaction.commit();
 		session.close();
+		cache.updateSections();
 	}
 	
 	public Section findSectionByName(String name) {

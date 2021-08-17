@@ -8,12 +8,15 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pl.model.cache.objects.SectionNode;
 import pl.model.dao.SectionDao;
 import pl.model.entities.Section;
 import pl.model.session.HibernateSessionFactory;
@@ -21,7 +24,12 @@ import pl.model.session.HibernateSessionFactory;
 @Singleton
 public class SectionCacheImpl implements SectionCache {
 	private static final long serialVersionUID = -8002568672223868377L;
+	private static final String ATTR_NAME = "name";
+	private static final String ATTR_ID = "id";
+	private static final String ATTR_CHILDREN = "children";
+	
 	private SectionNode rootSection = null;
+	private JsonObject sectionTree;
 	
 	@EJB
 	SectionDao sectionDao;
@@ -29,11 +37,13 @@ public class SectionCacheImpl implements SectionCache {
 	@PostConstruct
 	void init() {
 		rootSection = buildSectionTree();
+		sectionTree = sectionsToJson();
 	}
 	
 	@Override
 	public void updateSections() {
 		rootSection = buildSectionTree();
+		sectionTree = sectionsToJson();
 	}
 	
 	@Override
@@ -43,18 +53,17 @@ public class SectionCacheImpl implements SectionCache {
 	
 	@Override
 	public JsonObject getSectionsJson() {
-		JsonObject json = Json.createObjectBuilder()
-					 .add("name", "root")
-				     .add("id", 3).build();
-		
-		return json;
+		if(sectionTree==null) {
+			rootSection = buildSectionTree();
+			sectionTree = sectionsToJson();
+		}
+		return sectionTree;
 	}
 	
 	private SectionNode buildSectionTree() {
     	Section rootSection = sectionDao.findSectionByName(Section.ROOT_NAME);
     	SectionNode root = new SectionNode(rootSection.getId(), rootSection.getName());
     	addSubTreeFor(root);
-    	root.toConsole();
     	return root;
     }
     
@@ -87,18 +96,40 @@ public class SectionCacheImpl implements SectionCache {
 		session.close();
     }
     
-    private void sectionsToJson() {
+    private JsonObject sectionsToJson() {
     	if(rootSection==null)
-    		return;
+    		return null;
     	
-    	JsonObjectBuilder json = Json.createObjectBuilder();
-    	json.add("id", rootSection.id)
-    		.add("name", rootSection.name);
+    	JsonObjectBuilder rootBuilder = Json.createObjectBuilder();
+    	rootBuilder.add(ATTR_ID, rootSection.id)
+    				.add(ATTR_NAME, rootSection.name);
     	
+
+    	JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+		for (SectionNode child : rootSection.children)
+			arrayBuilder.add(sectionsToJson(child));
+		
+		JsonArray childrenArray  = arrayBuilder.build();
+    	if(childrenArray.size()>0)
+    		rootBuilder.add(ATTR_CHILDREN, childrenArray);
+    	
+    	JsonObject root =  rootBuilder.build();
+    	return root;
     }
     
-    private void sectionsToJson(JsonObjectBuilder json) {
-
+    private JsonObjectBuilder sectionsToJson(SectionNode node) {
+    	JsonObjectBuilder builder = Json.createObjectBuilder();
+    	builder.add(ATTR_ID, node.id)
+				.add(ATTR_NAME, node.name);
     	
+    	JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+    	for(SectionNode child: node.children)
+    		arrayBuilder.add(sectionsToJson(child));
+    	
+    	JsonArray childrenArray  = arrayBuilder.build();
+    	if(childrenArray.size()>0)
+    		builder.add(ATTR_CHILDREN, childrenArray);
+    	
+    	return builder;
     }
 }

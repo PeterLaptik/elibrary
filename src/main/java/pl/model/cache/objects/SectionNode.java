@@ -1,4 +1,4 @@
-package pl.model.cache;
+package pl.model.cache.objects;
 
 import java.util.ArrayList;
 import java.util.List;

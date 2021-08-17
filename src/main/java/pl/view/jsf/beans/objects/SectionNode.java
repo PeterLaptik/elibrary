@@ -1,4 +1,4 @@
-package pl.view.jsf.beans;
+package pl.view.jsf.beans.objects;
 
 public class SectionNode {
 	private String name;
