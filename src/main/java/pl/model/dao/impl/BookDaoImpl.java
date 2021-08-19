@@ -59,6 +59,16 @@ public class BookDaoImpl implements BookDao {
 	}
 
 	@Override
+	public List<Book> getBooksBySectionId(int id) {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Query<Book> query = session.createQuery("FROM Book WHERE section_section_id = :param", Book.class);
+		query.setParameter("param", id);
+		List<Book> books = query.list();
+		session.close();
+		return books;
+	}
+	
+	@Override
 	public void deleteBook(Book book) {
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Transaction transaction = session.beginTransaction();

@@ -1,7 +1,7 @@
-const app = Vue.createApp({
+const appNavigation = Vue.createApp({
 	data: function () {
 		return {
-			treeData: treeData,
+			sectionsTree: sectionsTree,
 		}
 	},
 	created: function () {
@@ -9,30 +9,20 @@ const app = Vue.createApp({
 	},
 
 	methods: {
-		makeFolder: function (item) {
-			item.children = [];
-			this.addItem(item);
-		},
-		addItem: function (item) {
-			item.children.push({
-				name: "new stuff"
-			});
-		},
-		onChangeData: function (treeData) {
-			console.log(JSON.stringify(treeData))
+		onChangeData: function (sectionsTree) {
+			console.log(JSON.stringify(sectionsTree))
 		},
 		fetchData: function () {
 			let xhr = new XMLHttpRequest();
 			xhr.open('GET',
-				applicationContextPath + pathSections);
+				router.getSectionsPath());
 			xhr.send();
 			xhr.onload = function () {
-				let x = treeData;
-				if (treeData.children == undefined)
-					treeData.children = [];
+				if (sectionsTree.children == undefined)
+				sectionsTree.children = [];
 
 				let loadedData = JSON.parse(xhr.response);
-				treeData.children = loadedData.children
+				sectionsTree.children = loadedData.children
 			}
 			return true;
 		}
@@ -41,9 +31,9 @@ const app = Vue.createApp({
 
 
 let selectedItem = null;
-app.provide('selectedItem', selectedItem);
+appNavigation.provide('selectedItem', selectedItem);
 
-app.component("tree-item", {
+appNavigation.component("tree-item", {
 	template: '#item-template',
 	isSelected: false,
 	props: {
@@ -72,9 +62,12 @@ app.component("tree-item", {
 			if (selectedItem)
 				selectedItem.$forceUpdate();
 
+			let needBooksTobeUpdated = (selectedItem != this);
 			selectedItem = this;
 			selectedItem.$forceUpdate();
-			console.log(this.item.id);
+			currentSectionId = this.item.id;
+			if(needBooksTobeUpdated==true)
+				updateBookList(this.item.id);
 		},
 		getStyleClass: function () {
 			let style = "item";
@@ -89,9 +82,8 @@ app.component("tree-item", {
 		autoUpdate: function () {
 			let x = this.item;
 			let y = this.isFolder;
-
 		}
 	},
 })
 
-app.mount('#book-navigator')
+appNavigation.mount('#book-navigator')

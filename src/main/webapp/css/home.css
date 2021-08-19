@@ -42,17 +42,12 @@
 }
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
-#main {
+#book-list {
   transition: margin-left .5s;
   padding-left: 250px;
 }
 
 #book-navigator {
-  font-size: 25px;
-  color: #818181;
-}
-
-.book-navigator {
   font-size: 25px;
   color: #818181;
 }
@@ -109,3 +104,7 @@ li {
   transition: 0.3s;
 }
 
+.bookLine {
+  border: 1px solid black;
+  width: 100vw;
+}

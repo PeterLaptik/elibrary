@@ -35,13 +35,13 @@
 	   function openNav() {
 	     document.getElementById("mySidenav").style.width = "250px";
 	     document.getElementById("topBar").style.paddingLeft = "250px";
-	     document.getElementById("main").style.paddingLeft = "250px";
+	     document.getElementById("book-list").style.paddingLeft = "250px";
 	   }
 	
 	   function closeNav() {
 	     document.getElementById("mySidenav").style.width = "0";
 	     document.getElementById("topBar").style.paddingLeft = "0";
-	     document.getElementById("main").style.paddingLeft = "10px";
+	     document.getElementById("book-list").style.paddingLeft = "10px";
 	   }
 	   
 	   function logOut(){
@@ -66,13 +66,12 @@
 				<ul>
 					<tree-item
 					class="item"
-					:item="treeData"
-					@add-item="addItem"
+					:item="sectionsTree"
 					></tree-item>
 				</ul>
 			</div>
 	 	</div>
-		 
+
 		<div id="topBar" class="topbar">
 		  <a id="showMenu" href="#menu" onclick="openNav()">Menu</a>
 		  <a class="active" href="#home">Home</a>
@@ -80,19 +79,37 @@
 		  <a href="admin/stats.xhtml">Admin</a>
 		  <a href="#" onclick="logOut()">Logout</a>
 		</div>
-		<div id="main">
-		  ...
+		<div id="book-list">
+			<table v-for="book in bookList.books" class="bookLine">
+				<tr>
+					<td class="book_name">{{book.name}}</td>
+				</tr>
+				<tr>
+					<td class="book_author">{{book.author}}</td>
+				</tr>
+				<tr>
+					<td class="book_descr">{{book.description}}</td>
+				</tr>
+			</table>
 		</div>
 
 	<script>
-		let applicationContextPath = 'res/';
-		let pathSections = 'sections';
+		var bookList = {books: []};
 
-		var treeData = {
+		var sectionsTree = {
 			name: "Sections", id: 0,
 			children: [{ name: "loading...", id: 1 }]
 		};
+
+		let currentSectionId = -1;
+
+		let updateBookList = function(sectionId){
+			app.updateBooks(sectionId);
+		}
+
 	</script>
+	<script src="js/elib.routes.js"></script>
 	<script src="js/elib.book.navigator.js"></script>
+	<script src="js/elib.books.list.js"></script>
    </body>
 </html>
