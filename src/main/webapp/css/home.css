@@ -17,10 +17,6 @@
 	font-size: 25px;
 }
 
-#showMenu a:hover {
-  color: #0000FF;
-}
-
 /* The navigation menu links */
 .sidenav a {
   padding: 8px 8px 8px 32px;
@@ -51,6 +47,16 @@
   padding-left: 250px;
 }
 
+#book-navigator {
+  font-size: 25px;
+  color: #818181;
+}
+
+.book-navigator {
+  font-size: 25px;
+  color: #818181;
+}
+
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
@@ -66,6 +72,30 @@
 
 .topbar a:hover {
   color: #0000FF;
+}
+
+.bold {
+  color: #0000FF;
+  cursor: pointer;
+}
+
+.selected {
+  color: #000000;
+  cursor: pointer;
+}
+
+::marker {
+  color: blue;
+  font-size: 1.2em;
+}
+
+ul {
+    padding-left: 20px;
+    list-style-type: none;
+}
+
+li {
+    margin-bottom: 0px; 
 }
 
 .topbar a {

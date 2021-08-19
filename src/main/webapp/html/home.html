@@ -4,8 +4,34 @@
       <title>E-Library</title>
       <link rel="stylesheet" type="text/css" href="css/home.css" />
    </head>
+
    <script src="js/sweetalert2.all.min.js"></script>
-   <script type="text/javascript">
+   <script src="js/sweetalert2.all.min.js"></script>
+   <script src="js/vue.global.js"></script>
+
+   <!-- Book navigation tree -->
+   <script type="text/x-template" id="item-template">
+	<li div>
+	  <div
+		   :class="getStyleClass()"
+		   @click="toggle"
+		   @dblclick="toggle"
+		   @mouseover="hover = true"
+		   @mouseleave="hover = false">
+			{{ item.name }}
+	  </div>
+	  <ul v-show="isOpen" v-if="isFolder">
+		<tree-item
+		   class="item"
+		   v-for="(child, index) in item.children"
+		   :key="index"
+		   :item="child">
+		</tree-item>
+	  </ul>
+	</li>
+  </script>
+
+	<script>
 	   function openNav() {
 	     document.getElementById("mySidenav").style.width = "250px";
 	     document.getElementById("topBar").style.paddingLeft = "250px";
@@ -32,17 +58,21 @@
 			   }
 			 })
 	   }
-	   
    </script>
    <body>
-	   <div id="mySidenav" class="sidenav">
+	   	<div id="mySidenav" class="sidenav">
 		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-		  <a href="#">About</a>
-		  <a href="#">Services</a>
-		  <a href="#">Clients</a>
-		  <a href="#">Contact</a>
-		</div>
-		
+			<div id="book-navigator">
+				<ul>
+					<tree-item
+					class="item"
+					:item="treeData"
+					@add-item="addItem"
+					></tree-item>
+				</ul>
+			</div>
+	 	</div>
+		 
 		<div id="topBar" class="topbar">
 		  <a id="showMenu" href="#menu" onclick="openNav()">Menu</a>
 		  <a class="active" href="#home">Home</a>
@@ -50,9 +80,19 @@
 		  <a href="admin/stats.xhtml">Admin</a>
 		  <a href="#" onclick="logOut()">Logout</a>
 		</div>
-
 		<div id="main">
 		  ...
 		</div>
+
+	<script>
+		let applicationContextPath = 'res/';
+		let pathSections = 'sections';
+
+		var treeData = {
+			name: "Sections", id: 0,
+			children: [{ name: "loading...", id: 1 }]
+		};
+	</script>
+	<script src="js/elib.book.navigator.js"></script>
    </body>
 </html>
