@@ -62,6 +62,9 @@ CREATE TABLE public.books (
 	authors varchar(255) NULL,
 	book_code varchar(255) NULL,
 	magazine varchar(255) NULL,
+	city varchar(255) NULL,
+	publisher varchar(255) NULL,
+	publication_year int4 NULL,
 	CONSTRAINT books_pkey PRIMARY KEY (id)
 );
 

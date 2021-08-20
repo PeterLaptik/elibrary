@@ -125,6 +125,33 @@
 						<td><p:inputText id="magazine"
 								value="#{sectionService.bookService.magazine}" /></td>
 					</tr>
+					<tr>
+						<td>Publisher</td>
+						<td><p:inputText id="publisher"
+								value="#{sectionService.bookService.publisher}" /></td>
+					</tr>
+					<tr>
+						<td>City</td>
+						<td><p:inputText id="city"
+								value="#{sectionService.bookService.city}" /></td>
+					</tr>
+					<tr>
+						<td>Year</td>
+							<td><p:inputText id="year"
+								value="#{sectionService.bookService.publicationYear}" 
+								onkeydown="return event.keyCode &gt;= 48 &amp;&amp; event.keyCode &lt;= 57 || event.keyCode == 8"/>
+							</td>
+					</tr>
+					<!-- 
+					<tr>
+						<td>Year</td>
+						<td><p:inputNumber id="year"
+								value="#{sectionService.bookService.publicationYear}"
+								padControl="false"
+								thousandSeparator=""
+								converterMessage="Please enter digits only." /></td>
+					</tr>
+					-->
 				</table>
 				<p:fileUpload mode="advanced" multiple="false" sizeLimit="136314880"
 					invalidSizeMessage="Maximum file size allowed is 130 MB"

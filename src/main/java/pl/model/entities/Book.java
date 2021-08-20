@@ -37,6 +37,9 @@ public class Book implements Serializable {
 	public static final String FIELD_CODE = "book_code";
 	public static final String FIELD_MAGAZINE = "magazine";
 	public static final String FIELD_DESCR = "book_description";
+	public static final String FIELD_PUBLISHER = "publisher";
+	public static final String FIELD_CITY = "city";
+	public static final String FIELD_YEAR = "publication_year";
 	public static final String FIELD_FILE_FORMAT = "file_format";
 	public static final String FIELD_FILE_NAME = "file_name";
 	public static final String FIELD_FILE_CREATED = "created_date";
@@ -70,9 +73,18 @@ public class Book implements Serializable {
 	private String code = "";
 	
 	/** Attribute is only for articles: 
-	 * name - article name, code - issue **/
+	 * name - article name, code - magazine issue **/
 	@Column(name=FIELD_MAGAZINE)
 	private String magazine = "";
+	
+	@Column(name=FIELD_PUBLISHER)
+	private String publisher = "";
+	
+	@Column(name=FIELD_CITY)
+	private String city = "";
+	
+	@Column(name=FIELD_YEAR)
+	private int year = 0;
 	
 	@Column(name=FIELD_FILE_CREATED)
 	private Date bookCreated;
@@ -162,6 +174,30 @@ public class Book implements Serializable {
 
 	public void setBookCreated(Date bookCreated) {
 		this.bookCreated = bookCreated;
+	}
+	
+	public String getPublisher() {
+		return publisher;
+	}
+
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(short year) {
+		this.year = year;
 	}
 	
 	@PrePersist

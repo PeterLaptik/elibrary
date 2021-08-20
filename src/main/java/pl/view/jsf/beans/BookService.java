@@ -40,7 +40,23 @@ public class BookService implements Serializable{
 	private String authors;
 	private String code;
 	private String magazine;
+	private String publisher;
+	
+	
+	private String publicationYear;
+
+	public String getPublicationYear() {
+		return publicationYear;
+	}
+
+	public void setPublicationYear(String publicationYear) {
+		this.publicationYear = publicationYear;
+	}
+
+	
+	private String city;
 	private Section section;
+	
 	private Book selectedBook = null;
 	
 	Section selectedSection = null;
@@ -129,6 +145,22 @@ public class BookService implements Serializable{
 		this.magazine = magazine;
 	}
 	
+	public String getPublisher() {
+		return publisher;
+	}
+
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+	
 	public Book getSelectedBook() {
 		return selectedBook;
 	}
@@ -186,14 +218,6 @@ public class BookService implements Serializable{
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, 
 					"Error!", 
 					"No uploaded file...");
-			PrimeFaces.current().dialog().showMessageDynamic(message);
-			return;
-		}
-		
-		if(description.equals("") || name.equals("")) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, 
-					"Error!", 
-					"Input book name and description...");
 			PrimeFaces.current().dialog().showMessageDynamic(message);
 			return;
 		}
@@ -282,6 +306,17 @@ public class BookService implements Serializable{
 		book.setCode(code);
 		book.setAuthors(authors);
 		book.setMagazine(magazine);
+		book.setPublisher(publisher);
+		book.setCity(city);
+		// Convert year
+		Integer year = null;
+		try {
+			year = Integer.parseInt(publicationYear);
+		} catch (Exception e) {
+			System.err.println("Wrong year value: " + publicationYear);
+			year = 0;
+		}
+		book.setYear(year.shortValue());
 		
 		try {
 			bookDao.createBook(book);
