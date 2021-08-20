@@ -12,8 +12,6 @@ import pl.model.cache.SectionCache;
 import pl.model.cache.SectionCacheImpl;
 import pl.model.dao.impl.BookDaoImpl;
 import pl.model.dao.impl.SectionDaoImpl;
-import pl.model.dao.impl.UserDaoImpl;
-import pl.model.dao.impl.UserSessionDaoImpl;
 import pl.model.entities.Book;
 import pl.model.entities.Section;
 import pl.view.jsf.beans.SectionService;

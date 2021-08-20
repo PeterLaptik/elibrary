@@ -19,6 +19,20 @@ import pl.model.session.HibernateSessionFactory;
 public class SectionDaoImpl implements SectionDao {
 	private static final long serialVersionUID = 2624986924936925684L;
 
+	static {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Transaction transaction = session.beginTransaction();
+		Query<Section> query = session.createQuery("FROM Section WHERE section_name = :param", Section.class);
+		query.setParameter("param", Section.ROOT_NAME);
+		List<Section> list = query.getResultList();
+		if(list.size()<1) {
+			Section rootSection = new Section();
+			rootSection.setName(Section.ROOT_NAME);
+			session.save(rootSection);
+		}
+		transaction.commit();
+	}
+	
 	@EJB
 	SectionCache cache;
 	
@@ -31,16 +45,6 @@ public class SectionDaoImpl implements SectionDao {
 			return false;
 		
 		Section rootSection = findSectionByName(Section.ROOT_NAME);
-		if(rootSection==null) {
-			rootSection = new Section();
-			rootSection.setName(Section.ROOT_NAME);
-			Session session = HibernateSessionFactory.getSession().openSession();
-			Transaction transaction = session.beginTransaction();
-			session.save(rootSection);
-			transaction.commit();
-			session.close();
-		}
-		
 		return addChild(rootSection, section);
 	}
 

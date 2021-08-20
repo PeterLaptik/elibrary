@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -21,6 +22,7 @@ import pl.model.dao.SectionDao;
 import pl.model.entities.Section;
 import pl.model.session.HibernateSessionFactory;
 
+@Startup
 @Singleton
 public class SectionCacheImpl implements SectionCache {
 	private static final long serialVersionUID = -8002568672223868377L;
