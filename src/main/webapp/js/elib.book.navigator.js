@@ -10,7 +10,7 @@ const appNavigation = Vue.createApp({
 
 	methods: {
 		onChangeData: function (sectionsTree) {
-			console.log(JSON.stringify(sectionsTree))
+			console.log('sferferferf');
 		},
 		fetchData: function () {
 			let xhr = new XMLHttpRequest();

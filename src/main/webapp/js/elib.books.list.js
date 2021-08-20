@@ -13,6 +13,7 @@ const app = Vue.createApp({
                 let loadedData = JSON.parse(xhr.response);
                 bookList.books = loadedData.books;
                 this.callBackObject.$forceUpdate();
+                updateCollapsibles();
             }
         }
     }

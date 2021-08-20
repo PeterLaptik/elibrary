@@ -57,16 +57,12 @@ public class SectionsResource {
 			}
 		});
     	
-    	JsonObjectBuilder listBuilder = Json.createObjectBuilder();
+    	
     	JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
     	for(Book i: bookList) {
-    		JsonObjectBuilder builder = Json.createObjectBuilder();
-    		builder.add("name", i.getName());
-    		builder.add("description", i.getDescription());
-    		builder.add("author", i.getAuthors());
-    		builder.add("code", i.getCode());
-    		arrayBuilder.add(builder);
+    		arrayBuilder.add(i.toJsonBuilder());
     	}
+    	JsonObjectBuilder listBuilder = Json.createObjectBuilder();
     	listBuilder.add("books", arrayBuilder);
     	JsonObject result = listBuilder.build();
     	

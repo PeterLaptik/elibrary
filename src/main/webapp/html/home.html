@@ -3,6 +3,7 @@
    <head>
       <title>E-Library</title>
       <link rel="stylesheet" type="text/css" href="css/home.css" />
+	  <link rel="stylesheet" type="text/css" href="css/book.css" />
    </head>
 
    <script src="js/sweetalert2.all.min.js"></script>
@@ -87,8 +88,15 @@
 				<tr>
 					<td class="book_author">{{book.author}}</td>
 				</tr>
+				
+				<tr class="book_author"><td>rtertr</td></tr>
 				<tr>
-					<td class="book_descr">{{book.description}}</td>
+					<td>
+						<button type="button" class="collapsible">Show description</button>
+						<div class="book_description">
+							{{book.description}}</td>
+						</div>
+					</td>
 				</tr>
 			</table>
 		</div>
@@ -105,6 +113,22 @@
 
 		let updateBookList = function(sectionId){
 			app.updateBooks(sectionId);
+		}
+
+		let updateCollapsibles = async function(){
+			let coll = document.getElementsByClassName("book_description");
+			console.log('Number of elements:' + coll.length);
+			for (i = 0; i < coll.length; i++) {
+				coll[i].addEventListener("click", function() {
+				this.classList.toggle("active");
+				var content = this.nextElementSibling;
+				if (content.style.display === "block") {
+					content.style.display = "none";
+					} else {
+					content.style.display = "block";
+					}
+				});
+			}
 		}
 
 	</script>

@@ -103,8 +103,3 @@ li {
   display: block;
   transition: 0.3s;
 }
-
-.bookLine {
-  border: 1px solid black;
-  width: 100vw;
-}

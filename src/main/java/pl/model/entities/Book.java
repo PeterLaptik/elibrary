@@ -3,6 +3,9 @@ package pl.model.entities;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -198,6 +201,32 @@ public class Book implements Serializable {
 
 	public void setYear(short year) {
 		this.year = year;
+	}
+	
+	public JsonObjectBuilder toJsonBuilder() {
+		JsonObjectBuilder builder = Json.createObjectBuilder();
+		builder.add("name", name);
+		builder.add("description", description);
+		builder.add("author", authors);
+		builder.add("code", code);
+		builder.add("format", format);
+		builder.add("publisher", publisher);
+		builder.add("city", city);
+		builder.add("year", year);
+		return builder;
+	}
+	
+	public JsonObject toJsonObject() {
+		JsonObjectBuilder builder = Json.createObjectBuilder();
+		builder.add("name", name);
+		builder.add("description", description);
+		builder.add("author", authors);
+		builder.add("code", code);
+		builder.add("format", format);
+		builder.add("publisher", publisher);
+		builder.add("city", city);
+		builder.add("year", year);
+		return builder.build();
 	}
 	
 	@PrePersist
