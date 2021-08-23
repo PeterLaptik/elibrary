@@ -92,7 +92,7 @@
 				<tr class="book_author"><td>rtertr</td></tr>
 				<tr>
 					<td>
-						<button type="button" class="collapsible">Show description</button>
+						<button type="button" class="collapsible">&#10000; Show description</button>
 						<div class="book_description">
 							{{book.description}}</td>
 						</div>
@@ -115,11 +115,12 @@
 			app.updateBooks(sectionId);
 		}
 
-		let updateCollapsibles = async function(){
-			let coll = document.getElementsByClassName("book_description");
+		let updateCollapsibles = function(){
+			let coll = document.getElementsByClassName("collapsible");
 			console.log('Number of elements:' + coll.length);
 			for (i = 0; i < coll.length; i++) {
 				coll[i].addEventListener("click", function() {
+				console.log('clicked');
 				this.classList.toggle("active");
 				var content = this.nextElementSibling;
 				if (content.style.display === "block") {
