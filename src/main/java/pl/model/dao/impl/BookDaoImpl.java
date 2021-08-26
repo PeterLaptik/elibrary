@@ -8,6 +8,7 @@ import javax.ejb.Stateless;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
 import pl.model.dao.BookDao;
@@ -49,20 +50,27 @@ public class BookDaoImpl implements BookDao {
 	public List<Book> getBooksBySection(Section section) {
 		if(section==null)
 			return new ArrayList<Book>();
-		
-		Session session = HibernateSessionFactory.getSession().openSession();
-		Query<Book> query = session.createQuery("FROM Book WHERE section_section_id = :param", Book.class);
-		query.setParameter("param", section.getId());
-		List<Book> books = query.list();
-		session.close();
-		return books;
+
+		return getBooksBySectionId(section.getId());
 	}
 
 	@Override
 	public List<Book> getBooksBySectionId(int id) {
 		Session session = HibernateSessionFactory.getSession().openSession();
-		Query<Book> query = session.createQuery("FROM Book WHERE section_section_id = :param", Book.class);
+		Query<Book> query = session.createQuery("FROM Book WHERE section_section_id = :param ORDER BY book_name", Book.class);
 		query.setParameter("param", id);
+		List<Book> books = query.list();
+		session.close();
+		return books;
+	}
+	
+	@Override
+	public List<Book> getBooksBySectionId(int sectionId, int windowCapacity, int pageNumber) {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Query<Book> query = session.createQuery("FROM Book WHERE section_section_id = :id ORDER BY book_name", Book.class)
+				.setFirstResult(windowCapacity*(pageNumber-1))
+				.setMaxResults(windowCapacity);
+		query.setParameter("id", sectionId);
 		List<Book> books = query.list();
 		session.close();
 		return books;
@@ -88,6 +96,28 @@ public class BookDaoImpl implements BookDao {
 		
 		@SuppressWarnings("unchecked")
 		List<BigInteger> counter = session.createSQLQuery("SELECT count(*) FROM books").list();
+		if(counter.size()>0) {
+			try {
+				result = counter.get(0).intValue();
+			} catch (Exception e) {
+				// Could not count
+				// do nothing (zero-value returns)
+			}
+		}
+		session.close();
+		return result;
+	}
+
+	@Override
+	public int getBookQuantity(int sectionId) {
+		int result = 0;
+		Session session = HibernateSessionFactory.getSession().openSession();
+		
+		NativeQuery<?> nquery = session.createSQLQuery("SELECT count(*) FROM books WHERE section_section_id=:param");
+		nquery.setParameter("param", sectionId);
+		@SuppressWarnings("unchecked")
+		List<BigInteger> counter = (List<BigInteger>) nquery.list();
+		
 		if(counter.size()>0) {
 			try {
 				result = counter.get(0).intValue();

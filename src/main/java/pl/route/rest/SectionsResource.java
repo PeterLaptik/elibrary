@@ -24,6 +24,8 @@ import pl.model.entities.Book;
 
 @Path("/sections")
 public class SectionsResource {
+	private static int DEFAULT_WINDOW_SIZE = 5;
+	
 	@EJB
 	SectionCache sectionCache;
 	
@@ -46,25 +48,26 @@ public class SectionsResource {
     } 
     
     @GET
-    @Path("/books/{id}")
+    @Path("/books/{sectionId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getBooks(@PathParam("id") int id) {
+    public Response getBooks(@PathParam("sectionId") int id) {
     	List<Book> bookList = bookDao.getBooksBySectionId(id);
-    	Collections.sort(bookList, new Comparator<Book>() {
-			@Override
-			public int compare(Book o1, Book o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-		});
     	
-    	
+    	// Book list
     	JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
     	for(Book i: bookList) {
     		arrayBuilder.add(i.toJsonBuilder());
     	}
-    	JsonObjectBuilder listBuilder = Json.createObjectBuilder();
-    	listBuilder.add("books", arrayBuilder);
-    	JsonObject result = listBuilder.build();
+    	JsonObjectBuilder bookListBuilder = Json.createObjectBuilder();
+    	bookListBuilder.add("books", arrayBuilder);
+    	// Book number
+    	Integer booksQuantity = bookDao.getBookQuantity(id);
+    	bookListBuilder.add("booksNumber:", booksQuantity);
+    	// Pages number
+    	Integer pageNumber = booksQuantity/DEFAULT_WINDOW_SIZE + 1;
+    	bookListBuilder.add("pagesNumber:", pageNumber);
+    	
+    	JsonObject result = bookListBuilder.build();
     	
         return Response.ok(result)
         			.header("Access-Control-Allow-Origin", "*")
@@ -72,5 +75,36 @@ public class SectionsResource {
         			.header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
         			.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
         			.build();
-    } 
+    }
+    
+    @GET
+    @Path("/books/{sectionId}/{pageId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBooks(@PathParam("sectionId") int sectionId, @PathParam("pageId") int pageId) {
+    	List<Book> bookList = bookDao.getBooksBySectionId(sectionId, DEFAULT_WINDOW_SIZE ,pageId);
+    	
+    	// Book list
+    	JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+    	for(Book i: bookList) {
+    		arrayBuilder.add(i.toJsonBuilder());
+    	}
+    	JsonObjectBuilder bookListBuilder = Json.createObjectBuilder();
+    	bookListBuilder.add("books", arrayBuilder);
+    	// Book number
+    	Integer booksQuantity = bookDao.getBookQuantity(sectionId);
+    	bookListBuilder.add("booksNumber:", booksQuantity);
+    	// Pages number
+    	Integer pageNumber = booksQuantity/DEFAULT_WINDOW_SIZE + 1;
+    	bookListBuilder.add("pagesNumber:", pageNumber);
+    	bookListBuilder.add("currentPage:", pageId);
+    	
+    	JsonObject result = bookListBuilder.build();
+    	
+        return Response.ok(result)
+        			.header("Access-Control-Allow-Origin", "*")
+        			.header("Access-Control-Allow-Credentials", "true")
+        			.header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+        			.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+        			.build();
+    }
 }
