@@ -9,6 +9,7 @@
    <script src="js/sweetalert2.all.min.js"></script>
    <script src="js/sweetalert2.all.min.js"></script>
    <script src="js/vue.global.js"></script>
+   <script src="js/elib.books.pages.js"></script>
 
    <!-- Book navigation tree -->
    <script type="text/x-template" id="item-template">
@@ -99,28 +100,35 @@
 					</td>
 				</tr>
 			</table>
+			<div id=pageNavigator>
+				<a>1</a>
+			</div>
 		</div>
-
 	<script>
-		var bookList = {books: []};
+		let bookList = {books: []};
 
-		var sectionsTree = {
+		let sectionsTree = {
 			name: "Sections", id: 0,
 			children: [{ name: "loading...", id: 1 }]
 		};
 
 		let currentSectionId = -1;
+		let currentPage = 0;
 
 		let updateBookList = function(sectionId){
-			app.updateBooks(sectionId);
+			app.updateBooks(sectionId, currentPage);
+		}
+
+		let rebuildPageList = function(paeNav){
+			let pageNav = document.getElementById("pageNavigator");
+			pageNav.innerHTML = bookList.currentPage + ' of ' + bookList.pagesNumber;
+			console.log(bookList.currentPage + ' of ' + bookList.pagesNumber);
 		}
 
 		let updateCollapsibles = function(){
 			let coll = document.getElementsByClassName("collapsible");
-			console.log('Number of elements:' + coll.length);
 			for (i = 0; i < coll.length; i++) {
 				coll[i].addEventListener("click", function() {
-				console.log('clicked');
 				this.classList.toggle("active");
 				var content = this.nextElementSibling;
 				if (content.style.display === "block") {

@@ -92,11 +92,11 @@ public class SectionsResource {
     	bookListBuilder.add("books", arrayBuilder);
     	// Book number
     	Integer booksQuantity = bookDao.getBookQuantity(sectionId);
-    	bookListBuilder.add("booksNumber:", booksQuantity);
+    	bookListBuilder.add("booksNumber", booksQuantity);
     	// Pages number
-    	Integer pageNumber = booksQuantity/DEFAULT_WINDOW_SIZE + 1;
-    	bookListBuilder.add("pagesNumber:", pageNumber);
-    	bookListBuilder.add("currentPage:", pageId);
+    	Integer pageNumber = booksQuantity>0 ? booksQuantity/DEFAULT_WINDOW_SIZE + 1 : 0;
+    	bookListBuilder.add("pagesNumber", pageNumber);
+    	bookListBuilder.add("currentPage", pageId);
     	
     	JsonObject result = bookListBuilder.build();
     	
