@@ -1,7 +1,5 @@
 package pl.route.rest;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -64,7 +62,8 @@ public class SectionsResource {
     	Integer booksQuantity = bookDao.getBookQuantity(id);
     	bookListBuilder.add("booksNumber:", booksQuantity);
     	// Pages number
-    	Integer pageNumber = booksQuantity/DEFAULT_WINDOW_SIZE + 1;
+    	Integer pageNumber = 1;
+
     	bookListBuilder.add("pagesNumber:", pageNumber);
     	
     	JsonObject result = bookListBuilder.build();
@@ -94,7 +93,10 @@ public class SectionsResource {
     	Integer booksQuantity = bookDao.getBookQuantity(sectionId);
     	bookListBuilder.add("booksNumber", booksQuantity);
     	// Pages number
-    	Integer pageNumber = booksQuantity>0 ? booksQuantity/DEFAULT_WINDOW_SIZE + 1 : 0;
+    	Integer pageNumber = booksQuantity>0 ? booksQuantity/DEFAULT_WINDOW_SIZE : 0;
+    	if(booksQuantity%DEFAULT_WINDOW_SIZE>0)
+    		pageNumber++;
+    	
     	bookListBuilder.add("pagesNumber", pageNumber);
     	bookListBuilder.add("currentPage", pageId);
     	

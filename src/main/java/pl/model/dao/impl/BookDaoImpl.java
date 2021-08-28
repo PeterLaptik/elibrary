@@ -68,7 +68,7 @@ public class BookDaoImpl implements BookDao {
 	public List<Book> getBooksBySectionId(int sectionId, int windowCapacity, int pageNumber) {
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Query<Book> query = session.createQuery("FROM Book WHERE section_section_id = :id ORDER BY book_name", Book.class)
-				.setFirstResult(windowCapacity*pageNumber+1)
+				.setFirstResult(windowCapacity*pageNumber)
 				.setMaxResults(windowCapacity);
 		query.setParameter("id", sectionId);
 		List<Book> books = query.list();
