@@ -33,15 +33,59 @@ public class SectionService implements Serializable {
 	private TreeNode selectedNode;
 	private String nodeName;
 	private String sectionName;
-	private Book selectedBook;
+	private List<Book> selectedBooks;
+	private List<Book> cutBooksSelection = new ArrayList<Book>();
+
 	private List<Book> books = new ArrayList<Book>();
 	private BookService bookService = new BookService();
+	private SortType sortType = SortType.BY_NAME;
 	
 	@EJB
 	SectionDao sectionDao;
 	
 	@EJB
 	BookDao bookDao;
+	
+	enum SortType {
+		BY_ID, BY_NAME, BY_AUTHOR, BY_CODE
+	};
+	
+	public void sortById() {
+		sortType = SortType.BY_ID;
+		sortBooks();
+	}
+
+	public void sortByName() {
+		sortType = SortType.BY_NAME;
+		sortBooks();
+	}
+	
+	public void sortByAuthor() {
+		sortType = SortType.BY_AUTHOR;
+		sortBooks();
+	}
+	
+	public void sortByCode() {
+		sortType = SortType.BY_CODE;
+		sortBooks();
+	}
+	
+	public void cutBooks() {
+		cutBooksSelection.clear();
+		for(Book i: selectedBooks)
+			cutBooksSelection.add(i);
+	}
+	
+	public void insertBooks() {
+		if(cutBooksSelection.size()<1)
+			return;
+		
+		for(Book i: cutBooksSelection) {
+			bookDao.moveBookToSection(i, ((SectionNode)selectedNode.getData()).getId());
+		}
+		cutBooksSelection.clear();
+		updateBooks();
+	}
 	
 	public TreeNode getRoot() {
 		root = buildStructure();
@@ -161,16 +205,17 @@ public class SectionService implements Serializable {
 		this.books = books;
 	}
 	
-	public Book getSelectedBook() {
-		return selectedBook;
+	public List<Book> getSelectedBooks() {
+		return selectedBooks;
 	}
 
-	public void setSelectedBook(Book selectedBook) {
-		this.selectedBook = selectedBook;
+	public void setSelectedBooks(List<Book> selectedBooks) {
+		this.selectedBooks = selectedBooks;
 	}
 	
-	public void deleteSelectedBook() {
-		bookService.setSelectedBook(selectedBook);
+	public void deleteSelectedBooks() {
+		cutBooksSelection.clear();
+		bookService.setSelectedBooks(selectedBooks);
 		bookService.deleteSelectedBook();
 		updateBooks();
 	}
@@ -203,5 +248,23 @@ public class SectionService implements Serializable {
 	    bookService.setSection(section);
 	    List<Book> bookList = bookDao.getBooksBySection(section);
 	    setBooks(bookList);
+	    sortBooks();
+	}
+	
+	private void sortBooks() {
+		Collections.sort(getBooks(), new Comparator<Book>() {
+			@Override
+			public int compare(Book o1, Book o2) {
+				if(sortType==SortType.BY_NAME)
+					return o1.getName().compareTo(o2.getName());
+				if(sortType==SortType.BY_AUTHOR)
+					return o1.getAuthors().compareTo(o2.getAuthors());
+				if(sortType==SortType.BY_CODE)
+					return o1.getCodeUdc().compareTo(o2.getCodeUdc());
+				
+				return ((Integer)o1.getId()).compareTo((Integer)o2.getId());
+			}
+	    	
+	    });
 	}
 }

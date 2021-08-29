@@ -120,6 +120,12 @@
 			let currentPage = 0;
 
 			let updateBookList = function(sectionId){
+				let coll = document.getElementsByClassName("collapsible");
+				for (i = 0; i < coll.length; i++) {
+					// TODO active
+					var content = coll[i].nextElementSibling;
+					content.style.display = "none";
+				}
 				app.updateBooks(sectionId, currentPage);
 			}
 
@@ -163,7 +169,6 @@
 
 			let updateCollapsibles = function(){
 				let coll = document.getElementsByClassName("collapsible");
-				console.log("Listeners:" + coll.length);
 				for (i = 0; i < coll.length; i++) {
 					if(coll[i].hasAttachedListener!=true) {
 						coll[i].addEventListener("click", function() {

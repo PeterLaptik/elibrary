@@ -34,6 +34,47 @@ public class BookDaoImpl implements BookDao {
 	}
 
 	@Override
+	public void deleteBook(Book book) {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Transaction transaction = session.beginTransaction();
+		Query<Book> query = session.createQuery("FROM Book WHERE id = :param", Book.class);
+		query.setParameter("param", book.getId());
+		List<Book> books = query.list();
+		if(books.size()>0)
+			session.delete(books.get(0));
+		transaction.commit();
+		session.close();
+	}
+
+	@Override
+	public void moveBookToSection(Book book, int sectionId) {
+		int id = book.getId();
+		
+		book = null;
+		Section section = null;
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Transaction transaction = session.beginTransaction();
+		
+		Query<Book> bQuery = session.createQuery("FROM Book WHERE id = :param", Book.class);
+		bQuery.setParameter("param", id);
+		List<Book> books = bQuery.list();
+		if(books.size()>0)
+			book = books.get(0);
+		
+		Query<Section> sQuery = session.createQuery("FROM Section WHERE id = :param", Section.class);
+		sQuery.setParameter("param", sectionId);
+		List<Section> sections = sQuery.list();
+		if(sections.size()>0)
+			section = sections.get(0);
+			
+		if(book!=null && section!=null)
+			book.setSection(section);
+		
+		transaction.commit();
+		session.close();
+	}
+	
+	@Override
 	public List<Book> findBooksByName(String name) {
 		if(name==null)
 			return new ArrayList<Book>();
@@ -76,19 +117,6 @@ public class BookDaoImpl implements BookDao {
 		return books;
 	}
 	
-	@Override
-	public void deleteBook(Book book) {
-		Session session = HibernateSessionFactory.getSession().openSession();
-		Transaction transaction = session.beginTransaction();
-		Query<Book> query = session.createQuery("FROM Book WHERE id = :param", Book.class);
-		query.setParameter("param", book.getId());
-		List<Book> books = query.list();
-		if(books.size()>0)
-			session.delete(books.get(0));
-		transaction.commit();
-		session.close();
-	}
-
 	@Override
 	public int getBooksQuantity() {
 		int result = 0;

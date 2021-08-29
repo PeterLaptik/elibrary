@@ -32,6 +32,7 @@
 								onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
 					</p:treeTable>
 					<p:contextMenu for="nodes">
+						<p:menuitem value="Insert books" action="#{sectionService.insertBooks}" update="books"/>
 						<p:menuitem value="Add section" onclick="PF('inputDlg').show()" />
 						<p:menuitem value="Delete section" update="nodes"
 							action="#{sectionService.deleteNode}" />
@@ -40,17 +41,14 @@
 			</div>
 			<div class="booksContent">
 				<div>
-					
-				</div>
-				<div>
 					<p:commandButton value="Load book" style="margin-bottom: 10px;"
 						onclick="PF('createBookDlg').show()" update="books"/>
 					<h:outputText id="sectionName" style="font-size: 1.2em;"
 						value="  Section: #{sectionService.nodeName}" />
 				</div>
 				<p:dataTable id="books" var="book" value="#{sectionService.books}" 
-	 						selection="#{sectionService.selectedBook}" rowKey="#{book.id}" 
-	 						selectionMode="single">
+	 						selection="#{sectionService.selectedBooks}" rowKey="#{book.id}" 
+	 						selectionMode="multi">
 		 			<p:column style="width:50px;" headerText="id">
 	                	<h:outputText value="#{book.id}" />
 		            </p:column>
@@ -77,7 +75,12 @@
 		        </p:dataTable>
 		        <!-- Popup menu for books -->
 		        <p:contextMenu for="books">
-		            <p:menuitem value="Delete book" onclick="PF('dlgc').show()" update="books"/>
+		        	<p:menuitem value="Sort by name" update="books" action="#{sectionService.sortByName}"/>
+		        	<p:menuitem value="Sort by author" update="books" action="#{sectionService.sortByAuthor}"/>
+		        	<p:menuitem value="Sort by code" update="books" action="#{sectionService.sortByCode}"/>
+		        	<p:menuitem value="Sort by id" update="books" action="#{sectionService.sortById}"/>
+		        	<p:menuitem value="Move selected books" update="books" action="#{sectionService.cutBooks}"/>
+		            <p:menuitem value="Delete selected books" onclick="PF('dlgc').show()" update="books"/>
 		        </p:contextMenu>
 			</div>
 		        
@@ -87,7 +90,7 @@
 				    <p class="p-m-0">Delete selected record?</p>
 				    <f:facet name="footer">
 				    	<p:commandButton value="Yes" style="width: 5rem" 
-					    	action="#{sectionService.deleteSelectedBook}" 
+					    	action="#{sectionService.deleteSelectedBooks}" 
 					    	onclick="hide()" update=":sections_form:books"/>
 				        <p:commandButton value="No" styleClass="ui-button-flat p-mr-2" style="width: 6rem" onclick="hide()"/>
 				    </f:facet>

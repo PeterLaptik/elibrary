@@ -74,6 +74,7 @@ public class Book implements Serializable {
 	@Column(name=FIELD_AUTHORS)
 	private String authors = "";
 	
+	// universal decimal code
 	@Column(name=FIELD_CODE_UDC)
 	private String codeUdc = "";
 	

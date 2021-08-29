@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -54,12 +55,11 @@ public class BookService implements Serializable{
 	public void setPublicationYear(String publicationYear) {
 		this.publicationYear = publicationYear;
 	}
-
 	
 	private String city;
 	private Section section;
 	
-	private Book selectedBook = null;
+	private List<Book> selectedBooks = null;
 	
 	Section selectedSection = null;
 	private UploadedFile file = null;
@@ -179,27 +179,30 @@ public class BookService implements Serializable{
 		this.city = city;
 	}
 	
-	public Book getSelectedBook() {
-		return selectedBook;
+	public List<Book> getSelectedBooks() {
+		return selectedBooks;
 	}
 
-	public void setSelectedBook(Book selectedBook) {
-		this.selectedBook = selectedBook;
+	public void setSelectedBooks(List<Book> selectedBooks) {
+		this.selectedBooks = selectedBooks;
 	}
 
 	public void deleteSelectedBook() {
-		if(selectedBook==null)
-			return;	
+		if(selectedBooks==null || selectedBooks.size()<1)
+			return;
+		
 		try {
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 			String directory = externalContext.getInitParameter(Book.BOOKS_VOLUME);
 			if (directory.charAt(directory.length()-1)!='\\' && directory.charAt(directory.length()-1)!='/')
 				directory += File.separator;
 
-			String filePath = directory + selectedBook.getFileName();
-			File file = new File(filePath);
-			bookDao.deleteBook(selectedBook);
-			file.delete();
+			for(Book selectedBook: selectedBooks) {
+				String filePath = directory + selectedBook.getFileName();
+				File file = new File(filePath);
+				bookDao.deleteBook(selectedBook);
+				file.delete();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, 
