@@ -50,42 +50,6 @@ public class SectionService implements Serializable {
 		BY_ID, BY_NAME, BY_AUTHOR, BY_CODE
 	};
 	
-	public void sortById() {
-		sortType = SortType.BY_ID;
-		sortBooks();
-	}
-
-	public void sortByName() {
-		sortType = SortType.BY_NAME;
-		sortBooks();
-	}
-	
-	public void sortByAuthor() {
-		sortType = SortType.BY_AUTHOR;
-		sortBooks();
-	}
-	
-	public void sortByCode() {
-		sortType = SortType.BY_CODE;
-		sortBooks();
-	}
-	
-	public void cutBooks() {
-		cutBooksSelection.clear();
-		for(Book i: selectedBooks)
-			cutBooksSelection.add(i);
-	}
-	
-	public void insertBooks() {
-		if(cutBooksSelection.size()<1)
-			return;
-		
-		for(Book i: cutBooksSelection) {
-			bookDao.moveBookToSection(i, ((SectionNode)selectedNode.getData()).getId());
-		}
-		cutBooksSelection.clear();
-		updateBooks();
-	}
 	
 	public TreeNode getRoot() {
 		root = buildStructure();
@@ -266,5 +230,43 @@ public class SectionService implements Serializable {
 			}
 	    	
 	    });
+	}
+	
+	public void sortById() {
+		sortType = SortType.BY_ID;
+		sortBooks();
+	}
+
+	public void sortByName() {
+		sortType = SortType.BY_NAME;
+		sortBooks();
+	}
+	
+	public void sortByAuthor() {
+		sortType = SortType.BY_AUTHOR;
+		sortBooks();
+	}
+	
+	public void sortByCode() {
+		sortType = SortType.BY_CODE;
+		sortBooks();
+	}
+	
+	
+	public void cutBooks() {
+		cutBooksSelection.clear();
+		for(Book i: selectedBooks)
+			cutBooksSelection.add(i);
+	}
+	
+	public void insertBooks() {
+		if(cutBooksSelection.size()<1)
+			return;
+		
+		for(Book i: cutBooksSelection) {
+			bookDao.moveBookToSection(i, ((SectionNode)selectedNode.getData()).getId());
+		}
+		cutBooksSelection.clear();
+		updateBooks();
 	}
 }
