@@ -37,7 +37,9 @@ public class Book implements Serializable {
 	public static final String FIELD_ID = "id";
 	public static final String FIELD_NAME = "book_name";
 	public static final String FIELD_AUTHORS = "authors";
-	public static final String FIELD_CODE = "book_code";
+	public static final String FIELD_CODE_UDC = "book_code_udc";
+	public static final String FIELD_CODE_ISBN = "book_code_isbn";
+	public static final String FIELD_CODE_ISSN = "book_code_issn";
 	public static final String FIELD_MAGAZINE = "magazine";
 	public static final String FIELD_DESCR = "book_description";
 	public static final String FIELD_PUBLISHER = "publisher";
@@ -72,8 +74,14 @@ public class Book implements Serializable {
 	@Column(name=FIELD_AUTHORS)
 	private String authors = "";
 	
-	@Column(name=FIELD_CODE)
-	private String code = "";
+	@Column(name=FIELD_CODE_UDC)
+	private String codeUdc = "";
+	
+	@Column(name=FIELD_CODE_ISBN)
+	private String codeIsbn = "";
+
+	@Column(name=FIELD_CODE_ISSN)
+	private String codeIssn = "";
 	
 	/** Attribute is only for articles: 
 	 * name - article name, code - magazine issue **/
@@ -155,14 +163,30 @@ public class Book implements Serializable {
 		this.authors = authors;
 	}
 
-	public String getCode() {
-		return code;
+	public String getCodeUdc() {
+		return codeUdc;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setCodeUdc(String codeUdc) {
+		this.codeUdc = codeUdc;
 	}
 
+	public String getCodeIsbn() {
+		return codeIsbn;
+	}
+
+	public void setCodeIsbn(String codeIsbn) {
+		this.codeIsbn = codeIsbn;
+	}
+
+	public String getCodeIssn() {
+		return codeIssn;
+	}
+
+	public void setCodeIssn(String codeIssn) {
+		this.codeIssn = codeIssn;
+	}
+	
 	public String getMagazine() {
 		return magazine;
 	}
@@ -208,7 +232,9 @@ public class Book implements Serializable {
 		builder.add("name", name);
 		builder.add("description", description);
 		builder.add("author", authors);
-		builder.add("code", code);
+		builder.add("codeUdc", codeUdc);
+		builder.add("codeIsbn", codeIsbn);
+		builder.add("codeIssn", codeIssn);
 		builder.add("format", format);
 		builder.add("publisher", publisher);
 		builder.add("city", city);
@@ -221,7 +247,9 @@ public class Book implements Serializable {
 		builder.add("name", name);
 		builder.add("description", description);
 		builder.add("author", authors);
-		builder.add("code", code);
+		builder.add("codeUdc", codeUdc);
+		builder.add("codeIsbn", codeIsbn);
+		builder.add("codeIssn", codeIssn);
 		builder.add("format", format);
 		builder.add("publisher", publisher);
 		builder.add("city", city);

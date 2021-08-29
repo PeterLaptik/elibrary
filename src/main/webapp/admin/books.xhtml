@@ -61,7 +61,7 @@
 		                <h:outputText value="#{book.authors}" />
 		            </p:column>
 		            <p:column headerText="Code">
-		                <h:outputText value="#{book.code}" />
+		                <h:outputText value="#{book.codeUdc}" />
 		            </p:column>
 		            <p:column headerText="Magazine">
 		                <h:outputText value="#{book.magazine}" />
@@ -111,9 +111,19 @@
 								value="#{sectionService.bookService.authors}" /></td>
 					</tr>
 					<tr>
-						<td>Code</td>
-						<td><p:inputText id="bookCode"
-								value="#{sectionService.bookService.code}" /></td>
+						<td>Code universal decimal</td>
+						<td><p:inputText id="bookCodeDecimal"
+								value="#{sectionService.bookService.codeUdc}" /></td>
+					</tr>
+					<tr>
+						<td>Code ISBN</td>
+						<td><p:inputText id="bookCodeIsbn"
+								value="#{sectionService.bookService.codeIsbn}" /></td>
+					</tr>
+					<tr>
+						<td>Code ISSN</td>
+						<td><p:inputText id="bookCodeIssn"
+								value="#{sectionService.bookService.codeIssn}" /></td>
 					</tr>
 					<tr>
 						<td>Description</td>

@@ -38,7 +38,9 @@ public class BookService implements Serializable{
 	private String format;
 	private String fileName;
 	private String authors;
-	private String code;
+	private String codeUdc;
+	private String codeIsbn;
+	private String codeIssn;
 	private String magazine;
 	private String publisher;
 	
@@ -129,14 +131,30 @@ public class BookService implements Serializable{
 		this.authors = authors;
 	}
 
-	public String getCode() {
-		return code;
+	public String getCodeUdc() {
+		return codeUdc;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setCodeUdc(String code) {
+		this.codeUdc = code;
 	}
 
+	public String getCodeIsbn() {
+		return codeIsbn;
+	}
+
+	public void setCodeIsbn(String codeIsbn) {
+		this.codeIsbn = codeIsbn;
+	}
+
+	public String getCodeIssn() {
+		return codeIssn;
+	}
+
+	public void setCodeIssn(String codeIssn) {
+		this.codeIssn = codeIssn;
+	}
+	
 	public String getMagazine() {
 		return magazine;
 	}
@@ -303,7 +321,9 @@ public class BookService implements Serializable{
 		book.setFileName(fileName);
 		book.setFormat(fileName.substring(fileName.lastIndexOf("."), fileName.length()));
 		book.setSection(section);
-		book.setCode(code);
+		book.setCodeUdc(codeUdc);
+		book.setCodeIsbn(codeIsbn);
+		book.setCodeIssn(codeIssn);
 		book.setAuthors(authors);
 		book.setMagazine(magazine);
 		book.setPublisher(publisher);
@@ -331,7 +351,9 @@ public class BookService implements Serializable{
 		} finally {
 			setName("");
 			setDescription("");
-			book.setCode("");
+			book.setCodeUdc("");
+			book.setCodeIsbn("");
+			book.setCodeIssn("");
 			book.setAuthors("");
 			book.setMagazine("");
 		}
