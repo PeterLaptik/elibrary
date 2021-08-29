@@ -16,8 +16,8 @@ const app = Vue.createApp({
                 bookList.currentPage = loadedData.currentPage;
                 this.callBackObject.$forceUpdate();
                 Vue.nextTick(function () {
-                    updateCollapsibles();
                     rebuildPageList();
+                    updateCollapsibles();
                   })
             }
         }

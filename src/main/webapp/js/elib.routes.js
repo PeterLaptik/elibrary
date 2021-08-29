@@ -12,6 +12,7 @@ var router = {
     },
 
     getBooksPage: function(sectionId, page){
+        console.log(this.getBooksList(sectionId) + '/' + page);
         return this.getBooksList(sectionId) + '/' + page;
     }
 };

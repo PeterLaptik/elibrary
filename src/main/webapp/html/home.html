@@ -11,7 +11,6 @@
    <script src="js/vue.global.js"></script>
    <script src="js/elib.books.pages.js"></script>
 
-   <!-- Book navigation tree -->
    <script type="text/x-template" id="item-template">
 	<li div>
 	  <div
@@ -89,90 +88,90 @@
 				<tr>
 					<td class="book_author">{{book.author}}</td>
 				</tr>
-				
-				<tr class="book_author"><td>rtertr</td></tr>
 				<tr>
 					<td>
 						<button type="button" class="collapsible">&#10000; Show description</button>
 						<div class="book_description">
-							{{book.description}}</td>
+							{{book.description}}
 						</div>
 					</td>
 				</tr>
 			</table>
 			<div id=pageNavigator>
-				<a>1</a>
 			</div>
 		</div>
-	<script>
-		let bookList = {books: []};
+		<script>
+			let bookList = {books: []};
 
-		let sectionsTree = {
-			name: "Sections", id: 0,
-			children: [{ name: "loading...", id: 1 }]
-		};
+			let sectionsTree = {
+				name: "Sections", id: 0,
+				children: [{ name: "loading...", id: 1 }]
+			};
 
-		let currentSectionId = -1;
-		let currentPage = 0;
+			let currentSectionId = -1;
+			let currentPage = 0;
 
-		let updateBookList = function(sectionId){
-			app.updateBooks(sectionId, currentPage);
-		}
-
-		let rebuildPageList = function(paeNav){
-			let pageNav = document.getElementById("pageNavigator");
-			pageNav.innerHTML = '';
-
-			const MAX_PAGES = 10;
-			const PAGE_WINDOW_MARGIN = 3;
-			let pageOverflow = bookList.pagesNumber>MAX_PAGES;
-
-			for(let i=0; i<bookList.pagesNumber; i++){
-				let minPage = currentPage-PAGE_WINDOW_MARGIN;
-				let maxPage = currentPage+PAGE_WINDOW_MARGIN;
-				if((i<minPage || i>maxPage) && i!=0 && i!=bookList.pagesNumber-1)
-					continue;
-
-				if(pageOverflow==true && i==bookList.pagesNumber-1 && maxPage<bookList.pagesNumber-2){
-					let dummyElem = document.createElement("a");
-					dummyElem.textContent = '...';
-					pageNav.appendChild(dummyElem);
-				}
-
-				let elem = document.createElement("a");
-				elem.textContent = ' ' + (i+1) + ' ';
-				elem.id = i!=currentPage ? 'pageLink' : 'pageLinkSelected';
-				elem.href = "#";
-				elem.onclick = function(event){
-					currentPage = i;
-					updateBookList(currentSectionId);
-				};
-
-				pageNav.appendChild(elem);
-				if(pageOverflow==true && i==0 && minPage>1){
-					let dummyElem = document.createElement("a");
-					dummyElem.textContent = '...';
-					pageNav.appendChild(dummyElem);
-				}
+			let updateBookList = function(sectionId){
+				app.updateBooks(sectionId, currentPage);
 			}
-		}
 
-		let updateCollapsibles = function(){
-			let coll = document.getElementsByClassName("collapsible");
-			for (i = 0; i < coll.length; i++) {
-				coll[i].addEventListener("click", function() {
-				this.classList.toggle("active");
-				var content = this.nextElementSibling;
-				if (content.style.display === "block") {
-					content.style.display = "none";
-					} else {
-					content.style.display = "block";
+			let rebuildPageList = function(paeNav){
+				let pageNav = document.getElementById("pageNavigator");
+				pageNav.innerHTML = '';
+
+				const MAX_PAGES = 10;
+				const PAGE_WINDOW_MARGIN = 3;
+				let pageOverflow = bookList.pagesNumber>MAX_PAGES;
+
+				for(let i=0; i<bookList.pagesNumber; i++){
+					let minPage = currentPage-PAGE_WINDOW_MARGIN;
+					let maxPage = currentPage+PAGE_WINDOW_MARGIN;
+					if((i<minPage || i>maxPage) && i!=0 && i!=bookList.pagesNumber-1)
+						continue;
+
+					if(pageOverflow==true && i==bookList.pagesNumber-1 && maxPage<bookList.pagesNumber-2){
+						let dummyElem = document.createElement("a");
+						dummyElem.textContent = '...';
+						pageNav.appendChild(dummyElem);
 					}
-				});
-			}
-		}
 
-	</script>
+					let elem = document.createElement("a");
+					elem.textContent = ' ' + (i+1) + ' ';
+					elem.id = i!=currentPage ? 'page_link' : 'page_link_selected';
+					elem.href = "#";
+					elem.onclick = function(event){
+						currentPage = i;
+						updateBookList(currentSectionId);
+					};
+
+					pageNav.appendChild(elem);
+					if(pageOverflow==true && i==0 && minPage>1){
+						let dummyElem = document.createElement("a");
+						dummyElem.textContent = '...';
+						pageNav.appendChild(dummyElem);
+					}
+				}
+			}
+
+			let updateCollapsibles = function(){
+				let coll = document.getElementsByClassName("collapsible");
+				console.log("Listeners:" + coll.length);
+				for (i = 0; i < coll.length; i++) {
+					if(coll[i].hasAttachedListener!=true) {
+						coll[i].addEventListener("click", function() {
+							this.classList.toggle("active");
+							var content = this.nextElementSibling;
+							if (content.style.display === "block") {
+								content.style.display = "none";
+								} else {
+								content.style.display = "block";
+								}
+							});
+					}
+					coll[i].hasAttachedListener = true;
+				}
+			}
+		</script>
 	<script src="js/elib.routes.js"></script>
 	<script src="js/elib.book.navigator.js"></script>
 	<script src="js/elib.books.list.js"></script>

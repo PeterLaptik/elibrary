@@ -28,3 +28,26 @@
   overflow: hidden;
   background-color: #f1f1f1;
 }
+
+.book_name {
+  font-size: 20px;
+}
+
+.book_author {
+  font-size: 18px;
+}
+
+#page_link_selected {
+  color: black;
+  font-size: large;
+  text-decoration: none;
+}
+
+#page_link {
+  font-size: large;
+  text-decoration: none;
+}
+
+#pageNavigator {
+  text-align: center;
+}
