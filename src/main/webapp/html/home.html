@@ -122,7 +122,9 @@
 			let updateBookList = function(sectionId){
 				let coll = document.getElementsByClassName("collapsible");
 				for (i = 0; i < coll.length; i++) {
-					// TODO active
+					if(coll[i].classList.contains("active"))
+						coll[i].classList.toggle("active");
+					// console.log(coll[i].classList.contains("active"));
 					var content = coll[i].nextElementSibling;
 					content.style.display = "none";
 				}
