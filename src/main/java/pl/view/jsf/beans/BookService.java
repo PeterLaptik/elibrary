@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -44,8 +45,6 @@ public class BookService implements Serializable{
 	private String codeIssn;
 	private String magazine;
 	private String publisher;
-	
-	
 	private String publicationYear;
 
 	public String getPublicationYear() {
@@ -218,7 +217,7 @@ public class BookService implements Serializable{
 	 * @param event - event from page
 	 */
 	public void uploadBook(FileUploadEvent event) {
-		file = event.getFile();
+		file = event.getFile();		
         if(file!=null && file.getContents()!=null && file.getContents().length > 0 
         		&& file.getFileName()!=null) {
             FacesMessage msg = new FacesMessage("Successful", file.getFileName() + " is uploaded.");

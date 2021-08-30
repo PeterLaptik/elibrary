@@ -170,6 +170,7 @@
 					invalidSizeMessage="Maximum file size allowed is 130 MB"
 					invalidFileMessage="only gif | jpg | jpeg | png is allowed"
 					fileUploadListener="#{sectionService.bookService.uploadBook}"
+					allowTypes="/(\.|\/)(pdf|djvu|djv)$/"
 					closable="true" />
 				<p:commandButton value="OK" style="float: right;"
 					actionListener="#{sectionService.appendBook}"
