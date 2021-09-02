@@ -3,6 +3,8 @@ package pl.controllers;
 import java.io.IOException;
 
 import javax.ejb.EJB;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,7 +29,7 @@ public class StartServlet extends HttpServlet {
         super();
     }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
 		if(mgr.hasSession(request.getCookies()))
 			response.sendRedirect(router.getHome());
 		else

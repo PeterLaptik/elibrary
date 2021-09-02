@@ -12,7 +12,7 @@ public interface BookDao extends Serializable{
 	
 	public void deleteBook(Book book);
 	
-	public void moveBookToSection(Book book, int sectionId);
+	public Book getBookById(int id);
 	
 	public List<Book> findBooksByName(String name);
 	
@@ -20,9 +20,12 @@ public interface BookDao extends Serializable{
 	
 	public List<Book> getBooksBySectionId(int id);
 	
+	/** Paginated list **/
 	public List<Book> getBooksBySectionId(int sectionId, int windowCapacity, int pageNumber);
 	
 	public int getBooksQuantity();
 	
 	public int getBookQuantity(int sectionId);
+	
+	public void moveBookToSection(Book book, int sectionId);
 }

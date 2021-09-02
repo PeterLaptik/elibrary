@@ -230,6 +230,7 @@ public class Book implements Serializable {
 	
 	public JsonObjectBuilder toJsonBuilder() {
 		JsonObjectBuilder builder = Json.createObjectBuilder();
+		builder.add("id", id);
 		builder.add("name", name);
 		builder.add("description", description);
 		builder.add("author", authors);
@@ -245,6 +246,7 @@ public class Book implements Serializable {
 	
 	public JsonObject toJsonObject() {
 		JsonObjectBuilder builder = Json.createObjectBuilder();
+		builder.add("id", id);
 		builder.add("name", name);
 		builder.add("description", description);
 		builder.add("author", authors);

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>PDF reader</title>
+		<link rel="stylesheet" type="text/css" href="css/reader-pdf.css" />
+	</head>
+	<body>
+		<div id="app">
+	      <div role="toolbar" id="toolbar">
+	        <div id="pager">
+	          <button data-pager="prev">prev</button>
+	          <button data-pager="next">next</button>
+	        </div>
+	        <div id="page-mode">
+	          <label>Page Mode <input type="number" value="1" min="1"/></label>
+	        </div>
+	      </div>
+	      <div id="viewport-container"><div role="main" id="viewport"></div></div>
+	    </div>
+	</body>
+	<script type="text/javascript">
+		var urlString = window.location.href;
+		//console.log(url_string);
+		var url = new URL(urlString);
+		var bookId = url.searchParams.get("id");
+		var ext = url.searchParams.get("ext");
+	</script>
+	<script src="js/elib.routes.js"></script>
+	<script src="https://unpkg.com/pdfjs-dist@2.0.489/build/pdf.min.js"></script>
+    <script src="js/reader-pdf.js"></script>
+    <script>
+      initPDFViewer(router.getBook(bookId));
+    </script>
+</html>

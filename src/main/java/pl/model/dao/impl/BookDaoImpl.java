@@ -75,6 +75,17 @@ public class BookDaoImpl implements BookDao {
 	}
 	
 	@Override
+	public Book getBookById(int id) {
+		Book book = null;
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Query<Book> query = session.createQuery("FROM Book WHERE id = :param", Book.class);
+		query.setParameter("param", id);
+		book = query.getSingleResult();
+		session.close();
+		return book;
+	}
+	
+	@Override
 	public List<Book> findBooksByName(String name) {
 		if(name==null)
 			return new ArrayList<Book>();

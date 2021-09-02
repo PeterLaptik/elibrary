@@ -12,6 +12,7 @@ public class RoutesKeeper implements IRoutes {
 	private String home = "home";
 	private String register = "register";
 	private String applicationPath = null;
+	private String pdfPage = "pdf-reader";
 	
 	public String getLogin() {
 		return login;
@@ -34,5 +35,14 @@ public class RoutesKeeper implements IRoutes {
 	
 	public String getApplicationPath() {
 		return applicationPath;
+	}
+	
+	@Override
+	public String getPdfPage() {
+		return pdfPage;
+	}
+	
+	public void setPdfPage(String pdfPage) {
+		this.pdfPage = pdfPage;
 	}
 }

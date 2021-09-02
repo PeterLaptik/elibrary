@@ -94,4 +94,12 @@
 	    <servlet-name>home</servlet-name>
 	    <url-pattern>/home</url-pattern>
 	  </servlet-mapping>
+	  <servlet>
+	    <servlet-name>pdf-reader</servlet-name>
+	    <jsp-file>/html/reader-pdf.html</jsp-file>
+	  </servlet>
+	  <servlet-mapping>
+	    <servlet-name>pdf-reader</servlet-name>
+	    <url-pattern>/pdf-reader</url-pattern>
+	  </servlet-mapping>
 </web-app>

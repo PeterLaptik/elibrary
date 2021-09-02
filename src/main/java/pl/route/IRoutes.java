@@ -6,4 +6,5 @@ public interface IRoutes extends Serializable {
 	public String getHome();
 	public String getLogin();
 	public String getRegister();
+	public String getPdfPage();
 }

@@ -1,4 +1,5 @@
 var router = {
+	pathReader: 'book',
     applicationContextPath: 'res',
     pathSections: '/sections',
     pathBooks: '/books',
@@ -12,7 +13,14 @@ var router = {
     },
 
     getBooksPage: function(sectionId, page){
-        console.log(this.getBooksList(sectionId) + '/' + page);
         return this.getBooksList(sectionId) + '/' + page;
-    }
+    },
+	
+	getReader: function(id, ext){
+		return this.pathReader + '?id=' + id + "&ext=" + ext;
+	},
+	
+	getBook: function(id){
+		return this.applicationContextPath + this.pathBooks + '/' + id;
+	}
 };

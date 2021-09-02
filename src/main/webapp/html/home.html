@@ -98,6 +98,12 @@
 				</tr>
 				<tr>
 					<td>
+						<a href='#' :book-name="book.id" :book-format="book.format"
+						onclick="openBook(this.getAttribute(`book-name`), this.getAttribute(`book-format`))" id="book-link">open</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
 						<button type="button" class="collapsible">&#10000; Show description</button>
 						<div class="book_description">
 							{{book.description}}
@@ -124,7 +130,6 @@
 				for (i = 0; i < coll.length; i++) {
 					if(coll[i].classList.contains("active"))
 						coll[i].classList.toggle("active");
-					// console.log(coll[i].classList.contains("active"));
 					var content = coll[i].nextElementSibling;
 					content.style.display = "none";
 				}
@@ -186,6 +191,11 @@
 					coll[i].hasAttachedListener = true;
 				}
 			}
+			
+			let openBook = function(id, format) {
+				window.open(router.getReader(id, format), "_blank");
+			}
+			
 		</script>
 	<script src="js/elib.routes.js"></script>
 	<script src="js/elib.book.navigator.js"></script>
