@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 import javax.servlet.http.Cookie;
 
+/**
+ * Bean for checking sessions / login / logout
+ * @author Peter Laptik
+ */
 public interface IAuthentification extends Serializable{
 	/**
 	 * Checks a password for the user login.

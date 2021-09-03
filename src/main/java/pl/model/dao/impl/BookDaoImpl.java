@@ -80,7 +80,11 @@ public class BookDaoImpl implements BookDao {
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Query<Book> query = session.createQuery("FROM Book WHERE id = :param", Book.class);
 		query.setParameter("param", id);
-		book = query.getSingleResult();
+		try {
+			book = query.getSingleResult();
+		} catch (Exception e) {
+			System.err.println("Error: book not found. book_id=" + id);
+		}
 		session.close();
 		return book;
 	}

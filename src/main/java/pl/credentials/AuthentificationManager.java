@@ -6,12 +6,14 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.servlet.http.Cookie;
 
+import pl.model.cache.SessionCache;
 import pl.model.dao.UserDao;
 import pl.model.dao.UserSessionDao;
 import pl.model.entities.User;
 import pl.model.entities.UserSession;
 
 /**
+ * Authentification manager imlementation
  * Description: see IAuthentification
  */
 @Singleton
@@ -24,6 +26,9 @@ public class AuthentificationManager implements IAuthentification {
 	
 	@EJB
 	private UserSessionDao sessionDao;
+	
+	@EJB
+	private SessionCache sessions;
 	
 	@Override
 	public Cookie login(String login, String pass) {
@@ -60,7 +65,7 @@ public class AuthentificationManager implements IAuthentification {
     	if(sessionUuid==null)
     		return false;
     	
-    	UserSession session = sessionDao.findSessionByUuid(sessionUuid);
+    	UserSession session = sessions.findSessionByUuid(sessionUuid);
     	return session!=null;
 	}
 	
@@ -81,6 +86,6 @@ public class AuthentificationManager implements IAuthentification {
     	if(sessionUuid==null)
     		return;
     	
-    	sessionDao.deleteSessionByUuid(sessionUuid);
+    	sessions.deleteSessionByUuid(sessionUuid);
 	}
 }

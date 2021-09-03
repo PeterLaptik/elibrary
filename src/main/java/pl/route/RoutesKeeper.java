@@ -13,6 +13,7 @@ public class RoutesKeeper implements IRoutes {
 	private String register = "register";
 	private String applicationPath = null;
 	private String pdfPage = "pdf-reader";
+	private String djvuPage = "djvu-reader";
 	
 	public String getLogin() {
 		return login;
@@ -44,5 +45,13 @@ public class RoutesKeeper implements IRoutes {
 	
 	public void setPdfPage(String pdfPage) {
 		this.pdfPage = pdfPage;
+	}
+	
+	@Override
+	public String getDjvuPage() {
+		return djvuPage;
+	}
+	public void setDjvuPage(String djvuPage) {
+		this.djvuPage = djvuPage;
 	}
 }

@@ -7,4 +7,5 @@ public interface IRoutes extends Serializable {
 	public String getLogin();
 	public String getRegister();
 	public String getPdfPage();
+	public String getDjvuPage();
 }

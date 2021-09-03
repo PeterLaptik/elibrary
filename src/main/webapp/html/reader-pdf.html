@@ -19,14 +19,24 @@
 	      <div id="viewport-container"><div role="main" id="viewport"></div></div>
 	    </div>
 	</body>
+	<script src="js/elib.routes.js"></script>
 	<script type="text/javascript">
 		var urlString = window.location.href;
-		//console.log(url_string);
 		var url = new URL(urlString);
 		var bookId = url.searchParams.get("id");
-		var ext = url.searchParams.get("ext");
+		
+		let currentPage = 1;
+		
+		let pathToPost = router.getBookHistory();
+		console.log(pathToPost)
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", pathToPost, true);
+		xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.send(JSON.stringify({
+			    id: bookId,
+			    page: currentPage
+		}));
 	</script>
-	<script src="js/elib.routes.js"></script>
 	<script src="https://unpkg.com/pdfjs-dist@2.0.489/build/pdf.min.js"></script>
     <script src="js/reader-pdf.js"></script>
     <script>

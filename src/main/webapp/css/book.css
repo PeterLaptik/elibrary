@@ -37,6 +37,10 @@
   font-size: 18px;
 }
 
+.book-download {
+	text-align: right;
+}
+
 #page_link_selected {
   color: black;
   font-size: large;

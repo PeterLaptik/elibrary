@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+    <header>
+        <meta charset="utf-8">
+        <script src="js/djvu.js"></script>
+        <script src="js/djvu_viewer.js"></script>
+
+        <style>
+            #for_viewer {
+                height: 80vh;
+                width: 90vw;
+                margin: 5vh auto;
+                border: 1px solid black;
+            }
+        </style>
+        <script src="js/elib.routes.js"></script>
+        <script>
+            var urlString = window.location.href;
+            var url = new URL(urlString);
+            var bookId = url.searchParams.get("id");
+
+            async function loadDocument() {
+                const viewer = new DjVu.Viewer();
+                viewer.render(document.getElementById('for_viewer'));
+                await viewer.loadDocumentByUrl(router.getBook(bookId));
+
+                viewer.configure({ // you also can pass the same object as a second parameter to .loadDocumentByUrl()
+                    pageNumber: 10,
+                });
+
+                viewer.on(DjVu.Viewer.Events.PAGE_NUMBER_CHANGED, () => { // no args are passed here
+                    console.log('Page number changed to', viewer.getPageNumber());
+                })
+            }
+
+            window.onload = function() {
+                window.ViewerInstance = new DjVu.Viewer();
+                window.ViewerInstance.render(
+                    document.querySelector("#for_viewer")
+                );
+                loadDocument();
+            };
+        </script>
+
+    </header>
+
+    <body>
+        <div id="for_viewer"></div>
+    </body>
+</html>

@@ -4,13 +4,17 @@ import java.io.File;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletContext;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.primefaces.json.JSONObject;
 
 import pl.model.dao.BookDao;
 import pl.model.entities.Book;
@@ -21,18 +25,6 @@ public class BookResource {
 	
 	@EJB
 	BookDao bookDao;
-	
-	@GET
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response getFile() {
-	  File file = new File("C:\\Java\\tmp\\test\\assets\\nastran.pdf"); // Initialize this to the File path you want to serve.
-	  return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
-				.header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"") // optional
-				.header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Credentials", "true")
-				.header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-				.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-				.build();
-	}
 
 	@GET
     @Path("/{bookId}")
@@ -44,11 +36,29 @@ public class BookResource {
 			directory += File.separator;
 		
 		File file = book!=null ? new File(directory + book.getFileName()) : null;
+		if(file.exists()==false) {
+			// TODO redirect to error page
+			file = null;
+		}
+		
 		return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
-				.header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
+				.header("Content-Disposition", "attachment; filename=\"" + (file!=null ? file.getName() : "unknown") + "\"")
 				.header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Credentials", "true")
 				.header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
 				.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
 				.build();
+    }
+	
+	@POST
+	@Path("/bookhistory")
+    @Produces(MediaType.TEXT_HTML)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void openedBook(String data) {
+		try {
+			JSONObject jsonObject = new JSONObject(data);
+		} catch (Exception e) {
+			System.err.println("Wrong opened book data:" + data);
+		}
+		
     }
 }

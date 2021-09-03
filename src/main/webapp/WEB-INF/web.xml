@@ -4,7 +4,11 @@
 		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 		version="3.0">
 	  <display-name>elibrary</display-name>
-	  <!-- Login page -->
+	  <!-- Welcom page -->
+	  <welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	  </welcome-file-list>
+	  <!-- Login page mapping -->
 	  <servlet>
 	  	<servlet-name>LoginView</servlet-name>
 	  	<jsp-file>/jsp/login.jsp</jsp-file>
@@ -21,7 +25,7 @@
 	  	<servlet-name>LoggingView</servlet-name>
 	  	<url-pattern>/logging</url-pattern>
 	  </servlet-mapping>
-	  <!-- Registration page -->
+	  <!-- Registration page mapping-->
 	  <servlet>
 	  	<servlet-name>RegistrationView</servlet-name>
 	  	<jsp-file>/jsp/register.jsp</jsp-file>
@@ -30,9 +34,56 @@
 	  	<servlet-name>RegistrationView</servlet-name>
 	  	<url-pattern>/registration</url-pattern>
 	  </servlet-mapping>
-	  <welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-	  </welcome-file-list>
+	  <!-- HTML pages mapping -->
+	   <servlet>
+	    <servlet-name>home</servlet-name>
+	    <jsp-file>/html/home.html</jsp-file>
+	  </servlet>
+	  <servlet-mapping>
+	    <servlet-name>home</servlet-name>
+	    <url-pattern>/home</url-pattern>
+	  </servlet-mapping>
+	  <servlet>
+	    <servlet-name>pdf-reader</servlet-name>
+	    <jsp-file>/html/reader-pdf.html</jsp-file>
+	  </servlet>
+	  <servlet-mapping>
+	    <servlet-name>pdf-reader</servlet-name>
+	    <url-pattern>/pdf-reader</url-pattern>
+	  </servlet-mapping>
+	  <servlet>
+	    <servlet-name>djvu-reader</servlet-name>
+	    <jsp-file>/html/reader-djvu.html</jsp-file>
+	  </servlet>
+	  <servlet-mapping>
+	    <servlet-name>djvu-reader</servlet-name>
+	    <url-pattern>/djvu-reader</url-pattern>
+	  </servlet-mapping>
+	   <!-- Custom filters mapping -->
+	   <filter>  
+			<filter-name>UserFilter</filter-name>  
+			<filter-class>pl.controllers.filters.UserFilter</filter-class>  
+	   </filter>  
+	   <filter-mapping>  
+			<filter-name>UserFilter</filter-name>
+			<url-pattern>/home</url-pattern>  
+	   </filter-mapping>
+	   <filter-mapping>  
+			<filter-name>UserFilter</filter-name>
+			<url-pattern>/res/*</url-pattern>  
+	   </filter-mapping>
+	   <filter-mapping>  
+			<filter-name>UserFilter</filter-name>
+			<url-pattern>/book/*</url-pattern>  
+	   </filter-mapping>
+	   <filter-mapping>  
+			<filter-name>UserFilter</filter-name>
+			<url-pattern>/pdf-reader/*</url-pattern>  
+	   </filter-mapping>
+	   <filter-mapping>  
+			<filter-name>UserFilter</filter-name>
+			<url-pattern>/djvu-reader/*</url-pattern>  
+	   </filter-mapping>
 	  <!-- Faces -->
 	  <context-param>
 		<param-name>primefaces.THEME</param-name>
@@ -85,21 +136,4 @@
 		    </init-param>  
 		    <load-on-startup>1</load-on-startup>  
 		</servlet>
-	   <!--Mapping- -->
-	   <servlet>
-	    <servlet-name>home</servlet-name>
-	    <jsp-file>/html/home.html</jsp-file>
-	  </servlet>
-	  <servlet-mapping>
-	    <servlet-name>home</servlet-name>
-	    <url-pattern>/home</url-pattern>
-	  </servlet-mapping>
-	  <servlet>
-	    <servlet-name>pdf-reader</servlet-name>
-	    <jsp-file>/html/reader-pdf.html</jsp-file>
-	  </servlet>
-	  <servlet-mapping>
-	    <servlet-name>pdf-reader</servlet-name>
-	    <url-pattern>/pdf-reader</url-pattern>
-	  </servlet-mapping>
 </web-app>

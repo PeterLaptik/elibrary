@@ -98,8 +98,14 @@
 				</tr>
 				<tr>
 					<td>
-						<a href='#' :book-name="book.id" :book-format="book.format"
-						onclick="openBook(this.getAttribute(`book-name`), this.getAttribute(`book-format`))" id="book-link">open</a>
+						<span id="book-format">Format: {{book.format}} &nbsp;&nbsp;</span>
+						<span id="book-link"> 
+							<a href='#' :book-name="book.id" :book-format="book.format"
+							onclick="openBook(this.getAttribute(`book-name`), this.getAttribute(`book-format`))">Open</a>
+						</span>
+						<span>
+							<a href='#' id="book-download" style="float: right;">Download</a>
+						</span>
 					</td>
 				</tr>
 				<tr>

@@ -3,24 +3,29 @@ var router = {
     applicationContextPath: 'res',
     pathSections: '/sections',
     pathBooks: '/books',
+	pathOpenedBook: '/bookhistory',
     
     getSectionsPath: function() {
         return this.applicationContextPath + this.pathSections;
     },
     
-    getBooksList: function(sectionId){
+    getBooksList: function(sectionId) {
         return this.getSectionsPath() + this.pathBooks + '/' + sectionId;
     },
 
-    getBooksPage: function(sectionId, page){
+    getBooksPage: function(sectionId, page) {
         return this.getBooksList(sectionId) + '/' + page;
     },
 	
-	getReader: function(id, ext){
+	getReader: function(id, ext) {
 		return this.pathReader + '?id=' + id + "&ext=" + ext;
 	},
 	
-	getBook: function(id){
+	getBook: function(id) {
 		return this.applicationContextPath + this.pathBooks + '/' + id;
+	},
+	
+	getBookHistory: function(id) {
+		return this.applicationContextPath + this.pathBooks + this.pathOpenedBook;
 	}
 };

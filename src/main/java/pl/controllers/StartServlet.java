@@ -20,10 +20,10 @@ public class StartServlet extends HttpServlet {
 	private static final long serialVersionUID = 3274802373502246333L;
 
 	@EJB
-	IAuthentification mgr;
+	private IAuthentification mgr;
 	
 	@EJB
-	IRoutes router;
+	private IRoutes router;
 	
 	public StartServlet() {
         super();
