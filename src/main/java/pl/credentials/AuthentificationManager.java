@@ -70,6 +70,15 @@ public class AuthentificationManager implements IAuthentification {
 	}
 	
 	@Override
+	public boolean hasSession(String sessionUuid) {
+    	if(sessionUuid==null)
+    		return false;
+    	
+    	UserSession session = sessions.findSessionByUuid(sessionUuid);
+    	return session!=null;
+	}
+	
+	@Override
 	public void logout(Cookie[] cookies) {
 		String sessionUuid = null;
     	if(cookies==null)

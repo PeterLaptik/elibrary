@@ -34,7 +34,7 @@ public class Book implements Serializable {
 	 **/
 	public static final String BOOKS_VOLUME = "fileUploadDirectory";
 	
-	public static final String FIELD_ID = "id";
+	public static final String FIELD_ID = "book_id";
 	public static final String FIELD_NAME = "book_name";
 	public static final String FIELD_AUTHORS = "authors";
 	public static final String FIELD_CODE_UDC = "book_code_udc";

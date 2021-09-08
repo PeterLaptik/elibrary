@@ -36,7 +36,7 @@ public class StatService implements Serializable {
 	}
 	
 	public int getUserQuantity() {
-		setUserQuantity(userDao.getUserQuantity());
+		setUserQuantity(userDao.getUsersQuantity());
 		return userQuantity;
 	}
 

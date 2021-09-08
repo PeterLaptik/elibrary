@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import pl.model.dao.UserSessionDao;
+import pl.model.entities.User;
 import pl.model.entities.UserSession;
 import pl.model.session.HibernateSessionFactory;
 

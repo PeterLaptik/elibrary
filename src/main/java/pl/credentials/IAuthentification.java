@@ -8,7 +8,7 @@ import javax.servlet.http.Cookie;
  * Bean for checking sessions / login / logout
  * @author Peter Laptik
  */
-public interface IAuthentification extends Serializable{
+public interface IAuthentification extends Serializable {
 	/**
 	 * Checks a password for the user login.
 	 * Creates session for the user if password check is passed
@@ -25,6 +25,13 @@ public interface IAuthentification extends Serializable{
 	 * @return true is a session exists, otherwise false
 	 */
 	public boolean hasSession(Cookie[] cookies);
+	
+	/**
+	 * Checks whether a session with defined uuid exists.
+	 * @param sessionUuid
+	 * @return true is a session exists, otherwise false
+	 */
+	boolean hasSession(String sessionUuid);
 	
 	/**
 	 * Removes active sessions from a database

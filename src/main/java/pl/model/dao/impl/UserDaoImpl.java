@@ -21,6 +21,7 @@ public class UserDaoImpl implements UserDao {
 		
 	}
 	
+	@Override
 	public boolean create(User user) {
 		if((user==null)||(findUserByLogin(user.getLogin())!=null))
 			return false;
@@ -34,6 +35,7 @@ public class UserDaoImpl implements UserDao {
 		return true;
 	}
 	
+	@Override
 	public User findUserByName(String name) {
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Query<User> query = session.createQuery("FROM User WHERE name = :param", User.class);
@@ -43,6 +45,7 @@ public class UserDaoImpl implements UserDao {
 		return users.size()>0 ? users.get(0) : null;
 	}
 	
+	@Override
 	public User findUserByLogin(String login) {
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Query<User> query = session.createQuery("FROM User WHERE login = :param", User.class);
@@ -52,6 +55,17 @@ public class UserDaoImpl implements UserDao {
 		return users.size()>0 ? users.get(0) : null;
 	}
 	
+	@Override
+	public User findUserBuId(int id) {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Query<User> query = session.createQuery("FROM User WHERE id = :param", User.class);
+		query.setParameter("param", id);
+		List<User> users = query.list();
+		session.close();
+		return users.size()>0 ? users.get(0) : null;
+	}
+	
+	@Override
 	public void setAdmin(User user, boolean isAdmin) {
 		if(user==null)
 			return;
@@ -64,6 +78,7 @@ public class UserDaoImpl implements UserDao {
 		session.close();
 	}
 	
+	@Override
 	public boolean deleteUser(User user) {
 		if(user==null)
 			return false;
@@ -80,6 +95,7 @@ public class UserDaoImpl implements UserDao {
 		return true;
 	}
 	
+	@Override
 	public List<User> getAllUsers() {
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Query<User> query = session.createQuery("FROM User", User.class);
@@ -92,7 +108,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public int getUserQuantity() {
+	public int getUsersQuantity() {
 		int result = 0;
 		Session session = HibernateSessionFactory.getSession().openSession();
 		
