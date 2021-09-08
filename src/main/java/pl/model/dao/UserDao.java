@@ -14,7 +14,7 @@ public interface UserDao {
 	
 	public User findUserByLogin(String login);
 	
-	public User findUserBuId(int id);
+	public User findUserById(int id);
 	
 	public void setAdmin(User user, boolean isAdmin);
 	

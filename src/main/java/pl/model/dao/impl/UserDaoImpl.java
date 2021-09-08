@@ -56,7 +56,7 @@ public class UserDaoImpl implements UserDao {
 	}
 	
 	@Override
-	public User findUserBuId(int id) {
+	public User findUserById(int id) {
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Query<User> query = session.createQuery("FROM User WHERE id = :param", User.class);
 		query.setParameter("param", id);

@@ -2,19 +2,22 @@ package pl.model.dao.impl;
 
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import pl.model.cache.SessionCache;
 import pl.model.dao.UserSessionDao;
-import pl.model.entities.User;
 import pl.model.entities.UserSession;
 import pl.model.session.HibernateSessionFactory;
 
 @Stateless
 public class UserSessionDaoImpl implements UserSessionDao {
+	@EJB
+	private SessionCache sessions;
 	
 	public UserSessionDaoImpl(){
 		

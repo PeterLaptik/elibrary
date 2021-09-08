@@ -19,6 +19,7 @@
             var urlString = window.location.href;
             var url = new URL(urlString);
             var bookId = url.searchParams.get("id");
+            let currentPage = 1;
 
             async function loadDocument() {
                 const viewer = new DjVu.Viewer();
@@ -26,20 +27,50 @@
                 await viewer.loadDocumentByUrl(router.getBook(bookId));
 
                 viewer.configure({ // you also can pass the same object as a second parameter to .loadDocumentByUrl()
-                    pageNumber: 10,
+                    pageNumber: currentPage,
                 });
 
                 viewer.on(DjVu.Viewer.Events.PAGE_NUMBER_CHANGED, () => { // no args are passed here
                     console.log('Page number changed to', viewer.getPageNumber());
+                    currentPage = viewer.getPageNumber();
+                    let pathToPost = router.getBookPageHistory(bookId);
+            		let xhr = new XMLHttpRequest();
+            		xhr.open("POST", pathToPost, true);
+            		xhr.setRequestHeader('Content-Type', 'application/json');
+            			xhr.send(JSON.stringify({
+            			    page: currentPage - 1
+            		}));
                 })
             }
 
             window.onload = function() {
+        		// Get last opened page for the book
+            	let pageReq = new XMLHttpRequest();
+        		pageReq.open("GET", router.getBookLastPage(bookId), true);
+        		pageReq.setRequestHeader('Content-Type', 'application/json');
+        		pageReq.onload = function() {
+        			currentPage = parseInt(pageReq.response) + 1;
+        			createStamp();
+        			loadDocument();
+        		};
+        		pageReq.send('page-info'); 
+        		
+        		let createStamp = function() {
+            		let pathToPost = router.getBookHistory();
+            		var xhr = new XMLHttpRequest();
+            		xhr.open("POST", pathToPost, true);
+            		xhr.setRequestHeader('Content-Type', 'application/json');
+            			xhr.send(JSON.stringify({
+            				id: bookId,
+            				page: currentPage
+            			}));
+            		}
+        		
                 window.ViewerInstance = new DjVu.Viewer();
                 window.ViewerInstance.render(
                     document.querySelector("#for_viewer")
                 );
-                loadDocument();
+                
             };
         </script>
 

@@ -1,4 +1,4 @@
-(function() {
+let driver = (function() {
     let currentPageIndex = 0;
     let pageMode = 1;
     let cursorIndex = Math.floor(currentPageIndex / pageMode);
@@ -26,6 +26,7 @@
         if (currentPageIndex < 0) {
           currentPageIndex = 0;
         }
+		writePageHistory(currentPageIndex);
         render();
       }
       if (action === "next") {
@@ -36,9 +37,21 @@
         if (currentPageIndex > totalPagesCount - 1) {
           currentPageIndex = totalPagesCount - 1;
         }
+		writePageHistory(currentPageIndex);
         render();
       }
     }
+
+	function writePageHistory(pageNumber){
+		let pathToPost = router.getBookPageHistory(bookId);
+		let xhr = new XMLHttpRequest();
+		xhr.open("POST", pathToPost, true);
+		xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.send(JSON.stringify({
+			    page: pageNumber
+		}));
+	}
+
     function initPager() {
       const pager = document.querySelector("#pager");
       pager.addEventListener("click", onPagerButtonsClick);
@@ -46,11 +59,12 @@
         pager.removeEventListener("click", onPagerButtonsClick);
       };
     }
-  
+	
     function onPageModeChange(event) {
       pageMode = Number(event.target.value);
       render();
     }
+
     function initPageMode() {
       const input = document.querySelector("#page-mode input");
       input.setAttribute("max", totalPagesCount);
@@ -98,4 +112,11 @@
         viewport: pdfViewport
       });
     }
+
+	return {
+		setPage: function(page){
+			currentPageIndex = page;
+			render();
+		}
+	}
   })();

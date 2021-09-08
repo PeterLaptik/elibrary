@@ -18,10 +18,10 @@ import javax.ws.rs.core.Response;
 
 import org.primefaces.json.JSONObject;
 
+import pl.model.cache.SessionCache;
 import pl.model.dao.BookDao;
 import pl.model.dao.UserDao;
 import pl.model.dao.UserHistoryDao;
-import pl.model.dao.UserSessionDao;
 import pl.model.entities.Book;
 import pl.model.entities.User;
 import pl.model.entities.UserHistory;
@@ -32,21 +32,27 @@ public class BookResource {
 	@Context ServletContext context;
 	
 	@EJB
-	BookDao bookDao;
+	private BookDao bookDao;
 	
 	@EJB
-	UserDao userDao;
+	private UserDao userDao;
 	
 	@EJB
-	UserSessionDao sessionDao;
+	private SessionCache sessionCache;
 	
 	@EJB
-	UserHistoryDao userHistoryDao;
+	private UserHistoryDao userHistoryDao;
 
+	
 	@GET
     @Path("/{bookId}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response getBooks(@PathParam("bookId") int id) {
+    public Response getBooks(@PathParam("bookId") int id, 
+    							@CookieParam(UserSession.FIELD_SESSION_UUID) Cookie cookie) {
+		UserSession session = sessionCache.findSessionByUuid(cookie.getValue());
+		if(session==null)
+			return Response.serverError().build();
+		
 		Book book = bookDao.getBookById(id);
 		String directory = context.getInitParameter(Book.BOOKS_VOLUME);
 		if (directory.charAt(directory.length()-1)!='\\' && directory.charAt(directory.length()-1)!='/')
@@ -66,22 +72,23 @@ public class BookResource {
 				.build();
     }
 	
+	
 	@POST
 	@Path("/bookhistory")
     @Produces(MediaType.TEXT_HTML)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response openedBook(String data, @CookieParam(UserSession.FIELD_SESSION_UUID) Cookie cookie) {
+    public Response writeOpenedBookHistory(String data, 
+    										@CookieParam(UserSession.FIELD_SESSION_UUID) Cookie cookie) {
 		try {
-			JSONObject jsonObject = new JSONObject(data);
-			
-			UserSession session = sessionDao.findSessionByUuid(cookie.getValue());
+			UserSession session = sessionCache.findSessionByUuid(cookie.getValue());
 			if(session==null) {
-				System.out.println("No session found!");
+				System.err.println("No session found!");
 				return Response.serverError().build();
 			}
 			
+			JSONObject jsonObject = new JSONObject(data);
 			int userId = session.getUserId();
-			User user = userDao.findUserBuId(userId);
+			User user = userDao.findUserById(userId);
 			Book book = bookDao.getBookById(jsonObject.getInt("id"));
 			
 			System.out.println(jsonObject.toString() + "bookId:" + book.getId() + " - userId: " + userId);
@@ -95,5 +102,52 @@ public class BookResource {
 			return Response.serverError().build();
 		}
 		return Response.ok().build();
+    }
+	
+	
+	@POST
+	@Path("/bookhistory/{bookId}")
+    @Produces(MediaType.TEXT_HTML)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response writeOpenedBookPageHistory(String data, @PathParam("bookId") int bookId,
+    											@CookieParam(UserSession.FIELD_SESSION_UUID) Cookie cookie) {
+		try {
+			UserSession session = sessionCache.findSessionByUuid(cookie.getValue());
+			if(session==null) {
+				System.err.println("No session found!");
+				return Response.serverError().build();
+			}
+			
+			JSONObject jsonObject = new JSONObject(data);
+			int userId = session.getUserId();
+			User user = userDao.findUserById(userId);
+			Book book = bookDao.getBookById(bookId);
+			
+			UserHistory userHistory = new UserHistory();
+			userHistory.setUser(user);
+			userHistory.setBook(book);
+			userHistory.setPage(jsonObject.getInt("page"));
+			userHistoryDao.updateStamp(userHistory);
+		} catch (Exception e) {
+			System.err.println("Wrong opened book data:" + data);
+			return Response.serverError().build();
+		}
+		return Response.ok().build();
+    }
+	
+	
+	@GET
+    @Path("/pagehistory/{bookId}")
+	@Produces(MediaType.TEXT_PLAIN)
+    public int getLastPageForBook(@PathParam("bookId") int bookId, 
+    						@CookieParam(UserSession.FIELD_SESSION_UUID) Cookie cookie) {
+		
+		UserSession session = sessionCache.findSessionByUuid(cookie.getValue());
+		if(session==null)
+			return 0;
+		
+		int userId = session.getUserId();
+		int page = userHistoryDao.getLastPageFor(bookId, userId);
+		return page;
     }
 }

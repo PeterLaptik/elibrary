@@ -20,26 +20,43 @@
 	    </div>
 	</body>
 	<script src="js/elib.routes.js"></script>
+	
 	<script type="text/javascript">
 		var urlString = window.location.href;
 		var url = new URL(urlString);
 		var bookId = url.searchParams.get("id");
 		
-		let currentPage = 1;
+		let currentPage = 0;
 		
-		let pathToPost = router.getBookHistory();
-		console.log(pathToPost)
-		var xhr = new XMLHttpRequest();
-		xhr.open("POST", pathToPost, true);
-		xhr.setRequestHeader('Content-Type', 'application/json');
-			xhr.send(JSON.stringify({
-			    id: bookId,
-			    page: currentPage
-		}));
+		// Write opened book to history
+		let createStamp = function() {
+			let pathToPost = router.getBookHistory();
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", pathToPost, true);
+			xhr.setRequestHeader('Content-Type', 'application/json');
+				xhr.send(JSON.stringify({
+				    id: bookId,
+				    page: currentPage
+			}));
+		}
 	</script>
+	
 	<script src="https://unpkg.com/pdfjs-dist@2.0.489/build/pdf.min.js"></script>
     <script src="js/reader-pdf.js"></script>
+    
     <script>
-      initPDFViewer(router.getBook(bookId));
+    	initPDFViewer(router.getBook(bookId));
+
+    	// Open book at last opened page
+    	let pageReq = new XMLHttpRequest();
+		pageReq.open("GET", router.getBookLastPage(bookId), true);
+		pageReq.setRequestHeader('Content-Type', 'application/json');
+		pageReq.onload = function() {
+			currentPageIndex = pageReq.response;
+			driver.setPage(pageReq.response);
+			if(pageReq.response==0)
+				createStamp();
+		};
+		pageReq.send('page-info'); 
     </script>
 </html>

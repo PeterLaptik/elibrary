@@ -4,7 +4,8 @@ var router = {
     pathSections: '/sections',
     pathBooks: '/books',
 	pathOpenedBook: '/bookhistory',
-    
+    pathOpenedPages: '/pagehistory',
+
     getSectionsPath: function() {
         return this.applicationContextPath + this.pathSections;
     },
@@ -25,7 +26,15 @@ var router = {
 		return this.applicationContextPath + this.pathBooks + '/' + id;
 	},
 	
-	getBookHistory: function(id) {
+	getBookHistory: function() {
 		return this.applicationContextPath + this.pathBooks + this.pathOpenedBook;
+	},
+	
+	getBookPageHistory: function(id){
+		return this.applicationContextPath + this.pathBooks + this.pathOpenedBook + '/' + id;
+	},
+	
+	getBookLastPage: function(id){
+		return this.applicationContextPath + this.pathBooks + this.pathOpenedPages + '/' + id;
 	}
 };
