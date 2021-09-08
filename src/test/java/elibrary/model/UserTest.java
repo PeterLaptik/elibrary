@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import pl.credentials.AuthentificationManager;
+import pl.model.cache.SessionCache;
+import pl.model.cache.SessionCacheImpl;
 import pl.model.dao.UserDao;
 import pl.model.dao.UserSessionDao;
 import pl.model.dao.impl.UserDaoImpl;
@@ -42,6 +44,14 @@ public class UserTest {
 			field = mgr.getClass().getDeclaredField("sessionDao");
 			field.setAccessible(true);
 			field.set(mgr, new UserSessionDaoImpl());
+			// Sessions cache
+			SessionCache sessionsCache = new SessionCacheImpl();
+			field = sessionsCache.getClass().getDeclaredField("sessionDao");
+			field.setAccessible(true);
+			field.set(sessionsCache, new UserSessionDaoImpl());
+			field = mgr.getClass().getDeclaredField("sessions");
+			field.setAccessible(true);
+			field.set(mgr, sessionsCache);
 		} catch (NoSuchFieldException e) {
 			e.printStackTrace();
 		} catch (SecurityException e) {
