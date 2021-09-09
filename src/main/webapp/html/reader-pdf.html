@@ -52,8 +52,9 @@
 		pageReq.open("GET", router.getBookLastPage(bookId), true);
 		pageReq.setRequestHeader('Content-Type', 'application/json');
 		pageReq.onload = function() {
-			currentPageIndex = pageReq.response;
-			driver.setPage(pageReq.response);
+			currentPageIndex = parseInt(pageReq.response);
+			console.log(currentPageIndex);
+			driver.setPage(parseInt(pageReq.response));
 			if(pageReq.response==0)
 				createStamp();
 		};

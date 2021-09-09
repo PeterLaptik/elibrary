@@ -18,6 +18,7 @@ let driver = (function() {
   
     function onPagerButtonsClick(event) {
       const action = event.target.getAttribute("data-pager");
+		console.log('current index:' + currentPageIndex);
       if (action === "prev") {
         if (currentPageIndex === 0) {
           return;
@@ -43,6 +44,7 @@ let driver = (function() {
     }
 
 	function writePageHistory(pageNumber){
+		console.log('write page:' + pageNumber); 
 		let pathToPost = router.getBookPageHistory(bookId);
 		let xhr = new XMLHttpRequest();
 		xhr.open("POST", pathToPost, true);
