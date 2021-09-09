@@ -42,7 +42,6 @@ public class BookResource {
 	
 	@EJB
 	private UserHistoryDao userHistoryDao;
-
 	
 	@GET
     @Path("/{bookId}")
@@ -91,11 +90,18 @@ public class BookResource {
 			User user = userDao.findUserById(userId);
 			Book book = bookDao.getBookById(jsonObject.getInt("id"));
 			
-			System.out.println(jsonObject.toString() + "bookId:" + book.getId() + " - userId: " + userId);
 			UserHistory userHistory = new UserHistory();
 			userHistory.setUser(user);
 			userHistory.setBook(book);
-			userHistoryDao.createStamp(userHistory);
+			
+			String maxVal = context.getInitParameter(UserHistory.MAX_BOOKS_IN_HISTORY);
+			Integer maxBooks = null;
+			try {
+				maxBooks = Integer.parseInt(maxVal);
+			} catch (Exception e) {
+				System.err.println("Wrong value of MAX_BOOKS_IN_HISTORY in web.xml: " + maxVal);
+			}
+			userHistoryDao.createStamp(userHistory, maxBooks);
 			
 		} catch (Exception e) {
 			System.err.println("Wrong opened book data:" + data);

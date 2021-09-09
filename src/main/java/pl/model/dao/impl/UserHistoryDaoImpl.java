@@ -18,7 +18,7 @@ import pl.model.session.HibernateSessionFactory;
 public class UserHistoryDaoImpl implements UserHistoryDao {
 	
 	@Override
-	public void createStamp(UserHistory userHistory) {
+	public void createStamp(UserHistory userHistory,  Integer maxRecords) {
 		if(userHistory==null)
 			return;
 		
@@ -35,6 +35,8 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 		List<UserHistory> stamps = query.list();
 		if(stamps.size()==0) {
 			session.save(userHistory);
+			if(maxRecords!=null && maxRecords>1)
+				cleanHistory(userHistory, maxRecords-1, session);
 		} else {
 			UserHistory existingStamp = stamps.get(0);
 			existingStamp.setLastOpenDate(new Date());
@@ -87,5 +89,21 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 			return 0;
 
 		return stamps.get(0).getPage();
+	}
+	
+	private void cleanHistory(UserHistory userHistory, int maxRecords, Session session) {
+		System.out.println("LIMIT:" + maxRecords);
+		Query<?> query = session.createNativeQuery(
+				"DELETE FROM users_history\r\n"
+				+ "WHERE ctid NOT IN\r\n"
+				+ "(SELECT\r\n"
+				+ "	ctid\r\n"
+				+ "FROM users_history\r\n"
+				+ "WHERE user_id = :user_id\r\n"
+				+ "ORDER BY date_opened DESC\r\n"
+				+ "LIMIT :limit);");
+		query.setParameter("user_id", userHistory.getUser().getId());
+		query.setParameter("limit", maxRecords);
+		query.executeUpdate();
 	}
 }

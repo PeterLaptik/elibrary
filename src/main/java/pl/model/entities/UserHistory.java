@@ -20,6 +20,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table (name="users_history")
 public class UserHistory implements Serializable {
 	public static final long serialVersionUID = -8284143090076041152L;
+	public static final String MAX_BOOKS_IN_HISTORY = "MAX_BOOKS_IN_HISTORY";
 	public static final String FIELD_PAGE = "page";
 	public static final String FIELD_DATE = "date_opened";
 	
@@ -89,14 +90,4 @@ public class UserHistory implements Serializable {
 	public void setBook(Book book) {
 		this.book = book;
 	}
-	
-//	@PrePersist
-//    private void prePersist() {
-//        if (getId() == null) {
-//        	UserHistoryId pk = new UserHistoryId();
-//            pk.setBookId(book.getId());
-//            pk.setUserId(user.getId());
-//            setId(pk);
-//      }
-//	}
 }

@@ -35,8 +35,6 @@ public class BookServlet extends HttpServlet {
 			sb.append(router.getPdfPage());
 			sb.append("?id=");
 			sb.append(id);
-//			sb.append("&ext=");
-//			sb.append(extension);
 			response.sendRedirect(sb.toString());
 			return;
 		} else if(extension.toLowerCase().equals("djvu")) {
