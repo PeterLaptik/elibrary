@@ -1,0 +1,97 @@
+@charset "UTF-8";
+
+#for_viewer {
+	height: 90vh;
+	width: 100vw;
+	margin: 5vh auto;
+	border: 1px solid black;
+}
+
+.sidenav {
+  height: 100%; /* 100% Full-height */
+  width: 0px; /* 0 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  right: 0;
+  background-color: #000000; /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 60px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+/* The navigation menu links */
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.5s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+  color: green;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  left: 0px;
+  font-size: 36px;
+}
+
+.bookmarksButton {
+	text-align: right;
+	font-size: 25px;
+  	color: #818181;
+	color: #FFFFFF;
+	top: 0;
+    right: 0;
+}
+
+a {
+	transition: 0.5s;
+}
+	
+.bookmarksButton a:hover {
+  	color: green;
+}
+
+body {
+	background-color: #000000;
+}
+
+a:link {
+  color: #F0F0F0;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #F0F0F0;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #F0F0F0;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:active {
+  color: #F0F0F0;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+#modalDialogue {
+	display: none;
+	background-color: white;
+	padding-top: 50%;
+	z-index: 1;
+	overflow: auto;
+}

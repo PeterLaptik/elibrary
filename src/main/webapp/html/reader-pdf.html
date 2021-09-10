@@ -9,8 +9,12 @@
 		<div id="app">
 	      <div role="toolbar" id="toolbar">
 	        <div id="pager">
+	        <!-- -->
 	          <button data-pager="prev">prev</button>
 	          <button data-pager="next">next</button>
+	          <button data-pager="zoom-in">zoom-in</button>
+	          <button data-pager="zoom-out">zoom-out</button>
+	          <button data-pager="pagination">on/off pagination</button>
 	        </div>
 	        <div id="page-mode">
 	          <label>Page Mode <input type="number" value="1" min="1"/></label>
@@ -41,7 +45,7 @@
 		}
 	</script>
 	
-	<script src="https://unpkg.com/pdfjs-dist@2.0.489/build/pdf.min.js"></script>
+	<script src="https://unpkg.com/pdfjs-dist@2.0.489/build/pdf.js"></script>
     <script src="js/reader-pdf.js"></script>
     
     <script>

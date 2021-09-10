@@ -1,19 +1,13 @@
 <!DOCTYPE html>
 <html>
-
+	<head>
+		<meta charset="UTF-8">
+		<title>DJVU reader</title>
+		<link rel="stylesheet" type="text/css" href="css/reader-djvu.css"/>
+	</head>
     <header>
-        <meta charset="utf-8">
         <script src="js/djvu.js"></script>
         <script src="js/djvu_viewer.js"></script>
-
-        <style>
-            #for_viewer {
-                height: 80vh;
-                width: 90vw;
-                margin: 5vh auto;
-                border: 1px solid black;
-            }
-        </style>
         <script src="js/elib.routes.js"></script>
         <script>
             var urlString = window.location.href;
@@ -26,7 +20,7 @@
                 viewer.render(document.getElementById('for_viewer'));
                 await viewer.loadDocumentByUrl(router.getBook(bookId));
 
-                viewer.configure({ // you also can pass the same object as a second parameter to .loadDocumentByUrl()
+                viewer.configure({
                     pageNumber: currentPage,
                 });
 
@@ -43,8 +37,8 @@
                 })
             }
 
+         // Get last opened page for the book
             window.onload = function() {
-        		// Get last opened page for the book
             	let pageReq = new XMLHttpRequest();
         		pageReq.open("GET", router.getBookLastPage(bookId), true);
         		pageReq.setRequestHeader('Content-Type', 'application/json');
@@ -72,11 +66,49 @@
                 );
                 
             };
+            
+            // Bookmarks menu
+            function openNav() {
+       	     document.getElementById("mySidenav").style.width = "250px";
+       	   }
+       	
+       	   function closeNav() {
+       	     document.getElementById("mySidenav").style.width = "0";
+       	   }
+       	   
+       		
+	       	function showModalInput() {
+	       		let modalDlg = document.getElementById("modalDialogue");
+	       		console.log(modalDlg);
+	       		modalDlg.style.display = "block";
+	       	}
+	       	
+	       	function hideModalInput() {
+	       		let modalDlg = document.getElementById("modalDialogue");
+	       		console.log(modalDlg);
+	       		modalDlg.style.display = "none";
+	       	}
+	       	
         </script>
-
     </header>
 
     <body>
+    	<div class="bookmarksButton">
+    		<a href="#" onclick="openNav()">Bookmarks</a>
+    	</div>
+    	<div id="mySidenav" class="sidenav">
+		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		  <a href="#" class="bookmarkCreator" onclick="showModalInput()">Create</a>
+	 	</div>
         <div id="for_viewer"></div>
+        
+	  <!-- Modal dialogue -->
+	  <div id="modalDialogue" class="modalDialogue">
+	  	<div class="modal-content">
+			<span class="close" onclick="hideModalInput()">&times;</span>
+			<p>Some text in the Modal..</p>
+		</div>
+	  </div>
+
     </body>
 </html>
