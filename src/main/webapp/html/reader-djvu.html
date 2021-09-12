@@ -9,15 +9,17 @@
         <script src="js/djvu.js"></script>
         <script src="js/djvu_viewer.js"></script>
         <script src="js/elib.routes.js"></script>
+        <script src="js/vue.global.js"></script>
         <script>
             var urlString = window.location.href;
             var url = new URL(urlString);
             var bookId = url.searchParams.get("id");
             let currentPage = 1;
 
+            let viewer = undefined;
             async function loadDocument() {
-                const viewer = new DjVu.Viewer();
-                viewer.render(document.getElementById('for_viewer'));
+                viewer = new DjVu.Viewer();
+                viewer.render(document.getElementById('for-viewer'));
                 await viewer.loadDocumentByUrl(router.getBook(bookId));
 
                 viewer.configure({
@@ -25,7 +27,6 @@
                 });
 
                 viewer.on(DjVu.Viewer.Events.PAGE_NUMBER_CHANGED, () => { // no args are passed here
-                    console.log('Page number changed to', viewer.getPageNumber());
                     currentPage = viewer.getPageNumber();
                     let pathToPost = router.getBookPageHistory(bookId);
             		let xhr = new XMLHttpRequest();
@@ -37,13 +38,14 @@
                 })
             }
 
-         // Get last opened page for the book
+         	// Get last opened page for the book before load
             window.onload = function() {
             	let pageReq = new XMLHttpRequest();
         		pageReq.open("GET", router.getBookLastPage(bookId), true);
         		pageReq.setRequestHeader('Content-Type', 'application/json');
         		pageReq.onload = function() {
         			currentPage = parseInt(pageReq.response) + 1;
+        			console.log('current:'+currentPage);
         			createStamp();
         			loadDocument();
         		};
@@ -62,53 +64,121 @@
         		
                 window.ViewerInstance = new DjVu.Viewer();
                 window.ViewerInstance.render(
-                    document.querySelector("#for_viewer")
-                );
-                
+                    document.querySelector("#for-viewer")
+                ); 
             };
             
             // Bookmarks menu
             function openNav() {
-       	     document.getElementById("mySidenav").style.width = "250px";
+       	     document.getElementById("side-nav").style.width = "250px";
        	   }
        	
        	   function closeNav() {
-       	     document.getElementById("mySidenav").style.width = "0";
+       	     document.getElementById("side-nav").style.width = "0";
        	   }
-       	   
        		
 	       	function showModalInput() {
-	       		let modalDlg = document.getElementById("modalDialogue");
-	       		console.log(modalDlg);
+	       		let modalDlg = document.getElementById("modal-dialogue");
 	       		modalDlg.style.display = "block";
 	       	}
 	       	
 	       	function hideModalInput() {
-	       		let modalDlg = document.getElementById("modalDialogue");
-	       		console.log(modalDlg);
+	       		let modalDlg = document.getElementById("modal-dialogue");
 	       		modalDlg.style.display = "none";
 	       	}
 	       	
+	       	function appendBookMark(){
+	       		let modalDlg = document.getElementById("modal-dialogue");
+	       		modalDlg.style.display = "none";
+	       		let inputText = document.getElementById("input-text");
+	       		
+	       		let obj = {
+	       			id: bookId,
+	       			text: inputText.value,
+	       			page: currentPage
+	       		};
+	       		writeBookmark(obj);
+	       	}
+	       	
+	       	let writeBookmark = function(bookmark) {
+        		let pathToPost = router.getBookmarksPost();
+        		var xhr = new XMLHttpRequest();
+        		xhr.open("POST", pathToPost, true);
+        		xhr.setRequestHeader('Content-Type', 'application/json');
+        		xhr.send(JSON.stringify(bookmark));
+        	}
+	       	
+	       	function openPage(page) {
+	       		currentPage = parseInt(page);
+	       		viewer.configure({
+                    pageNumber: currentPage,
+                });
+	       		console.log('open page:' + page);
+	       	}
         </script>
     </header>
 
     <body>
-    	<div class="bookmarksButton">
+    	<div class="bookmarks-button">
     		<a href="#" onclick="openNav()">Bookmarks</a>
     	</div>
-    	<div id="mySidenav" class="sidenav">
+    	<div id="side-nav" class="sidenav">
 		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-		  <a href="#" class="bookmarkCreator" onclick="showModalInput()">Create</a>
+		  <a href="#" class="bookmark-creator" onclick="showModalInput()">Create</a>
+		  <div id="app">
+		  		<a id="bookmark-element" href="#" :book-page="bookmark.page_number"
+		  		onclick="openPage(this.getAttribute(`book-page`))"
+		  		v-for="bookmark in bookmarksList.bookmarks">{{bookmark.bookmark_text}}</a>
+		  </div>
 	 	</div>
-        <div id="for_viewer"></div>
+        <div id="for-viewer"></div>
         
 	  <!-- Modal dialogue -->
-	  <div id="modalDialogue" class="modalDialogue">
+	  <div id="modal-dialogue">
 	  	<div class="modal-content">
-			<span class="close" onclick="hideModalInput()">&times;</span>
-			<p>Some text in the Modal..</p>
+	  		<p style="text-align:right;">
+				<span class="close-dlg" onclick="hideModalInput()">&times;</span>
+			</p>
+			<p style="text-align:center">
+				<input id="input-text" name="bookmark-text" 
+				type="text" maxlength="30"/>
+			</p>
+			<p style="margin: 12px; text-align:right;">
+				<button id="modal-button" name="textOk"
+				onclick="appendBookMark()">OK</button>
+			</p>
 		</div>
 	  </div>
-
     </body>
+    
+    <script>
+    	
+    	let bookmarksList = {bookmarks: [{bookmark_text: "page 20", page_number: 20}]};
+	 	// Bookmarks processing via Vue3
+	   	const app = Vue.createApp({
+			data() {
+				return { bookmarksList: bookmarksList};
+			},
+			methods:{
+		        updateBookmarks: function() {
+		        	console.log('here')
+		        	let bookmarksReq = new XMLHttpRequest();
+		       		bookmarksReq.open("GET", router.getBookmarks(bookId), true);
+		       		bookmarksReq.setRequestHeader('Content-Type', 'application/json');
+		       		bookmarksReq.callBackObject = this;
+		       		bookmarksReq.onload = function() {
+		       			let obj = JSON.parse(bookmarksReq.response);
+						bookmarksList.bookmarks = obj.bookmarks;
+						console.log(obj)
+						this.callBackObject.$forceUpdate();
+	        		};
+	        		bookmarksReq.send('page-info'); 
+		        }
+		    }
+		}).mount('#app');
+	 	app.updateBookmarks();
+	 	
+	 	
+	 	
+    </script>
 </html>

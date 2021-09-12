@@ -6,7 +6,7 @@ import java.util.List;
 import pl.model.entities.Book;
 import pl.model.entities.Section;
 
-public interface BookDao extends Serializable{
+public interface BookDao extends Serializable {
 	
 	public boolean createBook(Book book);
 	
@@ -20,7 +20,7 @@ public interface BookDao extends Serializable{
 	
 	public List<Book> getBooksBySectionId(int id);
 	
-	/** Paginated list **/
+	/** Paginated list.  windowCapacity - maximum books to show **/
 	public List<Book> getBooksBySectionId(int sectionId, int windowCapacity, int pageNumber);
 	
 	public int getBooksQuantity();

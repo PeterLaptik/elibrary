@@ -92,7 +92,6 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 	}
 	
 	private void cleanHistory(UserHistory userHistory, int maxRecords, Session session) {
-		System.out.println("LIMIT:" + maxRecords);
 		Query<?> query = session.createNativeQuery(
 				"DELETE FROM users_history\r\n"
 				+ "WHERE ctid NOT IN\r\n"

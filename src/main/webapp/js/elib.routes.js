@@ -3,6 +3,7 @@ var router = {
     applicationContextPath: 'res',
     pathSections: '/sections',
     pathBooks: '/books',
+    pathBookmarks: '/bookmarks',
 	pathOpenedBook: '/bookhistory',
     pathOpenedPages: '/pagehistory',
 
@@ -36,5 +37,13 @@ var router = {
 	
 	getBookLastPage: function(id){
 		return this.applicationContextPath + this.pathBooks + this.pathOpenedPages + '/' + id;
+	},
+	
+	getBookmarksPost: function(){
+		return this.applicationContextPath + this.pathBookmarks + '/post';
+	},
+	
+	getBookmarks: function(id){
+		return this.applicationContextPath + this.pathBookmarks + '/' + id;
 	}
 };

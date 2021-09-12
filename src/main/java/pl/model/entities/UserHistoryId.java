@@ -19,6 +19,7 @@ public class UserHistoryId implements Serializable {
 	@Column(name=FIELD_BOOK_ID)
 	private int bookId;
 	
+	
 	public UserHistoryId() {
 		
 	}

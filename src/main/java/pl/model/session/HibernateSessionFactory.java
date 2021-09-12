@@ -5,6 +5,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
 import pl.model.entities.Book;
+import pl.model.entities.Bookmark;
 import pl.model.entities.Section;
 import pl.model.entities.User;
 import pl.model.entities.UserHistory;
@@ -27,6 +28,7 @@ public class HibernateSessionFactory {
 				configuration.addAnnotatedClass(Section.class);
 				configuration.addAnnotatedClass(Book.class);
 				configuration.addAnnotatedClass(UserHistory.class);
+				configuration.addAnnotatedClass(Bookmark.class);
 				StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
 				builder.applySettings(configuration.getProperties());
 				session = configuration.buildSessionFactory(builder.build());
