@@ -3,9 +3,11 @@ var router = {
     applicationContextPath: 'res',
     pathSections: '/sections',
     pathBooks: '/books',
-    pathBookmarks: '/bookmarks',
 	pathOpenedBook: '/bookhistory',
     pathOpenedPages: '/pagehistory',
+	pathBookmarks: '/bookmarks',
+	pathBookmarksPost: '/post',
+	pathBookmarksDelete: '/delete',
 
     getSectionsPath: function() {
         return this.applicationContextPath + this.pathSections;
@@ -31,19 +33,23 @@ var router = {
 		return this.applicationContextPath + this.pathBooks + this.pathOpenedBook;
 	},
 	
-	getBookPageHistory: function(id){
+	getBookPageHistory: function(id) {
 		return this.applicationContextPath + this.pathBooks + this.pathOpenedBook + '/' + id;
 	},
 	
-	getBookLastPage: function(id){
+	getBookLastPage: function(id) {
 		return this.applicationContextPath + this.pathBooks + this.pathOpenedPages + '/' + id;
 	},
 	
-	getBookmarksPost: function(){
-		return this.applicationContextPath + this.pathBookmarks + '/post';
+	getBookmarks: function(id) {
+		return this.applicationContextPath + this.pathBookmarks + '/' + id;
 	},
 	
-	getBookmarks: function(id){
-		return this.applicationContextPath + this.pathBookmarks + '/' + id;
+	getBookmarksPost: function(id) {
+		return this.applicationContextPath + this.pathBookmarks + this.pathBookmarksPost + '/' + id;
+	},
+	
+	getBookmarksDelete: function(id) {
+		return this.applicationContextPath + this.pathBookmarks + this.pathBookmarksDelete + '/' + id;
 	}
 };

@@ -4,21 +4,23 @@
 		<meta charset="UTF-8">
 		<title>DJVU reader</title>
 		<link rel="stylesheet" type="text/css" href="css/reader-djvu.css"/>
+		<link rel="stylesheet" type="text/css" href="css/bookmarks.css"/>
 	</head>
     <header>
+		<script src="js/elib.routes.js"></script>
+        <script src="js/elib.bookmarks.js"></script>
+        <script src="js/vue.global.js"></script>
         <script src="js/djvu.js"></script>
         <script src="js/djvu_viewer.js"></script>
-        <script src="js/elib.routes.js"></script>
-        <script src="js/vue.global.js"></script>
         <script>
-            var urlString = window.location.href;
+			var urlString = window.location.href;
             var url = new URL(urlString);
             var bookId = url.searchParams.get("id");
             let currentPage = 1;
 
             let viewer = undefined;
             async function loadDocument() {
-                viewer = new DjVu.Viewer();
+				viewer = new DjVu.Viewer();
                 viewer.render(document.getElementById('for-viewer'));
                 await viewer.loadDocumentByUrl(router.getBook(bookId));
 
@@ -26,7 +28,7 @@
                     pageNumber: currentPage,
                 });
 
-                viewer.on(DjVu.Viewer.Events.PAGE_NUMBER_CHANGED, () => { // no args are passed here
+                viewer.on(DjVu.Viewer.Events.PAGE_NUMBER_CHANGED, () => {
                     currentPage = viewer.getPageNumber();
                     let pathToPost = router.getBookPageHistory(bookId);
             		let xhr = new XMLHttpRequest();
@@ -37,7 +39,41 @@
             		}));
                 })
             }
+            
+            // Colour schemes
+            let applyDarkScheme = function() {
+            	console.log('dark');
+            	// Navigation bar
+            	let navBar = document.getElementById("side-nav");
+            	document.body.style.background = "black";
+            	navBar.style.background = "black";
+            }
 
+			let applyLightScheme = function() {
+				console.log('light');
+				document.body.style.background = "#F0F0F0";
+				// Navigation bar
+				let navBar = document.getElementById("side-nav");
+				navBar.style.background = "#F0F0F0";
+				// Links
+				let rules = document.styleSheets[i].cssRules
+				for(let i=0; i<rules.length; i++) {
+					
+				}
+				
+				let links = document.getElementsByTagName("a");
+			    for(var i=0;i<links.length;i++)
+			    {
+			        if(links[i].href)
+			        {
+			            links[i].style.color = "#818181";
+			            
+			        }
+			    } 
+				
+				console.log(navBar);
+            }
+            
          	// Get last opened page for the book before load
             window.onload = function() {
             	let pageReq = new XMLHttpRequest();
@@ -45,7 +81,6 @@
         		pageReq.setRequestHeader('Content-Type', 'application/json');
         		pageReq.onload = function() {
         			currentPage = parseInt(pageReq.response) + 1;
-        			console.log('current:'+currentPage);
         			createStamp();
         			loadDocument();
         		};
@@ -69,16 +104,18 @@
             };
             
             // Bookmarks menu
-            function openNav() {
-       	     document.getElementById("side-nav").style.width = "250px";
-       	   }
+			function openNav() {
+       	  		document.getElementById("side-nav").style.width = "250px";
+       	  	}
        	
-       	   function closeNav() {
-       	     document.getElementById("side-nav").style.width = "0";
-       	   }
-       		
+       	   	function closeNav() {
+       	     	document.getElementById("side-nav").style.width = "0";
+       	   	}
+
 	       	function showModalInput() {
 	       		let modalDlg = document.getElementById("modal-dialogue");
+	       		document.getElementById("input-text").focus();
+	       		document.getElementById("input-text").select();
 	       		modalDlg.style.display = "block";
 	       	}
 	       	
@@ -87,62 +124,47 @@
 	       		modalDlg.style.display = "none";
 	       	}
 	       	
-	       	function appendBookMark(){
-	       		let modalDlg = document.getElementById("modal-dialogue");
-	       		modalDlg.style.display = "none";
-	       		let inputText = document.getElementById("input-text");
-	       		
-	       		let obj = {
-	       			id: bookId,
-	       			text: inputText.value,
-	       			page: currentPage
-	       		};
-	       		writeBookmark(obj);
-	       	}
-	       	
-	       	let writeBookmark = function(bookmark) {
-        		let pathToPost = router.getBookmarksPost();
-        		var xhr = new XMLHttpRequest();
-        		xhr.open("POST", pathToPost, true);
-        		xhr.setRequestHeader('Content-Type', 'application/json');
-        		xhr.send(JSON.stringify(bookmark));
-        	}
-	       	
 	       	function openPage(page) {
 	       		currentPage = parseInt(page);
 	       		viewer.configure({
                     pageNumber: currentPage,
                 });
-	       		console.log('open page:' + page);
 	       	}
-        </script>
+		</script>
     </header>
 
     <body>
-    	<div class="bookmarks-button">
+		<div class="bookmarks-button">
+			<button class="schemebutton" id="lightscheme-button" onclick="applyLightScheme()">&#9788;</button>
+    		<button class="schemebutton" id="darkscheme-button" onclick="applyDarkScheme()">&#9789;</button>
     		<a href="#" onclick="openNav()">Bookmarks</a>
     	</div>
     	<div id="side-nav" class="sidenav">
-		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-		  <a href="#" class="bookmark-creator" onclick="showModalInput()">Create</a>
-		  <div id="app">
-		  		<a id="bookmark-element" href="#" :book-page="bookmark.page_number"
-		  		onclick="openPage(this.getAttribute(`book-page`))"
-		  		v-for="bookmark in bookmarksList.bookmarks">{{bookmark.bookmark_text}}</a>
+		  	<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		  	<a href="#" class="bookmark-creator" onclick="showModalInput()">Create</a>
+		  	<div id="app">
+				<p v-for="bookmark in bookmarksList.bookmarks">
+					<a id="bookmark-element" href="#" :book-page="bookmark.page_number"
+			  			onclick="openPage(this.getAttribute(`book-page`))">{{bookmark.bookmark_text}}</a>
+			  		<a href="javascript:void(0)" href="#" :bookmark="bookmark.bookmark_text" :page="bookmark.page_number"
+			  			onclick="deleteBookmark(this.getAttribute(`bookmark`), this.getAttribute(`page`));">&times;</a>
+			  	</p>
 		  </div>
 	 	</div>
+	 	
         <div id="for-viewer"></div>
         
-	  <!-- Modal dialogue -->
-	  <div id="modal-dialogue">
-	  	<div class="modal-content">
-	  		<p style="text-align:right;">
-				<span class="close-dlg" onclick="hideModalInput()">&times;</span>
-			</p>
-			<p style="text-align:center">
-				<input id="input-text" name="bookmark-text" 
-				type="text" maxlength="30"/>
-			</p>
+		<!-- Modal dialogue -->
+	  	<div id="modal-dialogue">
+	  		<div class="modal-content">
+	  			<p style="text-align:right;">
+					<span class="close-dlg" id="close-modal" 
+					onclick="hideModalInput()">&times;</span>
+				</p>
+				<p style="text-align:center">
+					<input id="input-text" name="bookmark-text" 
+					type="text" maxlength="30"/>
+				</p>
 			<p style="margin: 12px; text-align:right;">
 				<button id="modal-button" name="textOk"
 				onclick="appendBookMark()">OK</button>
@@ -152,8 +174,7 @@
     </body>
     
     <script>
-    	
-    	let bookmarksList = {bookmarks: [{bookmark_text: "page 20", page_number: 20}]};
+    	let bookmarksList = {bookmarks: [{bookmark_text: "loading...", page_number: 1}]};
 	 	// Bookmarks processing via Vue3
 	   	const app = Vue.createApp({
 			data() {
@@ -161,7 +182,6 @@
 			},
 			methods:{
 		        updateBookmarks: function() {
-		        	console.log('here')
 		        	let bookmarksReq = new XMLHttpRequest();
 		       		bookmarksReq.open("GET", router.getBookmarks(bookId), true);
 		       		bookmarksReq.setRequestHeader('Content-Type', 'application/json');
@@ -169,7 +189,6 @@
 		       		bookmarksReq.onload = function() {
 		       			let obj = JSON.parse(bookmarksReq.response);
 						bookmarksList.bookmarks = obj.bookmarks;
-						console.log(obj)
 						this.callBackObject.$forceUpdate();
 	        		};
 	        		bookmarksReq.send('page-info'); 
@@ -178,7 +197,20 @@
 		}).mount('#app');
 	 	app.updateBookmarks();
 	 	
+	 	document.getElementById("input-text")
+	        .addEventListener("keyup", function(event) {
+	        event.preventDefault();
+	        if (event.keyCode === 13) {
+	            document.getElementById("modal-button").click();
+	        }
+	    });
 	 	
-	 	
+	 	document.addEventListener("keyup", function(event) {
+	        event.preventDefault();
+	        if (event.keyCode === 27) {
+	            document.getElementById("close-modal").click();
+	        }
+	    });
+
     </script>
 </html>
