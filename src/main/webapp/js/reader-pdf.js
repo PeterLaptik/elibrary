@@ -1,152 +1,134 @@
-let driver = (function() {
-    let currentPageIndex = 0;
-    let pageMode = 1;
-    let cursorIndex = Math.floor(currentPageIndex / pageMode);
-    let pdfInstance = null;
-    let totalPagesCount = 0;
-	let pdfScale = 1;
-	let pagination = true;
-  
-    const viewport = document.querySelector("#viewport");
-    window.initPDFViewer = function(pdfURL) {
-      pdfjsLib.getDocument(pdfURL).then(pdf => {
-        pdfInstance = pdf;
-        totalPagesCount = pdf.numPages;
-        initPager();
-        initPageMode();
-        render();
-      });
-    };
-  
-    function onPagerButtonsClick(event) {
-      const action = event.target.getAttribute("data-pager");
-      if (action === "prev") {
-		if(!pagination)
-			return;
-			
-        if (currentPageIndex === 0) {
-          return;
-        }
-        currentPageIndex -= pageMode;
-        if (currentPageIndex < 0) {
-          currentPageIndex = 0;
-        }
-		writePageHistory(currentPageIndex);
-        render();
-      }
-      if (action === "next") {
-		if(!pagination)
-			return;
-        if (currentPageIndex === totalPagesCount - 1) {
-          return;
-        }
-        currentPageIndex += pageMode;
-        if (currentPageIndex > totalPagesCount - 1) {
-          currentPageIndex = totalPagesCount - 1;
-        }
-		writePageHistory(currentPageIndex);
-        render();
-      }
-		if (action === "zoom-in") {
-			console.log('zoom in:' + pdfScale);
-			pdfScale = pdfScale + 0.25;
-			render();
-		}
-		if (action === "zoom-out") {
-			if (pdfScale <= 0.25) {
-               return;
-            }
-			console.log('zoom out:' + pdfScale);
-            pdfScale = pdfScale - 0.25;
-			render();
-		}
-		if (action === "pagination") {
-			pagination = !pagination;
-			pageMode = 1;
-			render();
-		}
-    }
 
-	function writePageHistory(pageNumber){
-		let pathToPost = router.getBookPageHistory(bookId);
-		let xhr = new XMLHttpRequest();
-		xhr.open("POST", pathToPost, true);
-		xhr.setRequestHeader('Content-Type', 'application/json');
-			xhr.send(JSON.stringify({
-			    page: pageNumber
-		}));
+
+// If absolute URL from the remote server is provided, configure the CORS
+// header on that server.
+var url = 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf';
+
+// Loaded via <script> tag, create shortcut to access PDF.js exports.
+var pdfjsLib = window['pdfjs-dist/build/pdf'];
+
+// The workerSrc property shall be specified.
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'js/pdf.worker.js';
+
+var pdfDoc = null,
+	pageNum = 1,
+	pageRendering = false,
+	pageNumPending = null,
+	scale = 0.8,
+	canvas = document.getElementById('the-canvas'),
+	ctx = canvas.getContext('2d');
+
+/**
+ * Get page info from document, resize canvas accordingly, and render page.
+ * @param num Page number.
+ */
+function renderPage(num) {
+	pageRendering = true;
+	// Using promise to fetch the page
+	pdfDoc.getPage(num).then(function(page) {
+		var viewport = page.getViewport({ scale: scale });
+		canvas.height = viewport.height;
+		canvas.width = viewport.width;
+		canvas.style.justifyItems = "center";
+
+		// Render PDF page into canvas context
+		var renderContext = {
+			canvasContext: ctx,
+			viewport: viewport
+		};
+		var renderTask = page.render(renderContext);
+
+		// Wait for rendering to finish
+		renderTask.promise.then(function() {
+			pageRendering = false;
+			if (pageNumPending !== null) {
+				// New page rendering is pending
+				renderPage(pageNumPending);
+				pageNumPending = null;
+			}
+		});
+	});
+
+	// Update page counters
+//	document.getElementById('page_num').textContent = num;
+}
+
+/**
+ * If another page rendering in progress, waits until the rendering is
+ * finised. Otherwise, executes rendering immediately.
+ */
+function queueRenderPage(num) {
+	if (pageRendering) {
+		pageNumPending = num;
+	} else {
+		renderPage(num);
 	}
+}
 
-    function initPager() {
-      const pager = document.querySelector("#pager");
-      pager.addEventListener("click", onPagerButtonsClick);
-      return () => {
-        pager.removeEventListener("click", onPagerButtonsClick);
-      };
-    }
-	
-    function onPageModeChange(event) {
-	  if(!pagination)
+/**
+ * Displays previous page.
+ */
+function onPrevPage() {
+	if (pageNum <= 1) {
 		return;
-		
-      pageMode = Number(event.target.value);
-      render();
-    }
-
-    function initPageMode() {
-      const input = document.querySelector("#page-mode input");
-      input.setAttribute("max", 4);
-      input.addEventListener("change", onPageModeChange);
-      return () => {
-        input.removeEventListener("change", onPageModeChange);
-      };
-    }
-  
-    function render() {
-      cursorIndex = Math.floor(currentPageIndex / pageMode);
-      const startPageIndex = cursorIndex * pageMode;
-      const endPageIndex = pagination ? 
-        (startPageIndex + pageMode < totalPagesCount
-          ? startPageIndex + pageMode - 1
-          : totalPagesCount - 1) : totalPagesCount - 1;
-  
-      const renderPagesPromises = [];
-      for (let i = startPageIndex; i <= endPageIndex; i++) {
-        renderPagesPromises.push(pdfInstance.getPage(i + 1));
-      }
-  
-      Promise.all(renderPagesPromises).then(pages => {
-        const pagesHTML = `<div style="width: ${
-          pageMode > 1 ? "50%" : "100%"
-        }"><canvas></canvas></div>`.repeat(pages.length);
-        viewport.innerHTML = pagesHTML;
-        pages.forEach(renderPage);
-      });
-    }
-  
-    function renderPage(page) {
-		console.log('rendering...');
-      let pdfViewport = page.getViewport(pdfScale);
-  
-      const container =
-        viewport.children[page.pageIndex - cursorIndex * pageMode];
-      pdfViewport = page.getViewport(container.offsetWidth / pdfViewport.width);
-      const canvas = container.children[0];
-      const context = canvas.getContext("2d");
-      canvas.height = pdfViewport.height;
-      canvas.width = pdfViewport.width;
-	  canvas.style.display = "block";
-  
-      page.render({
-        canvasContext: context,
-        viewport: pdfViewport
-      });
-    }
-
-	return {
-		setPage: function(page){
-			currentPageIndex = page;
-			render();
-		}
 	}
-  })();
+	pageNum--;
+	queueRenderPage(pageNum);
+}
+document.getElementById('prev').addEventListener('click', onPrevPage);
+
+
+/**
+ * Displays next page.
+ */
+function onNextPage() {
+	if (pageNum >= pdfDoc.numPages) {
+		return;
+	}
+	pageNum++;
+	queueRenderPage(pageNum);
+}
+document.getElementById('next').addEventListener('click', onNextPage);
+
+
+function onZoomIn() {
+	if(scale>5.0)
+		return;
+	scale *= 1.2;
+	console.log('scale:' + scale);
+	queueRenderPage(pageNum);
+}
+document.getElementById('zoom-in').addEventListener('click', onZoomIn);
+
+
+function onZoomOut() {
+	if(scale<0.2)
+		return;
+	scale /= 1.2;
+	console.log('scale:' + scale);
+	queueRenderPage(pageNum);
+}
+document.getElementById('zoom-out').addEventListener('click', onZoomOut);
+
+
+/**
+ * Asynchronously downloads PDF.
+ */
+pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+	pdfDoc = pdfDoc_;
+//	document.getElementById('page_count').textContent = pdfDoc.numPages;
+
+	// Initial/first page rendering
+	renderPage(pageNum);
+});
+
+
+function writePageHistory(pageNumber) {
+	let pathToPost = router.getBookPageHistory(bookId);
+	let xhr = new XMLHttpRequest();
+	xhr.open("POST", pathToPost, true);
+	xhr.setRequestHeader('Content-Type', 'application/json');
+	xhr.send(JSON.stringify({
+		page: pageNumber
+	}));
+}

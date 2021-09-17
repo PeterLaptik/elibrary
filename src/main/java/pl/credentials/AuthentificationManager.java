@@ -39,6 +39,7 @@ public class AuthentificationManager implements IAuthentification {
 		
 		String hash = PasswordProcessor.createPasswordHash(pass, foundUser.getSalt());
 		if(hash.equals(foundUser.getPassword())) {
+			sessionDao.purgeSessionsForUser(foundUser.getId());
 			UserSession session = new UserSession(foundUser);
 			sessionDao.create(session);
 			String sessionUuid = sessionDao.findSessionByUserId(foundUser.getId()).getUuid();
@@ -62,6 +63,7 @@ public class AuthentificationManager implements IAuthentification {
     			sessionUuid = cookie.getValue();
     		}
     	}
+    	
     	if(sessionUuid==null)
     		return false;
     	

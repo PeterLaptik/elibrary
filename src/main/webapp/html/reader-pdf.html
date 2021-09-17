@@ -4,64 +4,106 @@
 		<meta charset="UTF-8">
 		<title>PDF reader</title>
 		<link rel="stylesheet" type="text/css" href="css/reader-pdf.css" />
+		<link rel="stylesheet" type="text/css" href="css/bookmarks.css" />
 	</head>
 	<body>
-		<div id="app">
-	      <div role="toolbar" id="toolbar">
-	        <div id="pager">
-	        <!-- -->
-	          <button data-pager="prev">prev</button>
-	          <button data-pager="next">next</button>
-	          <button data-pager="zoom-in">zoom-in</button>
-	          <button data-pager="zoom-out">zoom-out</button>
-	          <button data-pager="pagination">on/off pagination</button>
+		<div class="bookmarks-button">
+			<button class="schemebutton" id="lightscheme-button" onclick="applyLightScheme()">&#9788;</button>
+    		<button class="schemebutton" id="darkscheme-button" onclick="applyDarkScheme()">&#9789;</button>
+    		<a href="#" onclick="openNav()">Bookmarks</a>
+    	</div>
+    	<div id="side-nav" class="sidenav">
+		  	<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		  	<a href="#" class="bookmark-creator" onclick="showModalInput()">Create</a>
+		  	<div id="app">
+				<p v-for="bookmark in bookmarksList.bookmarks">
+					<a id="bookmark-element" href="#" :book-page="bookmark.page_number"
+			  			onclick="openPage(this.getAttribute(`book-page`))">{{bookmark.bookmark_text}}</a>
+			  		<a href="javascript:void(0)" href="#" :bookmark="bookmark.bookmark_text" :page="bookmark.page_number"
+			  			onclick="deleteBookmark(this.getAttribute(`bookmark`), this.getAttribute(`page`));">&times;</a>
+			  	</p>
+		  </div>
+	 	</div>
+	 	
+	    <div>
+	    	<canvas id="the-canvas"></canvas>
+	        <div id="toolbar">
+		        <a href="#" id="prev">&#8678;</a>
+		        <a href="#" id="next">&#8680;</a>
+		        <a href="#" id="zoom-in">&#10011;</a>
+		        <a href="#" id="zoom-out">&#9866;</a>
 	        </div>
-	        <div id="page-mode">
-	          <label>Page Mode <input type="number" value="1" min="1"/></label>
-	        </div>
-	      </div>
-	      <div id="viewport-container"><div role="main" id="viewport"></div></div>
-	    </div>
+	      </div>	
 	</body>
 	<script src="js/elib.routes.js"></script>
-	
-	<script type="text/javascript">
+	<script src="js/pdf.js"></script>
+	<script>
 		var urlString = window.location.href;
 		var url = new URL(urlString);
-		var bookId = url.searchParams.get("id");
+		let bookId = url.searchParams.get("id");
+		console.log(bookId);
 		
-		let currentPage = 0;
+		let currentPage = 1;
+		let visibleBars = true;
 		
-		// Write opened book to history
-		let createStamp = function() {
-			let pathToPost = router.getBookHistory();
-			var xhr = new XMLHttpRequest();
-			xhr.open("POST", pathToPost, true);
-			xhr.setRequestHeader('Content-Type', 'application/json');
-				xhr.send(JSON.stringify({
-				    id: bookId,
-				    page: currentPage
-			}));
+		var cFrame = document.getElementById('the-canvas');
+		cFrame.onclick = function() {
+			if(visibleBars) {
+				tornOffBars();
+			} else {
+				tornOnBars();
+			}
+			visibleBars = !visibleBars;
+		};
+		
+		let tornOnBars = function() {
+			document.getElementById('toolbar').style.opacity = "1";
+			document.getElementById('prev').addEventListener('click', onPrevPage);
+			document.getElementById('next').addEventListener('click', onNextPage);
+			document.getElementById('zoom-in').addEventListener('click', onZoomIn);
+			document.getElementById('zoom-out').addEventListener('click', onZoomOut);
 		}
+		
+		let tornOffBars = function() {
+			document.getElementById('toolbar').style.opacity = "0";
+			document.getElementById('prev').removeEventListener('click', onPrevPage);
+			document.getElementById('next').removeEventListener('click', onNextPage);
+			document.getElementById('zoom-in').removeEventListener('click', onZoomIn);
+			document.getElementById('zoom-out').removeEventListener('click', onZoomOut);
+			document.getElementById('prev').addEventListener('click', tornOnBars);
+			document.getElementById('next').addEventListener('click', tornOnBars);
+			document.getElementById('zoom-in').addEventListener('click', tornOnBars);
+			document.getElementById('zoom-out').addEventListener('click', tornOnBars);
+		}
+		
+// 		// Write opened book to history
+// 		let createStamp = function() {
+// 			let pathToPost = router.getBookHistory();
+// 			var xhr = new XMLHttpRequest();
+// 			xhr.open("POST", pathToPost, true);
+// 			xhr.setRequestHeader('Content-Type', 'application/json');
+// 				xhr.send(JSON.stringify({
+// 					id: bookId,
+// 					page: currentPage
+// 			}));
+// 		}
 	</script>
-	
-	<script src="https://unpkg.com/pdfjs-dist@2.0.489/build/pdf.js"></script>
-    <script src="js/reader-pdf.js"></script>
-    
+
     <script>
-    	initPDFViewer(router.getBook(bookId));
+    	//initPDFViewer(router.getBook(bookId));
 
     	// Open book at last opened page
-    	let pageReq = new XMLHttpRequest();
-		pageReq.open("GET", router.getBookLastPage(bookId), true);
-		pageReq.setRequestHeader('Content-Type', 'application/json');
-		pageReq.onload = function() {
-			currentPageIndex = parseInt(pageReq.response);
-			console.log(currentPageIndex);
-			driver.setPage(parseInt(pageReq.response));
-			if(pageReq.response==0)
-				createStamp();
-		};
-		pageReq.send('page-info'); 
+//     	let pageReq = new XMLHttpRequest();
+// 		pageReq.open("GET", router.getBookLastPage(bookId), true);
+// 		pageReq.setRequestHeader('Content-Type', 'application/json');
+// 		pageReq.onload = function() {
+// 			currentPageIndex = parseInt(pageReq.response);
+// 			console.log(currentPageIndex);
+// 			driver.setPage(parseInt(pageReq.response));
+// 			if(pageReq.response==0)
+// 				createStamp();
+// 		};
+// 		pageReq.send('page-info'); 
     </script>
+	<script src="js/reader-pdf.js"></script>
 </html>

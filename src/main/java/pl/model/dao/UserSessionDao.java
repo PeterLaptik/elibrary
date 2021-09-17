@@ -11,4 +11,6 @@ public interface UserSessionDao {
 	public UserSession findSessionByUserId(int userId);
 	
 	public void deleteSessionByUuid(String uuid);
+	
+	public void purgeSessionsForUser(int userId);
 }

@@ -68,4 +68,17 @@ public class UserSessionDaoImpl implements UserSessionDao {
 		t.commit();
 		session.close();
 	}
+
+	@Override
+	public void purgeSessionsForUser(int userId) {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Transaction transaction = session.beginTransaction();
+		Query<?> query = session.createNativeQuery(
+				"DELETE FROM user_sessions\r\n"
+				+ "WHERE user_id = :param ;");
+		query.setParameter("param", userId);
+		query.executeUpdate();
+		transaction.commit();
+		session.close();
+	}
 }

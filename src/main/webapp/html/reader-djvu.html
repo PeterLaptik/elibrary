@@ -12,6 +12,7 @@
         <script src="js/vue.global.js"></script>
         <script src="js/djvu.js"></script>
         <script src="js/djvu_viewer.js"></script>
+        <script src="js/reader-djvu.colours.js"></script>
         <script>
 			var urlString = window.location.href;
             var url = new URL(urlString);
@@ -38,40 +39,6 @@
             			    page: currentPage - 1
             		}));
                 })
-            }
-            
-            // Colour schemes
-            let applyDarkScheme = function() {
-            	console.log('dark');
-            	// Navigation bar
-            	let navBar = document.getElementById("side-nav");
-            	document.body.style.background = "black";
-            	navBar.style.background = "black";
-            }
-
-			let applyLightScheme = function() {
-				console.log('light');
-				document.body.style.background = "#F0F0F0";
-				// Navigation bar
-				let navBar = document.getElementById("side-nav");
-				navBar.style.background = "#F0F0F0";
-				// Links
-				let rules = document.styleSheets[i].cssRules
-				for(let i=0; i<rules.length; i++) {
-					
-				}
-				
-				let links = document.getElementsByTagName("a");
-			    for(var i=0;i<links.length;i++)
-			    {
-			        if(links[i].href)
-			        {
-			            links[i].style.color = "#818181";
-			            
-			        }
-			    } 
-				
-				console.log(navBar);
             }
             
          	// Get last opened page for the book before load
@@ -152,7 +119,7 @@
 		  </div>
 	 	</div>
 	 	
-        <div id="for-viewer"></div>
+        <div id="for-viewer" style="margin-top: 0px; margin-bottom: 0px;"></div>
         
 		<!-- Modal dialogue -->
 	  	<div id="modal-dialogue">
