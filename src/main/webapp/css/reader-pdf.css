@@ -2,7 +2,6 @@
 
 body {
 	margin: 0;
-	font-family: sans-serif;
 	font-size: 0.9rem;
 	background-color: black;
 }
@@ -38,7 +37,25 @@ div {
     overflow: hidden;
 }
 
+.bookmarks-button {
+	align-items: center;
+	width:100vw;
+	top: 0;
+	position: fixed;
+	background-color: #000000;
+}
+
 @keyframes fade {
   0%,100% { opacity: 0 }
   50% { opacity: 1 }
 }
+
+#prev, #next, #zoom-in, #zoom-out {
+	font-size: 36px;
+}
+
+#page-box {
+	border: thin;
+	color: white;
+}
+

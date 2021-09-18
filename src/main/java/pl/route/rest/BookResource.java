@@ -135,7 +135,7 @@ public class BookResource {
 			userHistory.setPage(jsonObject.getInt("page"));
 			userHistoryDao.updateStamp(userHistory);
 		} catch (Exception e) {
-			System.err.println("Wrong opened book data:" + data);
+			System.err.println("Wrong page opened data:" + data);
 			return Response.serverError().build();
 		}
 		return Response.ok().build();

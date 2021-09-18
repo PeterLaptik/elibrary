@@ -7,41 +7,62 @@
 		<link rel="stylesheet" type="text/css" href="css/bookmarks.css" />
 	</head>
 	<body>
-		<div class="bookmarks-button">
-			<button class="schemebutton" id="lightscheme-button" onclick="applyLightScheme()">&#9788;</button>
-    		<button class="schemebutton" id="darkscheme-button" onclick="applyDarkScheme()">&#9789;</button>
-    		<a href="#" onclick="openNav()">Bookmarks</a>
-    	</div>
-    	<div id="side-nav" class="sidenav">
-		  	<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-		  	<a href="#" class="bookmark-creator" onclick="showModalInput()">Create</a>
-		  	<div id="app">
-				<p v-for="bookmark in bookmarksList.bookmarks">
-					<a id="bookmark-element" href="#" :book-page="bookmark.page_number"
-			  			onclick="openPage(this.getAttribute(`book-page`))">{{bookmark.bookmark_text}}</a>
-			  		<a href="javascript:void(0)" href="#" :bookmark="bookmark.bookmark_text" :page="bookmark.page_number"
-			  			onclick="deleteBookmark(this.getAttribute(`bookmark`), this.getAttribute(`page`));">&times;</a>
-			  	</p>
-		  </div>
-	 	</div>
-	 	
-	    <div>
-	    	<canvas id="the-canvas"></canvas>
-	        <div id="toolbar">
-		        <a href="#" id="prev">&#8678;</a>
-		        <a href="#" id="next">&#8680;</a>
-		        <a href="#" id="zoom-in">&#10011;</a>
-		        <a href="#" id="zoom-out">&#9866;</a>
-	        </div>
-	      </div>	
+		<div>
+			<div class="bookmarks-button" id="bookmarks-toolbar">
+				<button class="schemebutton" id="lightscheme-button"
+					onclick="applyLightScheme()">&#9788;</button>
+				<button class="schemebutton" id="darkscheme-button"
+					onclick="applyDarkScheme()">&#9789;</button>
+				<a href="#" onclick="openNav()">Bookmarks</a>
+			</div>
+			<div id="side-nav" class="sidenav">
+				<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+				<a href="#" class="bookmark-creator" onclick="showModalInput()">Create</a>
+				<div id="app">
+					<p v-for="bookmark in bookmarksList.bookmarks">
+						<a id="bookmark-element" href="#" :book-page="bookmark.page_number"
+							onclick="onSetPage(this.getAttribute(`book-page`))">{{bookmark.bookmark_text}}</a>
+						<a href="javascript:void(0)" href="#"
+							:bookmark="bookmark.bookmark_text" :page="bookmark.page_number"
+							onclick="deleteBookmark(this.getAttribute(`bookmark`), this.getAttribute(`page`));">&times;</a>
+					</p>
+				</div>
+			</div>
+			<canvas id="the-canvas"></canvas>
+			<div id="toolbar">
+				<a href="#" id="prev">&#8678;</a>
+				<a href="#" id="next">&#8680;</a>
+				<span style="border: thin;">Page <span id="page-count"></span> of <span id="total-pages"></span></span>
+				<a href="#" id="zoom-in">&#10011;</a>
+				<a href="#" id="zoom-out">&#9866;</a>
+			</div>
+		</div>
+	
+		<!-- Modal dialogue -->
+		<div id="modal-dialogue">
+			<div class="modal-content">
+				<p style="text-align: right;">
+					<span class="close-dlg" id="close-modal" onclick="hideModalInput()">&times;</span>
+				</p>
+				<p style="text-align: center">
+					<input id="input-text" name="bookmark-text" type="text"
+						maxlength="30" />
+				</p>
+				<p style="margin: 12px; text-align: right;">
+					<button id="modal-button" name="textOk" onclick="appendBookMark()">OK</button>
+				</p>
+			</div>
+		</div>	
 	</body>
 	<script src="js/elib.routes.js"></script>
+	<script src="js/elib.bookmarks.js"></script>
+	<script src="js/reader-pdf.colours.js"></script>
 	<script src="js/pdf.js"></script>
+	<script src="js/vue.global.js"></script>
 	<script>
 		var urlString = window.location.href;
 		var url = new URL(urlString);
 		let bookId = url.searchParams.get("id");
-		console.log(bookId);
 		
 		let currentPage = 1;
 		let visibleBars = true;
@@ -57,14 +78,23 @@
 		};
 		
 		let tornOnBars = function() {
+			// Navigation bar
 			document.getElementById('toolbar').style.opacity = "1";
 			document.getElementById('prev').addEventListener('click', onPrevPage);
 			document.getElementById('next').addEventListener('click', onNextPage);
 			document.getElementById('zoom-in').addEventListener('click', onZoomIn);
 			document.getElementById('zoom-out').addEventListener('click', onZoomOut);
+			// Bookmarks bar
+			document.getElementById('bookmarks-toolbar').style.opacity = "1";
+			document.getElementById('prev').addEventListener('click', onPrevPage);
+			document.getElementById('next').addEventListener('click', onNextPage);
+			document.getElementById('zoom-in').addEventListener('click', onZoomIn);
+			document.getElementById('zoom-out').addEventListener('click', onZoomOut);
+			
 		}
 		
 		let tornOffBars = function() {
+			// Navigation bar
 			document.getElementById('toolbar').style.opacity = "0";
 			document.getElementById('prev').removeEventListener('click', onPrevPage);
 			document.getElementById('next').removeEventListener('click', onNextPage);
@@ -74,36 +104,96 @@
 			document.getElementById('next').addEventListener('click', tornOnBars);
 			document.getElementById('zoom-in').addEventListener('click', tornOnBars);
 			document.getElementById('zoom-out').addEventListener('click', tornOnBars);
+			// Bookmarks bar
+			document.getElementById('bookmarks-toolbar').style.opacity = "0";
 		}
 		
-// 		// Write opened book to history
-// 		let createStamp = function() {
-// 			let pathToPost = router.getBookHistory();
-// 			var xhr = new XMLHttpRequest();
-// 			xhr.open("POST", pathToPost, true);
-// 			xhr.setRequestHeader('Content-Type', 'application/json');
-// 				xhr.send(JSON.stringify({
-// 					id: bookId,
-// 					page: currentPage
-// 			}));
-// 		}
+		// Bookmarks menu
+		function openNav() {
+   	  		document.getElementById("side-nav").style.width = "250px";
+   	  	}
+   	
+   	   	function closeNav() {
+   	     	document.getElementById("side-nav").style.width = "0";
+   	   	}
+		
+		// Write opened book to history
+		let createStamp = function() {
+			let pathToPost = router.getBookHistory();
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", pathToPost, true);
+			xhr.setRequestHeader('Content-Type', 'application/json');
+				xhr.send(JSON.stringify({
+					id: bookId,
+					page: currentPage
+			}));
+		}
 	</script>
-
-    <script>
-    	//initPDFViewer(router.getBook(bookId));
-
+	<script>
     	// Open book at last opened page
-//     	let pageReq = new XMLHttpRequest();
-// 		pageReq.open("GET", router.getBookLastPage(bookId), true);
-// 		pageReq.setRequestHeader('Content-Type', 'application/json');
-// 		pageReq.onload = function() {
-// 			currentPageIndex = parseInt(pageReq.response);
-// 			console.log(currentPageIndex);
-// 			driver.setPage(parseInt(pageReq.response));
-// 			if(pageReq.response==0)
-// 				createStamp();
-// 		};
-// 		pageReq.send('page-info'); 
+    	function getLastOpenedPage() {
+    		let pageReq = new XMLHttpRequest();
+    		pageReq.open("GET", router.getBookLastPage(bookId), true);
+    		pageReq.setRequestHeader('Content-Type', 'application/json');
+    		pageReq.onload = function() {
+    			currentPageIndex = parseInt(pageReq.response);
+    			console.log('Page:' + currentPageIndex);
+    			onSetPage(currentPageIndex);
+    			if(pageReq.response==0)
+    				createStamp();
+    		};
+    		pageReq.send('page-info'); 
+    	}
+    	
+    	let bookmarksList = {bookmarks: [{bookmark_text: "loading...", page_number: 1}]};
+	 	// Bookmarks processing via Vue3
+	   	const app = Vue.createApp({
+			data() {
+				return { bookmarksList: bookmarksList};
+			},
+			methods:{
+		        updateBookmarks: function() {
+		        	let bookmarksReq = new XMLHttpRequest();
+		       		bookmarksReq.open("GET", router.getBookmarks(bookId), true);
+		       		bookmarksReq.setRequestHeader('Content-Type', 'application/json');
+		       		bookmarksReq.callBackObject = this;
+		       		bookmarksReq.onload = function() {
+		       			let obj = JSON.parse(bookmarksReq.response);
+						bookmarksList.bookmarks = obj.bookmarks;
+						this.callBackObject.$forceUpdate();
+	        		};
+	        		bookmarksReq.send('page-info'); 
+		        }
+		    }
+		}).mount('#app');
+	 	app.updateBookmarks();
+	 	
+	 	document.getElementById("input-text")
+	        .addEventListener("keyup", function(event) {
+	        event.preventDefault();
+	        if (event.keyCode === 13) {
+	            document.getElementById("modal-button").click();
+	        }
+	    });
+	 	
+	 	document.addEventListener("keyup", function(event) {
+	        event.preventDefault();
+	        if (event.keyCode === 27) {
+	            document.getElementById("close-modal").click();
+	        }
+	    });
+	 	
+	 	function showModalInput() {
+       		let modalDlg = document.getElementById("modal-dialogue");
+       		document.getElementById("input-text").focus();
+       		document.getElementById("input-text").select();
+       		modalDlg.style.display = "block";
+       	}
+       	
+       	function hideModalInput() {
+       		let modalDlg = document.getElementById("modal-dialogue");
+       		modalDlg.style.display = "none";
+       	}
     </script>
 	<script src="js/reader-pdf.js"></script>
 </html>

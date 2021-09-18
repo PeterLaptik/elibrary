@@ -2,7 +2,10 @@
 
 // If absolute URL from the remote server is provided, configure the CORS
 // header on that server.
-var url = 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf';
+
+
+var url = router.getBook(bookId);
+
 
 // Loaded via <script> tag, create shortcut to access PDF.js exports.
 var pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -11,12 +14,13 @@ var pdfjsLib = window['pdfjs-dist/build/pdf'];
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'js/pdf.worker.js';
 
 var pdfDoc = null,
-	pageNum = 1,
 	pageRendering = false,
 	pageNumPending = null,
 	scale = 0.8,
 	canvas = document.getElementById('the-canvas'),
 	ctx = canvas.getContext('2d');
+
+let isStartPageSet = false;
 
 /**
  * Get page info from document, resize canvas accordingly, and render page.
@@ -25,6 +29,7 @@ var pdfDoc = null,
 function renderPage(num) {
 	pageRendering = true;
 	// Using promise to fetch the page
+	console.log('Got page:' + num);
 	pdfDoc.getPage(num).then(function(page) {
 		var viewport = page.getViewport({ scale: scale });
 		canvas.height = viewport.height;
@@ -41,6 +46,16 @@ function renderPage(num) {
 		// Wait for rendering to finish
 		renderTask.promise.then(function() {
 			pageRendering = false;
+			
+			if(isStartPageSet==false) {
+				console.log('rendered:' + pdfDoc);
+				getLastOpenedPage();
+				isStartPageSet = true;
+			}
+			
+			document.getElementById('total-pages').textContent = pdfDoc.numPages;
+			pdfDoc.numPages
+			
 			if (pageNumPending !== null) {
 				// New page rendering is pending
 				renderPage(pageNumPending);
@@ -50,7 +65,7 @@ function renderPage(num) {
 	});
 
 	// Update page counters
-//	document.getElementById('page_num').textContent = num;
+	document.getElementById('page-count').textContent = num;
 }
 
 /**
@@ -69,11 +84,12 @@ function queueRenderPage(num) {
  * Displays previous page.
  */
 function onPrevPage() {
-	if (pageNum <= 1) {
+	if (currentPage <= 1) {
 		return;
 	}
-	pageNum--;
-	queueRenderPage(pageNum);
+	currentPage--;
+	queueRenderPage(currentPage);
+	writePageHistory();
 }
 document.getElementById('prev').addEventListener('click', onPrevPage);
 
@@ -82,21 +98,27 @@ document.getElementById('prev').addEventListener('click', onPrevPage);
  * Displays next page.
  */
 function onNextPage() {
-	if (pageNum >= pdfDoc.numPages) {
+	if (currentPage >= pdfDoc.numPages) {
 		return;
 	}
-	pageNum++;
-	queueRenderPage(pageNum);
+	currentPage++;
+	queueRenderPage(currentPage);
+	writePageHistory();
 }
 document.getElementById('next').addEventListener('click', onNextPage);
 
+
+function onSetPage(page) {
+	currentPage = currentPage = parseInt(page);
+	queueRenderPage(currentPage);
+}
 
 function onZoomIn() {
 	if(scale>5.0)
 		return;
 	scale *= 1.2;
 	console.log('scale:' + scale);
-	queueRenderPage(pageNum);
+	queueRenderPage(currentPage);
 }
 document.getElementById('zoom-in').addEventListener('click', onZoomIn);
 
@@ -106,7 +128,7 @@ function onZoomOut() {
 		return;
 	scale /= 1.2;
 	console.log('scale:' + scale);
-	queueRenderPage(pageNum);
+	queueRenderPage(currentPage);
 }
 document.getElementById('zoom-out').addEventListener('click', onZoomOut);
 
@@ -116,19 +138,19 @@ document.getElementById('zoom-out').addEventListener('click', onZoomOut);
  */
 pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
 	pdfDoc = pdfDoc_;
-//	document.getElementById('page_count').textContent = pdfDoc.numPages;
+	document.getElementById('page-count').textContent = pdfDoc.numPages;
 
 	// Initial/first page rendering
-	renderPage(pageNum);
+	renderPage(currentPage);
 });
 
 
-function writePageHistory(pageNumber) {
+function writePageHistory() {
 	let pathToPost = router.getBookPageHistory(bookId);
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", pathToPost, true);
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.send(JSON.stringify({
-		page: pageNumber
+		page: currentPage
 	}));
 }

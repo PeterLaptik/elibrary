@@ -5,12 +5,14 @@
 const LIGHT_BODY_STYLE = "#F0F0F0";
 const LIGHT_LINK_STYLE = "#818181";
 const LIGHT_LINK_OVER_STYLE = "black";
-const LIGHT_ACTIVE_SCHEME = "black";
+const LIGHT_ACTIVE_SCHEME = "black"
+const LIGHT_TEXT = "black";
 
 const DARK_BODY_STYLE = "black";
 const DARK_LINK_STYLE = "#F0F0F0";
 const DARK_LINK_OVER_STYLE = "green";
 const DARK_ACTIVE_SCHEME = "yellow";
+const DARK_TEXT = "white";
 
 let applyDarkScheme = function() {
 	// Navigation bar
@@ -57,9 +59,13 @@ let applyDarkScheme = function() {
 		})
 	}
 	
-	viewer.configure({
-		theme: "dark"
-	});
+	document.getElementById("toolbar").style.backgroundColor = DARK_BODY_STYLE;
+	document.getElementById("bookmarks-toolbar").style.backgroundColor = DARK_BODY_STYLE;
+	
+	let elements = document.getElementsByTagName('span');
+	for(let i=0; i<elements.length; i++) {
+		elements[i].style.color = DARK_TEXT;
+	}
 }
 
 let applyLightScheme = function() {
@@ -107,7 +113,11 @@ let applyLightScheme = function() {
 		})
 	}
 	
-	viewer.configure({
-		theme: "light"
-	});
+	document.getElementById("toolbar").style.backgroundColor = LIGHT_BODY_STYLE;
+	document.getElementById("bookmarks-toolbar").style.backgroundColor = LIGHT_BODY_STYLE;
+	
+	let elements = document.getElementsByTagName('span');
+	for(let i=0; i<elements.length; i++) {
+		elements[i].style.color = LIGHT_TEXT;
+	}
 }
