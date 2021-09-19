@@ -30,26 +30,46 @@
 			</div>
 			<canvas id="the-canvas"></canvas>
 			<div id="toolbar">
+				<a href="#" id="zoom-out">&#9866;</a>
+				<a href="#" id="zoom-in">&#10011;</a>
+				<span style="border: thin;">&nbsp;&nbsp;Page 
+					<span id="page-count" ondblclick="showModalPage()"></span> of 
+					<span id="total-pages"></span>
+					&nbsp;&nbsp;
+				</span>
 				<a href="#" id="prev">&#8678;</a>
 				<a href="#" id="next">&#8680;</a>
-				<span style="border: thin;">Page <span id="page-count"></span> of <span id="total-pages"></span></span>
-				<a href="#" id="zoom-in">&#10011;</a>
-				<a href="#" id="zoom-out">&#9866;</a>
 			</div>
 		</div>
 	
-		<!-- Modal dialogue -->
+		<!-- Modal dialogue for bookmarks-->
 		<div id="modal-dialogue">
 			<div class="modal-content">
 				<p style="text-align: right;">
 					<span class="close-dlg" id="close-modal" onclick="hideModalInput()">&times;</span>
 				</p>
 				<p style="text-align: center">
-					<input id="input-text" name="bookmark-text" type="text"
+					<input id="input-text" name="input-page" type="text"
 						maxlength="30" />
 				</p>
 				<p style="margin: 12px; text-align: right;">
 					<button id="modal-button" name="textOk" onclick="appendBookMark()">OK</button>
+				</p>
+			</div>
+		</div>
+		
+		<!-- Modal dialogue for page number-->
+		<div id="modal-page">
+			<div class="modal-content">
+				<p style="text-align: right;">
+					<span class="close-dlg" id="close-modal-page" onclick="hideModalPage()">&times;</span>
+				</p>
+				<p style="text-align: center">
+					<input id="input-page" name="bookmark-text" type="text"
+						maxlength="30" />
+				</p>
+				<p style="margin: 12px; text-align: right;">
+					<button id="modal-button-page" name="textOk" onclick="goToPage()">OK</button>
 				</p>
 			</div>
 		</div>	
@@ -171,8 +191,16 @@
 	 	document.getElementById("input-text")
 	        .addEventListener("keyup", function(event) {
 	        event.preventDefault();
-	        if (event.keyCode === 13) {
+	        if (event.keyCode===13) {
 	            document.getElementById("modal-button").click();
+	        }
+	    });
+	 	
+	 	document.getElementById("input-page")
+	        .addEventListener("keyup", function(event) {
+	        event.preventDefault();
+	        if (event.keyCode===13) {
+	            document.getElementById("modal-button-page").click();
 	        }
 	    });
 	 	
@@ -180,6 +208,7 @@
 	        event.preventDefault();
 	        if (event.keyCode === 27) {
 	            document.getElementById("close-modal").click();
+	            document.getElementById("close-modal-page").click();
 	        }
 	    });
 	 	
@@ -193,6 +222,25 @@
        	function hideModalInput() {
        		let modalDlg = document.getElementById("modal-dialogue");
        		modalDlg.style.display = "none";
+       	}
+       	
+       	function showModalPage() {
+       		let modalDlg = document.getElementById("modal-page");
+       		document.getElementById("input-page").focus();
+       		document.getElementById("input-page").select();
+       		modalDlg.style.display = "block";
+       	}
+       	
+       	function hideModalPage() {
+       		let modalDlg = document.getElementById("modal-page");
+       		modalDlg.style.display = "none";
+       	}
+       	
+       	function goToPage() {
+       		let page = parseInt(document.getElementById('input-page').value);
+       		if(Number.isNaN(page)==false)
+       			onSetPage(page);
+       		hideModalPage();
        	}
     </script>
 	<script src="js/reader-pdf.js"></script>

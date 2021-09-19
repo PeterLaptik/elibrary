@@ -109,6 +109,9 @@ document.getElementById('next').addEventListener('click', onNextPage);
 
 
 function onSetPage(page) {
+	if ((page > pdfDoc.numPages) | (page<1)) {
+		return;
+	}
 	currentPage = currentPage = parseInt(page);
 	queueRenderPage(currentPage);
 }
