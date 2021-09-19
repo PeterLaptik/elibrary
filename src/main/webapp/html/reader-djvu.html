@@ -12,7 +12,6 @@
         <script src="js/vue.global.js"></script>
         <script src="js/djvu.js"></script>
         <script src="js/djvu_viewer.js"></script>
-        <script src="js/reader-djvu.colours.js"></script>
         <script>
 			var urlString = window.location.href;
             var url = new URL(urlString);
@@ -28,6 +27,8 @@
                 viewer.configure({
                     pageNumber: currentPage,
                 });
+                
+                processCookies();
 
                 viewer.on(DjVu.Viewer.Events.PAGE_NUMBER_CHANGED, () => {
                     currentPage = viewer.getPageNumber();
@@ -99,7 +100,6 @@
 	       	}
 		</script>
     </header>
-
     <body>
 		<div class="bookmarks-button">
 			<button class="schemebutton" id="lightscheme-button" onclick="applyLightScheme()">&#9788;</button>
@@ -139,7 +139,7 @@
 		</div>
 	  </div>
     </body>
-    
+    <script src="js/reader-djvu.colours.js"></script>
     <script>
     	let bookmarksList = {bookmarks: [{bookmark_text: "loading...", page_number: 1}]};
 	 	// Bookmarks processing via Vue3
@@ -179,5 +179,33 @@
 	        }
 	    });
 
+	 	// Cookies processing
+       	const COL_COOKIE = 'colour_scheme';
+       	const COL_DARK = 'dark';
+       	const COL_LIGHT = 'light';
+       	function processCookies() {
+       		let colourScheme = getCookieValue(COL_COOKIE);
+
+           	if(colourScheme==COL_DARK) {
+           		applyDarkScheme();
+           	} else if(colourScheme==COL_LIGHT) {
+           		applyLightScheme();
+           	} else {
+           		writeCookieValue(COL_COOKIE, COL_DARK);
+           	}
+       	}
+       	
+       	function getCookieValue(name) {
+       		let cookies = document.cookie.split(';');
+           	for(let cookie of cookies) {
+           		let pair = cookie.split('=');
+           		if(pair[0].trim()==name)
+           			return pair[1].trim();
+           	}
+       	}
+       	
+       	function writeCookieValue(name, value) {
+       		document.cookie = name + "=" + value + ";max-age=3600";
+       	}
     </script>
 </html>

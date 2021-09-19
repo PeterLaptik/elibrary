@@ -60,6 +60,7 @@ let applyDarkScheme = function() {
 	viewer.configure({
 		theme: "dark"
 	});
+	writeCookieValue(COL_COOKIE, COL_DARK);
 }
 
 let applyLightScheme = function() {
@@ -110,4 +111,5 @@ let applyLightScheme = function() {
 	viewer.configure({
 		theme: "light"
 	});
+	writeCookieValue(COL_COOKIE, COL_LIGHT);
 }

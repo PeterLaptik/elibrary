@@ -66,6 +66,7 @@ let applyDarkScheme = function() {
 	for(let i=0; i<elements.length; i++) {
 		elements[i].style.color = DARK_TEXT;
 	}
+	writeCookieValue(COL_COOKIE, COL_DARK);
 }
 
 let applyLightScheme = function() {
@@ -120,4 +121,5 @@ let applyLightScheme = function() {
 	for(let i=0; i<elements.length; i++) {
 		elements[i].style.color = LIGHT_TEXT;
 	}
+	writeCookieValue(COL_COOKIE, COL_LIGHT);
 }

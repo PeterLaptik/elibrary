@@ -242,6 +242,36 @@
        			onSetPage(page);
        		hideModalPage();
        	}
+       	
+       	// Cookies processing
+       	const COL_COOKIE = 'colour_scheme';
+       	const COL_DARK = 'dark';
+       	const COL_LIGHT = 'light';
+       	
+       	(function processCookies() {
+       		let colourScheme = getCookieValue(COL_COOKIE);
+
+           	if(colourScheme==COL_DARK) {
+           		applyDarkScheme();
+           	} else if(colourScheme==COL_LIGHT) {
+           		applyLightScheme();
+           	} else {
+           		writeCookieValue(COL_COOKIE, COL_DARK);
+           	}
+       	})();
+       	
+       	function getCookieValue(name) {
+       		let cookies = document.cookie.split(';');
+           	for(let cookie of cookies) {
+           		let pair = cookie.split('=');
+           		if(pair[0].trim()==name)
+           			return pair[1].trim();
+           	}
+       	}
+       	
+       	function writeCookieValue(name, value) {
+       		document.cookie = name + "=" + value + ";max-age=3600";
+       	}
     </script>
 	<script src="js/reader-pdf.js"></script>
 </html>
