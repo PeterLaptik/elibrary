@@ -1,5 +1,6 @@
 package pl.model.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,12 +11,14 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import pl.model.dao.UserHistoryDao;
+import pl.model.entities.Book;
 import pl.model.entities.UserHistory;
 import pl.model.entities.UserHistoryId;
 import pl.model.session.HibernateSessionFactory;
 
 @Stateless
 public class UserHistoryDaoImpl implements UserHistoryDao {
+	private static final long serialVersionUID = 1697888100344639121L;
 	
 	@Override
 	public void createStamp(UserHistory userHistory,  Integer maxRecords) {
@@ -36,7 +39,7 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 		if(stamps.size()==0) {
 			session.save(userHistory);
 			if(maxRecords!=null && maxRecords>1)
-				cleanHistory(userHistory, maxRecords-1, session);
+				purgeHistory(userHistory, maxRecords-1, session);
 		} else {
 			UserHistory existingStamp = stamps.get(0);
 			existingStamp.setLastOpenDate(new Date());
@@ -91,7 +94,7 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 		return stamps.get(0).getPage();
 	}
 	
-	private void cleanHistory(UserHistory userHistory, int maxRecords, Session session) {
+	private void purgeHistory(UserHistory userHistory, int maxRecords, Session session) {
 		Query<?> query = session.createNativeQuery(
 				"DELETE FROM users_history\r\n"
 				+ "WHERE ctid NOT IN\r\n"
@@ -104,5 +107,74 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 		query.setParameter("user_id", userHistory.getUser().getId());
 		query.setParameter("limit", maxRecords);
 		query.executeUpdate();
+	}
+
+	@Override
+	public List<Book> getHistoryBooks(int userId) {
+		List<Book> books = new ArrayList<Book>();
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Query<UserHistory> query = session.createQuery("FROM UserHistory WHERE user_id = :user_id ORDER BY date_opened DESC", 
+									UserHistory.class);
+		query.setParameter("user_id", userId);
+		List<UserHistory> historyLines = query.list();
+		for(UserHistory i: historyLines)
+			books.add(i.getBook());
+		
+		session.close();
+		return books;
+	}
+
+	@Override
+	public List<UserHistory> getHistory(int userId) {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Query<UserHistory> query = session.createQuery("FROM UserHistory WHERE user_id = :user_id ORDER BY date_opened DESC", 
+									UserHistory.class);
+		query.setParameter("user_id", userId);
+		List<UserHistory> historyLines = query.list();
+		session.close();
+		return historyLines;
+	}
+	
+	@Override
+	public void deleteStamp(UserHistory userHistory) {
+		if(userHistory==null)
+			return;
+		
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Transaction transaction = session.beginTransaction();
+		
+		try {
+			session.delete(userHistory);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		transaction.commit();
+		session.close();
+		
+	}
+
+	@Override
+	public void deleteStampsForBook(int bookId) {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Transaction transaction = session.beginTransaction();
+		Query<?> query = session.createNativeQuery(
+				"DELETE FROM users_history WHERE book_id = :book_id");
+		query.setParameter("book_id", bookId);
+		query.executeUpdate();
+		transaction.commit();
+		session.close();
+	}
+
+	@Override
+	public void deleteStampsForUser(int userId) {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Transaction transaction = session.beginTransaction();
+		Query<?> query = session.createNativeQuery(
+				"DELETE FROM users_history WHERE user_id = :user_id");
+		query.setParameter("user_id", userId);
+		query.executeUpdate();
+		transaction.commit();
+		session.close();
 	}
 }

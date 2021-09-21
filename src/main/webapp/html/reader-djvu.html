@@ -160,7 +160,10 @@
 	        		};
 	        		bookmarksReq.send('page-info'); 
 		        }
-		    }
+		    },
+	        updated() {
+		    	updateColours();
+	        }
 		}).mount('#app');
 	 	app.updateBookmarks();
 	 	
@@ -205,7 +208,7 @@
        	}
        	
        	function writeCookieValue(name, value) {
-       		document.cookie = name + "=" + value + ";max-age=3600";
+       		document.cookie = name + "=" + value + ";max-age=14400";
        	}
     </script>
 </html>

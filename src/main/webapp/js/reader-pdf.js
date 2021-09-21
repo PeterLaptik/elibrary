@@ -1,9 +1,4 @@
 
-
-// If absolute URL from the remote server is provided, configure the CORS
-// header on that server.
-
-
 var url = router.getBook(bookId);
 
 
@@ -29,7 +24,6 @@ let isStartPageSet = false;
 function renderPage(num) {
 	pageRendering = true;
 	// Using promise to fetch the page
-	console.log('Got page:' + num);
 	pdfDoc.getPage(num).then(function(page) {
 		var viewport = page.getViewport({ scale: scale });
 		canvas.height = viewport.height;
@@ -48,7 +42,6 @@ function renderPage(num) {
 			pageRendering = false;
 			
 			if(isStartPageSet==false) {
-				console.log('rendered:' + pdfDoc);
 				getLastOpenedPage();
 				isStartPageSet = true;
 			}
@@ -120,7 +113,6 @@ function onZoomIn() {
 	if(scale>5.0)
 		return;
 	scale *= 1.2;
-	console.log('scale:' + scale);
 	queueRenderPage(currentPage);
 }
 document.getElementById('zoom-in').addEventListener('click', onZoomIn);
@@ -130,7 +122,6 @@ function onZoomOut() {
 	if(scale<0.2)
 		return;
 	scale /= 1.2;
-	console.log('scale:' + scale);
 	queueRenderPage(currentPage);
 }
 document.getElementById('zoom-out').addEventListener('click', onZoomOut);

@@ -1,5 +1,9 @@
 @charset "UTF-8";
 /* The side navigation menu */
+body {
+	background-color: #ccc;
+}
+
 .sidenav {
   height: 100%; /* 100% Full-height */
   width: 250px; /* 0 width - change this with JavaScript */
@@ -45,6 +49,7 @@
 #book-list {
   transition: margin-left .5s;
   padding-left: 250px;
+/*   width: calc(100vw - 260px); */
 }
 
 #book-navigator {
@@ -61,7 +66,6 @@
 
 .topbar {
 	background-color: #F0F0F0;
-	width: 100%;
 	overflow: hidden;
 	padding-left: 250px;
 }
@@ -103,4 +107,20 @@ li {
   color: #818181;
   display: block;
   transition: 0.3s;
+}
+
+#history-lines {
+	padding-left: 250px;
+/* 	border: 1px solid #818181; */
+	display: block;
+	transition: 0.5s;
+}
+
+#history-line {
+	border-bottom: 1px solid #818181;
+	width: 100%;
+}
+
+#input-text {
+	width: auto;
 }

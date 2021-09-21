@@ -12,7 +12,10 @@ const DARK_LINK_STYLE = "#F0F0F0";
 const DARK_LINK_OVER_STYLE = "green";
 const DARK_ACTIVE_SCHEME = "yellow";
 
+let isDark = true;
+
 let applyDarkScheme = function() {
+	isDark = true;
 	// Navigation bar
 	let navBar = document.getElementById("side-nav");
 	document.body.style.background = DARK_BODY_STYLE;
@@ -64,6 +67,7 @@ let applyDarkScheme = function() {
 }
 
 let applyLightScheme = function() {
+	isDark = false;
 	document.body.style.background = LIGHT_BODY_STYLE;
 	// Navigation bar
 	let navBar = document.getElementById("side-nav");
@@ -112,4 +116,14 @@ let applyLightScheme = function() {
 		theme: "light"
 	});
 	writeCookieValue(COL_COOKIE, COL_LIGHT);
+}
+
+function updateColours() {
+	if(viewer===undefined)
+		return;
+		
+	if (isDark == false)
+		applyLightScheme();
+	else
+		applyDarkScheme();
 }

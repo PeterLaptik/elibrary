@@ -28,4 +28,13 @@ public interface BookDao extends Serializable {
 	public int getBookQuantity(int sectionId);
 	
 	public void moveBookToSection(Book book, int sectionId);
+	
+	/** Search services **/
+	public int searchByNameQuantity(String likeValue);
+	
+	public int searchByAuthorQuantity(String likeValue);
+	
+	public List<Book> searchByNameBooks(String likeValue, int windowCapacity, int pageNumber);
+	
+	public List<Book> searchByAuthorBooks(String likeValue, int windowCapacity, int pageNumber);
 }

@@ -3,6 +3,7 @@ package pl.model.dao.impl;
 import java.math.BigInteger;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import org.hibernate.Session;
@@ -10,16 +11,19 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import pl.credentials.PasswordProcessor;
+import pl.model.dao.BookmarkDao;
 import pl.model.dao.UserDao;
+import pl.model.dao.UserHistoryDao;
 import pl.model.entities.User;
 import pl.model.session.HibernateSessionFactory;
 
 @Stateless
 public class UserDaoImpl implements UserDao {
+	@EJB
+	private UserHistoryDao historyDao;
 	
-	public UserDaoImpl(){
-		
-	}
+	@EJB
+	private BookmarkDao bookmarkDao;
 	
 	@Override
 	public boolean create(User user) {
@@ -83,6 +87,8 @@ public class UserDaoImpl implements UserDao {
 		if(user==null)
 			return false;
 		
+		historyDao.deleteStampsForUser(user.getId());
+		bookmarkDao.deleteBookmarksForUser(user.getId());
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Transaction transaction = session.beginTransaction();
 		Query<User> query = session.createQuery("FROM User WHERE user_id = :param", User.class);

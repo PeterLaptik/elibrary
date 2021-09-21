@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import org.hibernate.Session;
@@ -12,6 +13,8 @@ import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
 import pl.model.dao.BookDao;
+import pl.model.dao.BookmarkDao;
+import pl.model.dao.UserHistoryDao;
 import pl.model.entities.Book;
 import pl.model.entities.Section;
 import pl.model.session.HibernateSessionFactory;
@@ -19,6 +22,12 @@ import pl.model.session.HibernateSessionFactory;
 @Stateless
 public class BookDaoImpl implements BookDao {
 	private static final long serialVersionUID = 8219653706236670746L;
+	
+	@EJB
+	private UserHistoryDao historyDao;
+	
+	@EJB
+	private BookmarkDao bookmarkDao;
 
 	@Override
 	public boolean createBook(Book book) {
@@ -35,6 +44,8 @@ public class BookDaoImpl implements BookDao {
 
 	@Override
 	public void deleteBook(Book book) {
+		historyDao.deleteStampsForBook(book.getId());
+		bookmarkDao.deleteBookmarksForBook(book.getId());
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Transaction transaction = session.beginTransaction();
 		Query<Book> query = session.createQuery("FROM Book WHERE id = :param", Book.class);
@@ -171,5 +182,67 @@ public class BookDaoImpl implements BookDao {
 		}
 		session.close();
 		return result;
+	}
+
+	@Override
+	public int searchByNameQuantity(String likeValue) {
+		int result = 0;
+		Session session = HibernateSessionFactory.getSession().openSession();
+		
+		NativeQuery<?> nquery = session.createSQLQuery("SELECT count(*) FROM books WHERE book_name like :param");
+		nquery.setParameter("param", '%' + likeValue + '%');
+		
+		@SuppressWarnings("unchecked")
+		List<BigInteger> counter = (List<BigInteger>) nquery.list();
+		if(counter.size()>0) {
+			try {
+				result = counter.get(0).intValue();
+			} catch (Exception e) {
+				// Could not count
+				// do nothing (zero-value returns)
+			}
+		}
+		session.close();
+		return result;
+	}
+
+	@Override
+	public int searchByAuthorQuantity(String likeValue) {
+		int result = 0;
+		Session session = HibernateSessionFactory.getSession().openSession();
+		
+		NativeQuery<?> nquery = session.createSQLQuery("SELECT count(*) FROM books WHERE authors like :param");
+		nquery.setParameter("param", '%' + likeValue + '%');
+		
+		@SuppressWarnings("unchecked")
+		List<BigInteger> counter = (List<BigInteger>) nquery.list();
+		if(counter.size()>0) {
+			try {
+				result = counter.get(0).intValue();
+			} catch (Exception e) {
+				// Could not count
+				// do nothing (zero-value returns)
+			}
+		}
+		session.close();
+		return result;
+	}
+
+	@Override
+	public List<Book> searchByNameBooks(String likeValue, int windowCapacity, int pageNumber) {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Query<Book> query = session.createQuery("FROM Book WHERE book_name like :param ORDER BY book_name", Book.class)
+				.setFirstResult(windowCapacity*pageNumber)
+				.setMaxResults(windowCapacity);
+		query.setParameter("param", '%' + likeValue + '%');
+		List<Book> books = query.list();
+		session.close();
+		return books;
+	}
+
+	@Override
+	public List<Book> searchByAuthorBooks(String likeValue, int windowCapacity, int pageNumber) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

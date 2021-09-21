@@ -1,12 +1,12 @@
 @charset "UTF-8";
 
 .bookLine {
-  border: 1px solid black;
-  width: 100vw;
+  border-bottom: 1px solid #818181;
+  width: 100%;
 }
 
 .collapsible {
-  background-color: #eee;
+  background-color: #E0E0E0;
   color: #444;
   cursor: pointer;
   padding: 0px;
@@ -39,6 +39,7 @@
 
 .book-download {
 	text-align: right;
+	padding-right: 25px;
 }
 
 #page_link_selected {

@@ -157,7 +157,6 @@
     		pageReq.setRequestHeader('Content-Type', 'application/json');
     		pageReq.onload = function() {
     			currentPageIndex = parseInt(pageReq.response);
-    			console.log('Page:' + currentPageIndex);
     			onSetPage(currentPageIndex);
     			if(pageReq.response==0)
     				createStamp();
@@ -184,7 +183,10 @@
 	        		};
 	        		bookmarksReq.send('page-info'); 
 		        }
-		    }
+		    },
+		    updated() {
+		    	updateColours();
+	        }
 		}).mount('#app');
 	 	app.updateBookmarks();
 	 	
@@ -270,7 +272,7 @@
        	}
        	
        	function writeCookieValue(name, value) {
-       		document.cookie = name + "=" + value + ";max-age=3600";
+       		document.cookie = name + "=" + value + ";max-age=14400";
        	}
     </script>
 	<script src="js/reader-pdf.js"></script>

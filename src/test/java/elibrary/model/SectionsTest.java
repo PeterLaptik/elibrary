@@ -10,8 +10,10 @@ import org.junit.runners.MethodSorters;
 
 import pl.model.cache.SectionCache;
 import pl.model.cache.SectionCacheImpl;
+import pl.model.dao.BookDao;
 import pl.model.dao.impl.BookDaoImpl;
 import pl.model.dao.impl.SectionDaoImpl;
+import pl.model.dao.impl.UserHistoryDaoImpl;
 import pl.model.entities.Book;
 import pl.model.entities.Section;
 import pl.view.jsf.beans.SectionService;
@@ -22,6 +24,7 @@ public class SectionsTest {
 	
 	static {
 		BookDaoImpl bookDao = new BookDaoImpl();
+		assignUserHistory(bookDao);
 		List<Book> books = bookDao.findBooksByName("Test book");
 		for(Book book: books)
 			bookDao.deleteBook(book);
@@ -110,6 +113,7 @@ public class SectionsTest {
 		SectionsTest.assignSectionCache(dao);
 		Section bookSection = dao.findSectionByName("test_section");
 		BookDaoImpl bookDao = new BookDaoImpl();
+		assignUserHistory(bookDao);
 		Book book = new Book();
 		book.setName("Test book");
 		book.setDescription("desc");
@@ -125,6 +129,7 @@ public class SectionsTest {
 	@Test
 	public void test3_deleteTestData() {
 		BookDaoImpl bookDao = new BookDaoImpl();
+		assignUserHistory(bookDao);
 		List<Book> books = bookDao.findBooksByName("Test book");
 		for(Book book: books)
 			bookDao.deleteBook(book);
@@ -180,6 +185,21 @@ public class SectionsTest {
 			Field field = dao.getClass().getDeclaredField("cache");
 			field.setAccessible(true);
 			field.set(dao, commonCache);
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void assignUserHistory(BookDao dao) {
+		try {
+			// SectionsCache
+			Field field = dao.getClass().getDeclaredField("historyDao");
+			field.setAccessible(true);
+			field.set(dao, new UserHistoryDaoImpl());
 		} catch (NoSuchFieldException e) {
 			e.printStackTrace();
 		} catch (SecurityException e) {

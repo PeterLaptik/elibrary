@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.hibernate.Session;
@@ -37,7 +38,10 @@ public class SectionService implements Serializable {
 	private List<Book> cutBooksSelection = new ArrayList<Book>();
 
 	private List<Book> books = new ArrayList<Book>();
-	private BookService bookService = new BookService();
+	
+	@Inject
+	private BookService bookService;// = new BookService();
+	
 	private SortType sortType = SortType.BY_NAME;
 	
 	@EJB

@@ -14,7 +14,10 @@ const DARK_LINK_OVER_STYLE = "green";
 const DARK_ACTIVE_SCHEME = "yellow";
 const DARK_TEXT = "white";
 
+let isDark = true;
+
 let applyDarkScheme = function() {
+	isDark = false;
 	// Navigation bar
 	let navBar = document.getElementById("side-nav");
 	document.body.style.background = DARK_BODY_STYLE;
@@ -70,6 +73,7 @@ let applyDarkScheme = function() {
 }
 
 let applyLightScheme = function() {
+	isDark = false;
 	document.body.style.background = LIGHT_BODY_STYLE;
 	// Navigation bar
 	let navBar = document.getElementById("side-nav");
@@ -122,4 +126,11 @@ let applyLightScheme = function() {
 		elements[i].style.color = LIGHT_TEXT;
 	}
 	writeCookieValue(COL_COOKIE, COL_LIGHT);
+}
+
+function updateColours() {
+	if (isDark == false)
+		applyLightScheme();
+	else
+		applyDarkScheme();
 }

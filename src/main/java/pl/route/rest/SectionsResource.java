@@ -80,7 +80,7 @@ public class SectionsResource {
     @Path("/books/{sectionId}/{pageId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBooks(@PathParam("sectionId") int sectionId, @PathParam("pageId") int pageId) {
-    	List<Book> bookList = bookDao.getBooksBySectionId(sectionId, DEFAULT_WINDOW_SIZE ,pageId);
+    	List<Book> bookList = bookDao.getBooksBySectionId(sectionId, DEFAULT_WINDOW_SIZE, pageId);
     	
     	// Book list
     	JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();

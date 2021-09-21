@@ -1,125 +1,221 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <title>E-Library</title>
-      <link rel="stylesheet" type="text/css" href="css/home.css" />
-	  <link rel="stylesheet" type="text/css" href="css/book.css" />
-   </head>
+	<head>
+		<title>E-Library</title>
+		<link rel="stylesheet" type="text/css" href="css/home.css" />
+		<link rel="stylesheet" type="text/css" href="css/book.css" />
+	</head>
 
-   <script src="js/sweetalert2.all.min.js"></script>
-   <script src="js/sweetalert2.all.min.js"></script>
-   <script src="js/vue.global.js"></script>
-   <script src="js/elib.books.pages.js"></script>
+	<script src="js/sweetalert2.all.min.js"></script>
+	<script src="js/sweetalert2.all.min.js"></script>
+	<script src="js/vue.global.js"></script>
+	<script src="js/elib.books.pages.js"></script>
+	<script src="js/elib.pages.navigators.js"></script>
 
-   <script type="text/x-template" id="item-template">
-	<li div>
-	  <div
-		   :class="getStyleClass()"
-		   @click="toggle"
-		   @dblclick="toggle"
-		   @mouseover="hover = true"
-		   @mouseleave="hover = false">
-			{{ item.name }}
-	  </div>
-	  <ul v-show="isOpen" v-if="isFolder">
-		<tree-item
-		   class="item"
-		   v-for="(child, index) in item.children"
-		   :key="index"
-		   :item="child">
-		</tree-item>
-	  </ul>
-	</li>
-  </script>
+	<script type="text/x-template" id="item-template">
+		<li div>
+			<div
+				:class="getStyleClass()"
+		   		@click="toggle"
+		   		@dblclick="toggle"
+		   		@mouseover="hover = true"
+		   		@mouseleave="hover = false">
+				{{ item.name }}
+	  		</div>
+	  		<ul v-show="isOpen" v-if="isFolder">
+				<tree-item
+					class="item"
+		   			v-for="(child, index) in item.children"
+		   			:key="index"
+		   			:item="child">
+				</tree-item>
+			</ul>
+		</li>
+	</script>
 
 	<script>
-	   function openNav() {
-	     document.getElementById("mySidenav").style.width = "250px";
-	     document.getElementById("topBar").style.paddingLeft = "250px";
-	     document.getElementById("book-list").style.paddingLeft = "250px";
-	   }
+		// Navigation bar behaviour (show/hide)
+		function openNav() {
+			document.getElementById("mySidenav").style.width = "250px";
+	     	document.getElementById("topBar").style.paddingLeft = "250px";
+	     	let element = document.getElementById("book-list");
+	     	if(element)
+	     		element.style.paddingLeft = "250px";
+	     	element = document.getElementById("history-lines");
+	     	if(element)
+	     		element.style.paddingLeft = "250px";
+	     	
+	     	let elements = document.getElementsByClassName("bookLine");
+	     	for(let element of elements) {
+	     		element.style.width = "calc(100vw - 260px);";
+	     	}
+	   	}
 	
-	   function closeNav() {
-	     document.getElementById("mySidenav").style.width = "0";
-	     document.getElementById("topBar").style.paddingLeft = "0";
-	     document.getElementById("book-list").style.paddingLeft = "10px";
-	   }
-	   
-	   function logOut(){
-		   Swal.fire({
-			   text: 'Logout from the library?',
-			   showCancelButton: true,
-			   confirmButtonText: 'Yes',
-			   cancelButtonText: 'No'
-			 }).then((result) => {
-			   if (result.isConfirmed) {
-				   window.location.href = "logout"
-			   } else if (result.dismiss === Swal.DismissReason.cancel) {
+	   	function closeNav() {
+	     	document.getElementById("mySidenav").style.width = "0";
+	     	document.getElementById("topBar").style.paddingLeft = "0";
+	     	let element = document.getElementById("book-list");
+	     	if(element) {
+	     		element.style.paddingLeft = "10px";
+	     		element.style.width = "100vh;"
+	     	}
+	     	element = document.getElementById("history-lines");
+	     	if(element)
+	     		element.style.paddingLeft = "10px";
+	     	
+	     	let elements = document.getElementsByClassName("bookLine");
+	     	for(let i=0; i<elements.length; i++) {
+	     		elements[i].style.width = "100vh;";
+	     	}
+	   	}
+	   	
+	   	// TODO update
+	   	function logOut(){
+			Swal.fire({
+				text: 'Logout from the library?',
+			   	showCancelButton: true,
+			   	confirmButtonText: 'Yes',
+			   	cancelButtonText: 'No'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					window.location.href = "logout"
+				} else if (result.dismiss === Swal.DismissReason.cancel) {
 				   // do nothing
-			   }
-			 })
-	   }
-   </script>
-   <body>
-	   	<div id="mySidenav" class="sidenav">
-		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+				}
+			})
+		}
+	</script>
+	
+	<body>
+		<div id="mySidenav" class="sidenav">
+			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 			<div id="book-navigator">
 				<ul>
-					<tree-item
-					class="item"
-					:item="sectionsTree"
-					></tree-item>
+					<tree-item class="item" :item="sectionsTree"></tree-item>
 				</ul>
 			</div>
-	 	</div>
-
-		<div id="topBar" class="topbar">
-		  <a id="showMenu" href="#menu" onclick="openNav()">Menu</a>
-		  <a class="active" href="#home">Home</a>
-		  <a href="#news">News</a>
-		  <a href="admin/stats.xhtml">Admin</a>
-		  <a href="#" onclick="logOut()">Logout</a>
 		</div>
-		<div id="book-list">
-			<table v-for="book in bookList.books" class="bookLine">
-				<tr>
-					<td class="book_name">{{book.name}}</td>
-				</tr>
-				<tr>
-					<td class="book_author">{{book.author}}</td>
-				</tr>
-				<tr>
-					<td>
-						UDC:{{book.codeUdc}}&nbsp;&nbsp;
-						ISBN:{{book.codeIsbn}}
-						&nbsp;&nbsp;
-						ISSN:{{book.codeIssn}}
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<span id="book-format">Format: {{book.format}} &nbsp;&nbsp;</span>
-						<span id="book-link"> 
-							<a href='#' :book-name="book.id" :book-format="book.format"
-							onclick="openBook(this.getAttribute(`book-name`), this.getAttribute(`book-format`))">Open</a>
-						</span>
-						<span>
+
+		<div id='main-page'>
+			<!-- Main menu -->
+			<div id="topBar" class="topbar">
+				<a id="showMenu" href="#menu" onclick="openNav()">Menu</a>
+				<a href="#home" v-bind:class="{active: mainState}" v-on:click="setMainState();">Home</a>
+				<a href="#news" v-bind:class="{active: historyState}" v-on:click="setHistoryState();">History</a>
+				<a href="#news" v-bind:class="{active: searchState}" v-on:click="setSearchState();">Search</a>
+				<a href="admin/stats.xhtml">Admin</a>
+				<a href="#" onclick="logOut()">Logout</a>
+			</div>
+			<!-- Book list -->
+			<div id="book-list" v-if="mainState">
+				<table v-for="book in bookList.books" class="bookLine">
+					<tr>
+						<td class="book_name">{{book.name}}</td>
+					</tr>
+					<tr>
+						<td class="book_author">{{book.author}}</td>
+					</tr>
+					<tr>
+						<td>UDC:{{book.codeUdc}}&nbsp;&nbsp; 
+								ISBN:{{book.codeIsbn}}&nbsp;&nbsp; 
+								ISSN:{{book.codeIssn}}</td>
+					</tr>
+					<tr>
+						<td><span id="book-format">Format: {{book.format}}
+								&nbsp;&nbsp;</span> <span id="book-link"> <a href='#'
+								:book-name="book.id" :book-format="book.format"
+								onclick="openBook(this.getAttribute(`book-name`), this.getAttribute(`book-format`))">Open</a>
+							</span> 
+						<span> 
 							<a href='#' id="book-download" style="float: right;">Download</a>
 						</span>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<button type="button" class="collapsible">&#10000; Show description</button>
-						<div class="book_description">
-							{{book.description}}
-						</div>
-					</td>
-				</tr>
-			</table>
-			<div id=pageNavigator>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<button type="button" class="collapsible">&#10000; Show
+								description</button>
+							<div class="book_description">{{book.description}}</div>
+						</td>
+					</tr>
+				</table>
+				<div id=pageNavigator></div>
 			</div>
+			<!-- Book history -->
+			<div v-if="historyState" id="history-lines">
+				<table v-for="book in historyList.books" id="history-line">
+					<tr>
+						<td class="book_name">{{book.name}}</td>
+					</tr>
+					<tr>
+						<td class="book_author">{{book.author}}</td>
+					</tr>
+					<tr>
+						<td>UDC:{{book.codeUdc}}&nbsp;&nbsp; ISBN:{{book.codeIsbn}}
+							&nbsp;&nbsp; ISSN:{{book.codeIssn}}</td>
+					</tr>
+					<tr>
+						<td><span id="book-format">Format: {{book.format}}
+								&nbsp;&nbsp;</span> <span id="book-link"> <a href='#'
+								:book-name="book.id" :book-format="book.format"
+								onclick="openBook(this.getAttribute(`book-name`), this.getAttribute(`book-format`))">Open</a>
+							</span> 
+						<span> 
+							<a href='#' id="book-download" style="float: right;">Download</a>
+						</span>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<!-- Book search -->
+			<div v-if="searchState" id="history-lines">
+				<p style="text-align: center"> Search
+					<input id="input-text" name="input-search" type="text"
+						maxlength="50" />
+					<select name="choice-type" id="search-choice">
+						<option value="book">book</option>
+						<option value="author">author</option>
+					</select>
+					<button id="modal-button" name="textOk" onclick="executeSearch()">OK</button>
+				</p>
+				<div>
+					<table v-for="book in searchList.books" class="bookLine">
+						<tr>
+							<td class="book_name">{{book.name}}</td>
+						</tr>
+						<tr>
+							<td class="book_author">{{book.author}}</td>
+						</tr>
+						<tr>
+							<td>UDC:{{book.codeUdc}}&nbsp;&nbsp; 
+									ISBN:{{book.codeIsbn}}&nbsp;&nbsp; 
+									ISSN:{{book.codeIssn}}</td>
+						</tr>
+						<tr>
+							<td><span id="book-format">Format: {{book.format}}
+									&nbsp;&nbsp;</span> <span id="book-link"> <a href='#'
+									:book-name="book.id" :book-format="book.format"
+									onclick="openBook(this.getAttribute(`book-name`), this.getAttribute(`book-format`))">Open</a>
+								</span> 
+							<span> 
+								<a href='#' id="book-download" style="float: right;">Download</a>
+							</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<button type="button" class="collapsible">&#10000; Show
+									description</button>
+								<div class="book_description">{{book.description}}</div>
+							</td>
+						</tr>
+					</table>
+					<div id=pageSearchNavigator></div>
+				</div>
+			</div>
+			<!-- Settings -->
 		</div>
+		
 		<script>
 			let bookList = {books: []};
 
@@ -142,44 +238,6 @@
 				app.updateBooks(sectionId, currentPage);
 			}
 
-			let rebuildPageList = function(paeNav){
-				let pageNav = document.getElementById("pageNavigator");
-				pageNav.innerHTML = '';
-
-				const MAX_PAGES = 10;
-				const PAGE_WINDOW_MARGIN = 3;
-				let pageOverflow = bookList.pagesNumber>MAX_PAGES;
-
-				for(let i=0; i<bookList.pagesNumber; i++){
-					let minPage = currentPage-PAGE_WINDOW_MARGIN;
-					let maxPage = currentPage+PAGE_WINDOW_MARGIN;
-					if((i<minPage || i>maxPage) && i!=0 && i!=bookList.pagesNumber-1)
-						continue;
-
-					if(pageOverflow==true && i==bookList.pagesNumber-1 && maxPage<bookList.pagesNumber-2){
-						let dummyElem = document.createElement("a");
-						dummyElem.textContent = '...';
-						pageNav.appendChild(dummyElem);
-					}
-
-					let elem = document.createElement("a");
-					elem.textContent = ' ' + (i+1) + ' ';
-					elem.id = i!=currentPage ? 'page_link' : 'page_link_selected';
-					elem.href = "#";
-					elem.onclick = function(event){
-						currentPage = i;
-						updateBookList(currentSectionId);
-					};
-
-					pageNav.appendChild(elem);
-					if(pageOverflow==true && i==0 && minPage>1){
-						let dummyElem = document.createElement("a");
-						dummyElem.textContent = '...';
-						pageNav.appendChild(dummyElem);
-					}
-				}
-			}
-
 			let updateCollapsibles = function(){
 				let coll = document.getElementsByClassName("collapsible");
 				for (i = 0; i < coll.length; i++) {
@@ -192,7 +250,7 @@
 							} else {
 								content.style.display = "block";
 							}
-							});
+						});
 					}
 					coll[i].hasAttachedListener = true;
 				}
@@ -202,9 +260,21 @@
 				window.open(router.getReader(id, format), "_blank");
 			}
 			
+			// History
+			let historyList = {books: []};
+
+			// Search
+			let searchList = {books: []};
+		
+			let searchType = null;
+			let searchVal = null;
+			let executeSearch = function() {
+				app.searchBooks();
+			}
 		</script>
-	<script src="js/elib.routes.js"></script>
-	<script src="js/elib.book.navigator.js"></script>
-	<script src="js/elib.books.list.js"></script>
-   </body>
+		
+		<script src="js/elib.routes.js"></script>
+		<script src="js/elib.book.navigator.js"></script>
+		<script src="js/elib.books.list.js"></script>
+	</body>
 </html>

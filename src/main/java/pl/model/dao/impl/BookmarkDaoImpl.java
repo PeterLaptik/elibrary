@@ -84,4 +84,28 @@ public class BookmarkDaoImpl implements BookmarkDao {
 		session.close();
 		return bookmarks;
 	}
+
+	@Override
+	public void deleteBookmarksForBook(int bookId) {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Transaction transaction = session.beginTransaction();
+		Query<?> query = session.createNativeQuery(
+				"DELETE FROM bookmarks WHERE book_id = :book_id");
+		query.setParameter("book_id", bookId);
+		query.executeUpdate();
+		transaction.commit();
+		session.close();
+	}
+
+	@Override
+	public void deleteBookmarksForUser(int userId) {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Transaction transaction = session.beginTransaction();
+		Query<?> query = session.createNativeQuery(
+				"DELETE FROM bookmarks WHERE user_id = :user_id");
+		query.setParameter("user_id", userId);
+		query.executeUpdate();
+		transaction.commit();
+		session.close();
+	}
 }

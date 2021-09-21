@@ -1,8 +1,12 @@
 package pl.route.rest;
 
 import java.io.File;
+import java.util.List;
 
 import javax.ejb.EJB;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
@@ -42,6 +46,7 @@ public class BookResource {
 	
 	@EJB
 	private UserHistoryDao userHistoryDao;
+	
 	
 	@GET
     @Path("/{bookId}")
@@ -156,4 +161,35 @@ public class BookResource {
 		int page = userHistoryDao.getLastPageFor(bookId, userId);
 		return page;
     }
+	
+	@GET
+	@Path("/bookhistory")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_HTML)
+	public Response getBookHistory(@CookieParam(UserSession.FIELD_SESSION_UUID) Cookie cookie) {
+		UserSession session = sessionCache.findSessionByUuid(cookie.getValue());
+		if(session==null)
+			return Response.serverError().build();
+		
+		JsonObjectBuilder bookListBuilder = Json.createObjectBuilder();
+		try {
+			int userId = session.getUserId();
+			List<Book> books = userHistoryDao.getHistoryBooks(userId);
+			JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+	    	for(Book i: books) {
+	    		arrayBuilder.add(i.toJsonBuilder());
+	    	}
+	    	bookListBuilder.add("books", arrayBuilder);
+	    	
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().build();
+		}
+		return Response.ok(bookListBuilder.build())
+    			.header("Access-Control-Allow-Origin", "*")
+    			.header("Access-Control-Allow-Credentials", "true")
+    			.header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+    			.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+    			.build();
+	}
 }

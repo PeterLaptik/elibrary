@@ -8,6 +8,8 @@ var router = {
 	pathBookmarks: '/bookmarks',
 	pathBookmarksPost: '/post',
 	pathBookmarksDelete: '/delete',
+	pathSearchByBook: '/search/bookname',
+	pathSearchByAuthor: '/search/author',
 
     getSectionsPath: function() {
         return this.applicationContextPath + this.pathSections;
@@ -51,5 +53,13 @@ var router = {
 	
 	getBookmarksDelete: function(id) {
 		return this.applicationContextPath + this.pathBookmarks + this.pathBookmarksDelete + '/' + id;
+	},
+	
+	getSearchByBookName: function() {
+		return this.applicationContextPath + this.pathSearchByBook;
+	},
+	
+	getSearchByAuthor: function() {
+		return this.applicationContextPath + this.pathSearchByAuthor;
 	}
 };

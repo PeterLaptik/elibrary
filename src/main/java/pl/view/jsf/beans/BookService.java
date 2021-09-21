@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -25,7 +25,6 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
 import pl.model.dao.BookDao;
-import pl.model.dao.impl.BookDaoImpl;
 import pl.model.entities.Book;
 import pl.model.entities.Section;
 
@@ -62,7 +61,9 @@ public class BookService implements Serializable{
 	
 	Section selectedSection = null;
 	private UploadedFile file = null;
-	BookDao bookDao = new BookDaoImpl();
+	
+	@EJB
+	private BookDao bookDao;// = new BookDaoImpl();
 
 	private TreeNode node; 
 

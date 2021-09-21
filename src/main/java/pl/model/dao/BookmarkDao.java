@@ -9,7 +9,11 @@ public interface BookmarkDao extends Serializable {
 	
 	void createBookmark(Bookmark bookmark);
 	
+	void deleteBookmark(Bookmark bookmark);
+	
 	List<Bookmark> getBookmarks(int bookId, int userId);
 	
-	void deleteBookmark(Bookmark bookmark);
+	void deleteBookmarksForBook(int bookId);
+	
+	void deleteBookmarksForUser(int userId);
 }
