@@ -188,8 +188,9 @@
 						</tr>
 						<tr>
 							<td>UDC:{{book.codeUdc}}&nbsp;&nbsp; 
-									ISBN:{{book.codeIsbn}}&nbsp;&nbsp; 
-									ISSN:{{book.codeIssn}}</td>
+								ISBN:{{book.codeIsbn}}&nbsp;&nbsp; 
+								ISSN:{{book.codeIssn}}
+							</td>
 						</tr>
 						<tr>
 							<td><span id="book-format">Format: {{book.format}}
@@ -227,7 +228,7 @@
 			let currentSectionId = -1;
 			let currentPage = 0;
 
-			let updateBookList = function(sectionId){
+			let updateBookList = function(sectionId) {
 				let coll = document.getElementsByClassName("collapsible");
 				for (i = 0; i < coll.length; i++) {
 					if(coll[i].classList.contains("active"))
@@ -238,7 +239,7 @@
 				app.updateBooks(sectionId, currentPage);
 			}
 
-			let updateCollapsibles = function(){
+			let updateCollapsibles = function() {
 				let coll = document.getElementsByClassName("collapsible");
 				for (i = 0; i < coll.length; i++) {
 					if(coll[i].hasAttachedListener!=true) {
@@ -265,11 +266,27 @@
 
 			// Search
 			let searchList = {books: []};
-		
-			let searchType = null;
+			
+			let searchChoice = null;
 			let searchVal = null;
+			let searchPage = 0;
+			
 			let executeSearch = function() {
+				searchPage = 0;
+				searchChoice = document.getElementById('search-choice').value;
+				searchVal = document.getElementById('input-text').value;
 				app.searchBooks();
+			}
+			
+			let updateSearchBookList = function(sectionId) {
+				let coll = document.getElementsByClassName("collapsible");
+				for (i = 0; i < coll.length; i++) {
+					if(coll[i].classList.contains("active"))
+						coll[i].classList.toggle("active");
+					var content = coll[i].nextElementSibling;
+					content.style.display = "none";
+				}
+				app.searchBooks(searchPage);
 			}
 		</script>
 		

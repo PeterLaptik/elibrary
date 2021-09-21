@@ -102,6 +102,13 @@ public class SectionsResource {
     	
     	JsonObject result = bookListBuilder.build();
     	
+    	try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
         return Response.ok(result)
         			.header("Access-Control-Allow-Origin", "*")
         			.header("Access-Control-Allow-Credentials", "true")

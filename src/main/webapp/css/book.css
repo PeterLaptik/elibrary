@@ -3,6 +3,7 @@
 .bookLine {
   border-bottom: 1px solid #818181;
   width: 100%;
+  transition: 0.5s;
 }
 
 .collapsible {
@@ -53,6 +54,6 @@
   text-decoration: none;
 }
 
-#pageNavigator {
+#pageNavigator, #pageSearchNavigator {
   text-align: center;
 }

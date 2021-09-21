@@ -32,24 +32,18 @@ const app = Vue.createApp({
         },
 
 		searchBooks: function () {
-			console.log('Start search...');
-			selected = document.getElementById('search-choice').value;
-			searchVal = document.getElementById('input-text').value;
-
-			if (!selected || !searchVal)
+			if (!searchChoice || !searchVal)
 				return;
 
-			let object = { 'likeVal': searchVal, 'page': 0 };
+			let object = { 'likeVal': searchVal, 'page': searchPage };
 			let path = null;
-			if (selected == 'book') {
+			if (searchChoice == 'book') {
 				path = router.getSearchByBookName();
-			} else if (selected == 'author') {
+			} else if (searchChoice == 'author') {
 				path = router.getSearchByAuthor();
 			} else {
 				return
 			}
-
-			console.log('Start search...' + selected + ' : ' + path);
 
 			let xhr = new XMLHttpRequest();
 			xhr.open('POST', path);
@@ -57,14 +51,13 @@ const app = Vue.createApp({
 			xhr.send(JSON.stringify(object));
 			xhr.callBackObject = this;
 			xhr.onload = function() {
-				console.log('Response:' + xhr.response);
 				let loadedData = JSON.parse(xhr.response);
 				searchList.books = loadedData.books;
 				searchList.pagesNumber = loadedData.pagesNumber;
 				searchList.currentPage = loadedData.currentPage;
 				this.callBackObject.$forceUpdate();
 				Vue.nextTick(function() {
-					rebuildPageList();
+					rebuildSearchPageList();
 					updateCollapsibles();
 				})
 			}
@@ -109,6 +102,11 @@ const app = Vue.createApp({
     },
 
 	updated() {
-		rebuildPageList();
+		if(this.mainState==true)
+			rebuildPageList();
+		else if(this.searchState==true)
+			rebuildSearchPageList();
+			
+		updateCollapsibles();
 	}
 }).mount('#main-page');

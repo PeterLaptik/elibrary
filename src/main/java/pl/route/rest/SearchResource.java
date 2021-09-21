@@ -53,7 +53,7 @@ public class SearchResource {
 			
 			// Search result capacity
 			int quantity = bookDao.searchByNameQuantity(search);
-			System.out.println("Found:" + quantity);
+			System.out.println("page:" + pageId);
 			
 			// Book list
 			List<Book> bookList = bookDao.searchByNameBooks(search, DEFAULT_WINDOW_SIZE, pageId);
