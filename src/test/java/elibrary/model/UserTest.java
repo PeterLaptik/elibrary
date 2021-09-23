@@ -26,44 +26,18 @@ public class UserTest {
 	private final static String testLogin = "test_user";
 	private final static String testPass = "qwerty";
 	private static User user = null;
-	private static AuthentificationManager mgr = new AuthentificationManager();
+	private static AuthentificationManager mgr = TestInjectionMock.getAuthManager();
 	
 	static {
 		UserTest.user = new User();
 		UserTest.user.setName(testLogin);
 		UserTest.user.setPassword(testPass);
 		UserTest.user.setLogin(testLogin);
-		
-		// Init authentification manager manager via reflection
-		try {
-			// User DAO
-			Field field = mgr.getClass().getDeclaredField("userDao");
-			field.setAccessible(true);
-			field.set(mgr, new UserDaoImpl());
-			// Session DAO
-			field = mgr.getClass().getDeclaredField("sessionDao");
-			field.setAccessible(true);
-			field.set(mgr, new UserSessionDaoImpl());
-			// Sessions cache
-			SessionCache sessionsCache = new SessionCacheImpl();
-			field = sessionsCache.getClass().getDeclaredField("sessionDao");
-			field.setAccessible(true);
-			field.set(sessionsCache, new UserSessionDaoImpl());
-			field = mgr.getClass().getDeclaredField("sessions");
-			field.setAccessible(true);
-			field.set(mgr, sessionsCache);
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	@BeforeClass
 	public static void removeTestUsersIfExist() {
-		UserDao dao = new UserDaoImpl();
+		UserDao dao = TestInjectionMock.getUserDao();
 		User user = dao.findUserByLogin(testLogin);
 		if(user!=null)
 			dao.deleteUser(user);
@@ -125,7 +99,7 @@ public class UserTest {
 	
 	@Test
 	public void test4_userDeletingCascadeCheck() {
-		UserDao uDao = new UserDaoImpl();
+		UserDao uDao = TestInjectionMock.getUserDao();
 		User foundUser = uDao.findUserByLogin(UserTest.user.getLogin());
 		Assert.assertNotNull(foundUser);
 		

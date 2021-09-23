@@ -1,6 +1,5 @@
 package elibrary.model;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import org.junit.Assert;
@@ -11,26 +10,19 @@ import org.junit.runners.MethodSorters;
 import pl.model.cache.SectionCache;
 import pl.model.cache.SectionCacheImpl;
 import pl.model.dao.BookDao;
-import pl.model.dao.impl.BookDaoImpl;
-import pl.model.dao.impl.SectionDaoImpl;
-import pl.model.dao.impl.UserHistoryDaoImpl;
+import pl.model.dao.SectionDao;
 import pl.model.entities.Book;
 import pl.model.entities.Section;
-import pl.view.jsf.beans.SectionService;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SectionsTest {
-	private static SectionCache commonCache = new SectionCacheImpl();
-	
 	static {
-		BookDaoImpl bookDao = new BookDaoImpl();
-		assignUserHistory(bookDao);
+		BookDao bookDao = TestInjectionMock.getBookDao();
 		List<Book> books = bookDao.findBooksByName("Test book");
 		for(Book book: books)
 			bookDao.deleteBook(book);
 		
-		SectionDaoImpl dao = new SectionDaoImpl();
-		assignSectionCache(dao);
+		SectionDao dao = TestInjectionMock.getSectionDao();
 		Section section = dao.findSectionByName("sub_child_3");
 		dao.deleteSection(section);
 		section = dao.findSectionByName("sub_child_1");
@@ -51,25 +43,11 @@ public class SectionsTest {
 		dao.deleteSection(section);
 		section = dao.findSectionByName("test_section_5");
 		dao.deleteSection(section);
-		
-		try {
-			// SectionsCache
-			Field field = commonCache.getClass().getDeclaredField("sectionDao");
-			field.setAccessible(true);
-			field.set(commonCache, new SectionDaoImpl());
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	@Test
 	public void test1_userCreatingTestDefDao() {
-		SectionDaoImpl dao = new SectionDaoImpl();
-		SectionsTest.assignSectionCache(dao);
+		SectionDao dao = TestInjectionMock.getSectionDao();
 		Section section = new Section();
 		section.setName("test_section");
 		dao.createSection(section);
@@ -109,11 +87,9 @@ public class SectionsTest {
 	
 	@Test
 	public void test2_createBooks() {
-		SectionDaoImpl dao = new SectionDaoImpl();
-		SectionsTest.assignSectionCache(dao);
+		SectionDao dao = TestInjectionMock.getSectionDao();
 		Section bookSection = dao.findSectionByName("test_section");
-		BookDaoImpl bookDao = new BookDaoImpl();
-		assignUserHistory(bookDao);
+		BookDao bookDao = TestInjectionMock.getBookDao();
 		Book book = new Book();
 		book.setName("Test book");
 		book.setDescription("desc");
@@ -128,14 +104,12 @@ public class SectionsTest {
 	
 	@Test
 	public void test3_deleteTestData() {
-		BookDaoImpl bookDao = new BookDaoImpl();
-		assignUserHistory(bookDao);
+		BookDao bookDao = TestInjectionMock.getBookDao();
 		List<Book> books = bookDao.findBooksByName("Test book");
 		for(Book book: books)
 			bookDao.deleteBook(book);
 		
-		SectionDaoImpl dao = new SectionDaoImpl();
-		SectionsTest.assignSectionCache(dao);
+		SectionDao dao = TestInjectionMock.getSectionDao();
 		Section section = dao.findSectionByName("sub_child_3");
 		dao.deleteSection(section);
 		section = dao.findSectionByName("sub_child_1");
@@ -156,56 +130,5 @@ public class SectionsTest {
 		dao.deleteSection(section);
 		section = dao.findSectionByName("test_section_5");
 		dao.deleteSection(section);
-	}
-	
-	@Test
-	public void tests_showSectionsTree() {
-		SectionService service = new SectionService();
-		Field field;
-		try {
-			field = service.getClass().getDeclaredField("sectionDao");
-			field.setAccessible(true);
-			field.set(service, new SectionDaoImpl());
-		} catch (NoSuchFieldException e1) {
-			e1.printStackTrace();
-		} catch (SecurityException e1) {
-			e1.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		service.getRoot();
-	}
-	
-	
-	private static void assignSectionCache(SectionDaoImpl dao) {
-		try {
-			// SectionsCache
-			Field field = dao.getClass().getDeclaredField("cache");
-			field.setAccessible(true);
-			field.set(dao, commonCache);
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private static void assignUserHistory(BookDao dao) {
-		try {
-			// SectionsCache
-			Field field = dao.getClass().getDeclaredField("historyDao");
-			field.setAccessible(true);
-			field.set(dao, new UserHistoryDaoImpl());
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 }
