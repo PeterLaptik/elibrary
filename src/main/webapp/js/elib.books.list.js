@@ -7,7 +7,8 @@ const app = Vue.createApp({
 				searchList: searchList,
 				mainState: true,
 				historyState: false,
-				searchState: false
+				searchState: false,
+				isMenuShowed: true
 		}
     },
 
@@ -18,7 +19,11 @@ const app = Vue.createApp({
             router.getBooksPage(id, page));
             xhr.send();
             xhr.callBackObject = this;
+
+			let loader = document.getElementById("spinner-anim");
+	       	loader.style.display = "block";
             xhr.onload = function () {
+	       		loader.style.display = "none";
                 let loadedData = JSON.parse(xhr.response);
                 bookList.books = loadedData.books;
                 bookList.pagesNumber = loadedData.pagesNumber;
@@ -50,7 +55,11 @@ const app = Vue.createApp({
 			xhr.setRequestHeader('Content-Type', 'application/json');
 			xhr.send(JSON.stringify(object));
 			xhr.callBackObject = this;
+			
+			let loader = document.getElementById("spinner-anim");
+	       	loader.style.display = "block";
 			xhr.onload = function() {
+				loader.style.display = "none";
 				let loadedData = JSON.parse(xhr.response);
 				searchList.books = loadedData.books;
 				searchList.pagesNumber = loadedData.pagesNumber;
@@ -93,7 +102,11 @@ const app = Vue.createApp({
             xhr.open('GET', router.getBookHistory());
             xhr.send();
             xhr.callBackObject = this;
+
+			let loader = document.getElementById("spinner-anim");
+	       	loader.style.display = "block";
             xhr.onload = function () {
+				loader.style.display = "none";
                 let loadedData = JSON.parse(xhr.response);
                 historyList.books = loadedData.books;
                 this.callBackObject.$forceUpdate();

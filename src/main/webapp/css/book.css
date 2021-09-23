@@ -1,13 +1,13 @@
 @charset "UTF-8";
 
 .bookLine {
-  border-bottom: 1px solid #818181;
+  border-bottom: 1px solid #FFFFFF;
   width: 100%;
   transition: 0.5s;
 }
 
 .collapsible {
-  background-color: #E0E0E0;
+  background-image: linear-gradient(to right, #CCCCCC, #EEEEFF);
   color: #444;
   cursor: pointer;
   padding: 0px;
@@ -19,15 +19,19 @@
   font-size: 15px;
 }
 
-.active, .collapsible:hover {
+.active {
   background-color: #ccc;
+}
+
+.collapsible:hover {
+	background-image: linear-gradient(to left, #CCCCCC, #EEEEFF);
 }
 
 .book_description {
   padding: 0 18px;
   display: none;
   overflow: hidden;
-  background-color: #f1f1f1;
+  background-color: #F8F8F8;
 }
 
 .book_name {

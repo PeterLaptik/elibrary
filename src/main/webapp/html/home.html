@@ -35,9 +35,12 @@
 
 	<script>
 		// Navigation bar behaviour (show/hide)
+		let visibleNavigationBar = true;
+		
 		function openNav() {
+			app.isMenuShowed=true;
 			document.getElementById("mySidenav").style.width = "250px";
-	     	document.getElementById("topBar").style.paddingLeft = "250px";
+	     	document.getElementById("topBar").style.left = "250px";
 	     	let element = document.getElementById("book-list");
 	     	if(element)
 	     		element.style.paddingLeft = "250px";
@@ -52,8 +55,9 @@
 	   	}
 	
 	   	function closeNav() {
+	   		app.isMenuShowed=false;
 	     	document.getElementById("mySidenav").style.width = "0";
-	     	document.getElementById("topBar").style.paddingLeft = "0";
+	     	document.getElementById("topBar").style.left = "0";
 	     	let element = document.getElementById("book-list");
 	     	if(element) {
 	     		element.style.paddingLeft = "10px";
@@ -88,7 +92,10 @@
 	
 	<body>
 		<div id="mySidenav" class="sidenav">
-			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+			<div class="sidepanelline">
+				
+				<p><a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a></p>
+			</div>
 			<div id="book-navigator">
 				<ul>
 					<tree-item class="item" :item="sectionsTree"></tree-item>
@@ -99,10 +106,10 @@
 		<div id='main-page'>
 			<!-- Main menu -->
 			<div id="topBar" class="topbar">
-				<a id="showMenu" href="#menu" onclick="openNav()">Menu</a>
-				<a href="#home" v-bind:class="{active: mainState}" v-on:click="setMainState();">Home</a>
-				<a href="#news" v-bind:class="{active: historyState}" v-on:click="setHistoryState();">History</a>
-				<a href="#news" v-bind:class="{active: searchState}" v-on:click="setSearchState();">Search</a>
+				<a v-if="!isMenuShowed" href="#menu" id="showMenu" onclick="openNav()">Menu</a>
+				<a href="#home" v-bind:class="{activenotepad: mainState}" v-on:click="setMainState();">Home</a>
+				<a href="#news" v-bind:class="{activenotepad: historyState}" v-on:click="setHistoryState();">History</a>
+				<a href="#news" v-bind:class="{activenotepad: searchState}" v-on:click="setSearchState();">Search</a>
 				<a href="admin/stats.xhtml">Admin</a>
 				<a href="#" onclick="logOut()">Logout</a>
 			</div>
@@ -155,14 +162,15 @@
 							&nbsp;&nbsp; ISSN:{{book.codeIssn}}</td>
 					</tr>
 					<tr>
-						<td><span id="book-format">Format: {{book.format}}
+						<td>
+							<span id="book-format">Format: {{book.format}}
 								&nbsp;&nbsp;</span> <span id="book-link"> <a href='#'
 								:book-name="book.id" :book-format="book.format"
 								onclick="openBook(this.getAttribute(`book-name`), this.getAttribute(`book-format`))">Open</a>
 							</span> 
-						<span> 
-							<a href='#' id="book-download" style="float: right;">Download</a>
-						</span>
+							<span> 
+								<a href='#' id="book-download" style="float: right;">Download</a>
+							</span>
 						</td>
 					</tr>
 				</table>
@@ -215,8 +223,14 @@
 				</div>
 			</div>
 			<!-- Settings -->
+			
+			<!-- Spinner -->
+			<div id="spinner-anim">
+				<div id="loader-animation"></div>
+			</div>
+	  
 		</div>
-		
+
 		<script>
 			let bookList = {books: []};
 
