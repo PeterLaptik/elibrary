@@ -6,9 +6,11 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -17,7 +19,7 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table 
 (name="sections",
-uniqueConstraints = @UniqueConstraint(columnNames={"section_name"}))
+uniqueConstraints = @UniqueConstraint(columnNames={"section_name"}, name="uk_section_name"))
 public class Section implements Serializable{
 	private static final long serialVersionUID = -6957062912046512337L;
 	public static final String FIELD_ID = "section_id";
@@ -36,7 +38,7 @@ public class Section implements Serializable{
 	@OneToOne(cascade=CascadeType.DETACH)
 	private Section parent;
 
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="parent")
 	private List<Section> children;
 
 	

@@ -53,7 +53,7 @@ FOREIGN KEY (section_section_id) REFERENCES public.sections(section_id);
 
 
 CREATE TABLE public.books (
-	id int4 NOT NULL,
+	book_id int4 NOT NULL,
 	book_description text NULL,
 	file_name varchar(255) NULL,
 	file_format varchar(255) NULL,
@@ -67,7 +67,7 @@ CREATE TABLE public.books (
 	city varchar(255) NULL,
 	publisher varchar(255) NULL,
 	publication_year int4 NULL,
-	CONSTRAINT books_pkey PRIMARY KEY (id)
+	CONSTRAINT books_pkey PRIMARY KEY (book_id)
 );
 
 
@@ -89,3 +89,26 @@ minvalue 0
 start with 0
 increment by 1
 cache 5;
+
+------------------------------------
+------ History and bookmarks -------
+------------------------------------
+CREATE TABLE public.users_history (
+	book_id int4 NOT NULL,
+	user_id int4 NOT NULL,
+	date_opened timestamp NULL,
+	page int4 NULL,
+	CONSTRAINT users_history_pkey PRIMARY KEY (book_id, user_id),
+	CONSTRAINT fk_hist_outer_book_id FOREIGN KEY (book_id) REFERENCES books(book_id),
+	CONSTRAINT fk_hist_outer_user_id FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE public.bookmarks (
+	book_id int4 NOT NULL,
+	bookmark_text varchar(255) NOT NULL,
+	user_id int4 NOT NULL,
+	page_number int4 NULL,
+	CONSTRAINT bookmarks_pkey PRIMARY KEY (book_id, bookmark_text, user_id),
+	CONSTRAINT fk_bm_outer_user_id FOREIGN KEY (user_id) REFERENCES users(user_id),
+	CONSTRAINT fk_bm_outer_book_id FOREIGN KEY (book_id) REFERENCES books(book_id)
+);
