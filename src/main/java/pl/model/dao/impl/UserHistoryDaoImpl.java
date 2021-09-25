@@ -38,8 +38,6 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 		List<UserHistory> stamps = query.list();
 		if(stamps.size()==0) {
 			session.save(userHistory);
-			if(maxRecords!=null && maxRecords>1)
-				purgeHistory(userHistory, maxRecords-1, session);
 		} else {
 			UserHistory existingStamp = stamps.get(0);
 			existingStamp.setLastOpenDate(new Date());
@@ -47,6 +45,10 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 		}
 		transaction.commit();
 		session.close();
+		
+		// Purge history
+		if(maxRecords!=null && maxRecords>1)
+			purgeHistory(userHistory, maxRecords-1);
 	}
 
 	@Override
@@ -94,7 +96,9 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 		return stamps.get(0).getPage();
 	}
 	
-	private void purgeHistory(UserHistory userHistory, int maxRecords, Session session) {
+	private void purgeHistory(UserHistory userHistory, int maxRecords) {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Transaction transaction = session.beginTransaction();
 		Query<?> query = session.createNativeQuery(
 				"DELETE FROM users_history\r\n"
 				+ "WHERE ctid NOT IN\r\n"
@@ -107,6 +111,8 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 		query.setParameter("user_id", userHistory.getUser().getId());
 		query.setParameter("limit", maxRecords);
 		query.executeUpdate();
+		transaction.commit();
+		session.close();
 	}
 
 	@Override

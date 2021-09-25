@@ -112,3 +112,15 @@ CREATE TABLE public.bookmarks (
 	CONSTRAINT fk_bm_outer_user_id FOREIGN KEY (user_id) REFERENCES users(user_id),
 	CONSTRAINT fk_bm_outer_book_id FOREIGN KEY (book_id) REFERENCES books(book_id)
 );
+
+
+------------------------------
+--- Data model information ---
+------------------------------
+
+CREATE TABLE installed_models (
+	update_num serial,
+	update_name varchar
+);
+
+INSERT INTO installed_models (update_name) VALUES('0.0_baseline');
