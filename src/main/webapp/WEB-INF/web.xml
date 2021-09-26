@@ -3,12 +3,14 @@
 	xmlns="http://Java.sun.com/xml/ns/javaee"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0">
+	<!-- Application settings parameters -->
 	<display-name>elibrary</display-name>
+	<!-- Pages mappings -->
 	<!-- Welcom page -->
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
-	<!-- Login page mapping -->
+	<!-- Login pages mapping -->
 	<servlet>
 		<servlet-name>LoginView</servlet-name>
 		<jsp-file>/jsp/login.jsp</jsp-file>
@@ -25,7 +27,7 @@
 		<servlet-name>LoggingView</servlet-name>
 		<url-pattern>/logging</url-pattern>
 	</servlet-mapping>
-	<!-- Registration page mapping -->
+	<!-- Registration pages mapping -->
 	<servlet>
 		<servlet-name>RegistrationView</servlet-name>
 		<jsp-file>/jsp/register.jsp</jsp-file>
@@ -84,7 +86,7 @@
 		<filter-name>UserFilter</filter-name>
 		<url-pattern>/djvu-reader/*</url-pattern>
 	</filter-mapping>
-	<!-- Faces -->
+	<!-- JSF: Primefaces -->
 	<context-param>
 		<param-name>primefaces.THEME</param-name>
 		<param-value>bootstrap</param-value>
@@ -127,7 +129,7 @@
 		<filter-name>PrimeFaces FileUpload Filter</filter-name>
 		<servlet-name>Faces Servlet</servlet-name>
 	</filter-mapping>
-	<!-- REST Jersey -->
+	<!-- REST Jersey library -->
 	<servlet>
 		<servlet-name>Jersey REST Service</servlet-name>
 		<servlet-class>org.glassfish.jersey.servlet.ServletContainer
@@ -141,6 +143,6 @@
 	<!-- Environment settings -->
 	<context-param>
 		<param-name>MAX_BOOKS_IN_HISTORY</param-name>
-		<param-value>5</param-value>
+		<param-value>10</param-value>
 	</context-param>
 </web-app>

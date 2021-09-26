@@ -109,7 +109,7 @@ public class BookResource {
 			userHistoryDao.createStamp(userHistory, maxBooks);
 			
 		} catch (Exception e) {
-			System.err.println("Wrong opened book data:" + data);
+			System.err.println("Wrong opened book history data:" + data);
 			return Response.serverError().build();
 		}
 		return Response.ok().build();

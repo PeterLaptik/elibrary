@@ -4,14 +4,37 @@
   height: 100%;
   width: 250px;
   position: fixed;
-  z-index: 1;
-  top: 50px;
-  left: 0;
+  left: 10px;
   overflow-x: hidden;
   padding-top: 20px;
+  top: 80px;
 }
 
 .booksContent {
-  	padding-left: 250px;
+	margin-left: 250px;
+    margin-top: 100px;
+}
+
+.topMenu {
+	top: 0px;
+	position: fixed;
+	width: 100vw;
+	z-index: 1;
+}
+
+.usersTable {
+	margin-top: 50px;
+}
+
+.statSettings {
+	margin-top: 70px;
+}
+
+.uploadButton {
+	position: fixed;
+	top: 60px;
+	width: 100vw;
+	background-color: white;
+	z-index: 1;
 }
 

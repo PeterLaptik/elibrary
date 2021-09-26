@@ -5,16 +5,9 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
 	 <h:head>
 	 	<title>E-library: admin</title>
+	 	<link rel="stylesheet" type="text/css" href="css/books.css" />
 	 	<h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
 	 	<h:outputStylesheet library="primefaces-omega" name="theme.css" />
-	 	<!--
-	 	<h:outputStylesheet  name="primefaces.css" library="primefaces"/>
-	 	<h:outputStylesheet name="css/bootstrap.min.css"/>
-        <h:outputStylesheet name="css/bootstrap-theme.min.css"/>
-        <h:outputStylesheet name="css/main.css"/>
-        <h:outputScript name="js/vendor/modernizr-2.8.3.min.js"></h:outputScript>
-        <h:outputStylesheet name="css/font-awesome.css"></h:outputStylesheet>
-        -->
 	 </h:head>
 	 <h:body>
 	 	<div class="topMenu">
@@ -26,7 +19,7 @@
 		    </p:tabMenu>
 	 	</div>
 	 	
-	 	<div class="table">
+	 	<div class="usersTable">
 	 		<h:form id="form">
 	 			<p:dataTable id="users" var="user" value="#{userService.users}" 
 	 						selection="#{userService.selectedUser}" rowKey="#{user.id}" selectionMode="single">
