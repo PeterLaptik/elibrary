@@ -2,6 +2,9 @@ package pl.model.entities;
 
 import java.util.Date;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -64,6 +67,12 @@ public class User {
 	}
 	
 	
+	@PrePersist
+	public void registrationDate() {
+		this.registrationDate = new Date();
+	}
+	
+	
 	public int getId() {
 		return id;
 	}
@@ -112,11 +121,6 @@ public class User {
 		this.registrationDate = registrationDate;
 	}
 	
-	@PrePersist
-	public void registrationDate() {
-		this.registrationDate = new Date();
-	}
-	
 	public boolean isAdmin() {
 		return admin;
 	}
@@ -128,5 +132,13 @@ public class User {
 	@Override
 	public String toString() {
 		return id + ": " + name;
+	}
+	
+	public JsonObject toJson() {
+		JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+		jsonBuilder.add("name", name);
+		jsonBuilder.add("login", login);
+		jsonBuilder.add("registration", registrationDate.toString());
+		return jsonBuilder.build();
 	}
 }

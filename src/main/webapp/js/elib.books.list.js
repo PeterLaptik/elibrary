@@ -8,6 +8,7 @@ const app = Vue.createApp({
 				mainState: true,
 				historyState: false,
 				searchState: false,
+				settingsState: false,
 				isMenuShowed: true
 		}
     },
@@ -91,10 +92,17 @@ const app = Vue.createApp({
 			openNav();
 		},
 		
+		setSettingsState: function() {
+			this.clearStates();
+			this.settingsState = true;
+			openNav();
+		},
+		
 		clearStates: function() {
 			this.mainState = false;
 			this.historyState = false;
 			this.searchState = false;
+			this.settingsState = false;
 		},
 		
 		loadHistory: function() {

@@ -107,9 +107,10 @@
 			<!-- Main menu -->
 			<div id="topBar" class="topbar">
 				<a v-if="!isMenuShowed" href="#menu" id="showMenu" onclick="openNav()">Menu</a>
-				<a href="#home" v-bind:class="{activenotepad: mainState}" v-on:click="setMainState();">Home</a>
-				<a href="#news" v-bind:class="{activenotepad: historyState}" v-on:click="setHistoryState();">History</a>
-				<a href="#news" v-bind:class="{activenotepad: searchState}" v-on:click="setSearchState();">Search</a>
+				<a href="#" v-bind:class="{activenotepad: mainState}" v-on:click="setMainState();">Home</a>
+				<a href="#" v-bind:class="{activenotepad: historyState}" v-on:click="setHistoryState();">History</a>
+				<a href="#" v-bind:class="{activenotepad: searchState}" v-on:click="setSearchState();">Search</a>
+				<a href="#" v-bind:class="{activenotepad: settingsState}" v-on:click="setSettingsState();">Settings</a>
 				<a href="admin/stats.xhtml">Admin</a>
 				<a href="#" onclick="logOut()">Logout</a>
 			</div>
@@ -177,14 +178,15 @@
 			</div>
 			<!-- Book search -->
 			<div v-if="searchState" id="history-lines">
-				<p style="text-align: center"> Search
+				<p style="text-align: center"> Search &nbsp;
 					<input id="input-text" name="input-search" type="text"
 						maxlength="50" />
 					<select name="choice-type" id="search-choice">
 						<option value="book">book</option>
 						<option value="author">author</option>
 					</select>
-					<button id="modal-button" name="textOk" onclick="executeSearch()">OK</button>
+					&nbsp;
+					<button id="search-button" name="textOk" onclick="executeSearch()">OK</button>
 				</p>
 				<div>
 					<table v-for="book in searchList.books" class="bookLine">
@@ -223,7 +225,9 @@
 				</div>
 			</div>
 			<!-- Settings -->
-			
+			<div v-if="settingsState" id="settings-page">
+				<p>User name:</p>
+			</div>
 			<!-- Spinner -->
 			<div id="spinner-anim">
 				<div id="loader-animation"></div>
