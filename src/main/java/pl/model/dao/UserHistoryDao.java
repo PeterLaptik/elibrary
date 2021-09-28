@@ -10,7 +10,7 @@ import pl.model.entities.UserHistory;
 
 public interface UserHistoryDao extends Serializable {
 	
-	void createStamp(UserHistory userHistory, Integer maxRecords);
+	void createStamp(int bookId, int userId, Integer maxRecords);
 	
 	void updateStamp(UserHistory userHistory);
 	

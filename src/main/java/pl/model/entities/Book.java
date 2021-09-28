@@ -9,9 +9,11 @@ import javax.json.JsonObjectBuilder;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
@@ -102,6 +104,7 @@ public class Book implements Serializable {
 	private Date bookCreated;
 
 	@ManyToOne(cascade=CascadeType.DETACH)
+	@JoinColumn(foreignKey=@ForeignKey(name="fk_book_section_id"))
 	private Section section;
 
 	public Book() {

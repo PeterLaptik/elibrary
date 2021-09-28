@@ -2,6 +2,7 @@ package pl.model.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -29,7 +30,8 @@ public class UserSession {
 	
 	@OneToOne(optional=true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name="user_id", insertable=false, updatable=false)
+    @JoinColumn(name="user_id", insertable=false, updatable=false,
+    			foreignKey=@ForeignKey(name="fk_users_sessions"))
     private User user;
 	
 	public UserSession() {

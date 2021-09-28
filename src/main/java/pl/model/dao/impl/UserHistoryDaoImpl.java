@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import pl.model.dao.BookDao;
+import pl.model.dao.UserDao;
 import pl.model.dao.UserHistoryDao;
 import pl.model.entities.Book;
+import pl.model.entities.User;
 import pl.model.entities.UserHistory;
 import pl.model.entities.UserHistoryId;
 import pl.model.session.HibernateSessionFactory;
@@ -20,14 +24,14 @@ import pl.model.session.HibernateSessionFactory;
 public class UserHistoryDaoImpl implements UserHistoryDao {
 	private static final long serialVersionUID = 1697888100344639121L;
 	
+	@EJB
+	UserDao userDao;
+	
+	@EJB
+	BookDao bookDao;
+	
 	@Override
-	public void createStamp(UserHistory userHistory,  Integer maxRecords) {
-		if(userHistory==null)
-			return;
-		
-		int userId = userHistory.getUser().getId();
-		int bookId = userHistory.getBook().getId();
-		userHistory.setId(new UserHistoryId(userId, bookId));
+	public void createStamp(int bookId, int userId,  Integer maxRecords) {
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Transaction transaction = session.beginTransaction();
 		// Does a previous stamp exists
@@ -36,8 +40,20 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 		query.setParameter("user_id", userId);
 		query.setParameter("book_id", bookId);
 		List<UserHistory> stamps = query.list();
+		
+		UserHistory userHistory = null;
 		if(stamps.size()==0) {
+			userHistory = new UserHistory();
+			UserHistoryId uhid = new UserHistoryId(userId, bookId);
+			userHistory.setId(uhid);
+			User user = userDao.findUserById(userId);
+			Book book = bookDao.getBookById(bookId);
+			userHistory.setUser(user);
+			userHistory.setBook(book);
 			session.save(userHistory);
+			// Purge history
+			if(maxRecords!=null && maxRecords>1)
+				purgeHistory(userHistory, session, maxRecords-1);
 		} else {
 			UserHistory existingStamp = stamps.get(0);
 			existingStamp.setLastOpenDate(new Date());
@@ -45,10 +61,6 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 		}
 		transaction.commit();
 		session.close();
-		
-		// Purge history
-		if(maxRecords!=null && maxRecords>1)
-			purgeHistory(userHistory, maxRecords-1);
 	}
 
 	@Override
@@ -96,9 +108,7 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 		return stamps.get(0).getPage();
 	}
 	
-	private void purgeHistory(UserHistory userHistory, int maxRecords) {
-		Session session = HibernateSessionFactory.getSession().openSession();
-		Transaction transaction = session.beginTransaction();
+	private void purgeHistory(UserHistory userHistory, Session session, int maxRecords) {
 		Query<?> query = session.createNativeQuery(
 				"DELETE FROM users_history\r\n"
 				+ "WHERE ctid NOT IN\r\n"
@@ -111,8 +121,6 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 		query.setParameter("user_id", userHistory.getUser().getId());
 		query.setParameter("limit", maxRecords);
 		query.executeUpdate();
-		transaction.commit();
-		session.close();
 	}
 
 	@Override

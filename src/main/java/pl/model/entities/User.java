@@ -10,10 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 
 @Entity
-@Table (name="users")
+@Table (name="users",
+	uniqueConstraints = @UniqueConstraint(name="uk_user_login", columnNames = {"login"}))
 public class User {
 	public static final String FIELD_USER_ID = "user_id";
 	public static final String FIELD_USER_NAME = "user_name";
@@ -35,7 +37,7 @@ public class User {
 	@Column(name=FIELD_USER_NAME)
 	private String name;
 	
-	@Column(name=FIELD_USER_LOGIN, unique=true)
+	@Column(name=FIELD_USER_LOGIN)
 	private String login;
 	
 	@Column(name=FIELD_USER_PASS)

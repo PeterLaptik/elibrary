@@ -6,12 +6,11 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Cascade;
 
 @Entity
 @Table (name="users_history")
@@ -25,11 +24,13 @@ public class UserHistory implements Serializable {
 	private UserHistoryId id = new UserHistoryId();
 	
 	@ManyToOne
-    @JoinColumn(name = User.FIELD_USER_ID, insertable = false, updatable = false)
+    @JoinColumn(name = User.FIELD_USER_ID, insertable = false, updatable = false,
+    			foreignKey=@ForeignKey(name="fk_hist_outer_user_id"))
 	private User user;
 
 	@ManyToOne
-    @JoinColumn(name = Book.FIELD_ID, insertable = false, updatable = false)
+    @JoinColumn(name = Book.FIELD_ID, insertable = false, updatable = false,
+    			foreignKey=@ForeignKey(name="fk_hist_outer_book_id"))
 	private Book book;
 	
 	@Column(name=FIELD_PAGE)

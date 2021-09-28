@@ -64,8 +64,9 @@ public class BookResource {
 		
 		File file = book!=null ? new File(directory + book.getFileName()) : null;
 		if(file.exists()==false) {
-			// TODO redirect to error page
 			file = null;
+			System.err.println("Book does not exist in the database");
+			return Response.serverError().build();
 		}
 		
 		return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
@@ -92,12 +93,7 @@ public class BookResource {
 			
 			JSONObject jsonObject = new JSONObject(data);
 			int userId = session.getUserId();
-			User user = userDao.findUserById(userId);
-			Book book = bookDao.getBookById(jsonObject.getInt("id"));
-			
-			UserHistory userHistory = new UserHistory();
-			userHistory.setUser(user);
-			userHistory.setBook(book);
+			int bookId = jsonObject.getInt("id");
 			
 			String maxVal = context.getInitParameter(UserHistory.MAX_BOOKS_IN_HISTORY);
 			Integer maxBooks = null;
@@ -106,7 +102,7 @@ public class BookResource {
 			} catch (Exception e) {
 				System.err.println("Wrong value of MAX_BOOKS_IN_HISTORY in web.xml: " + maxVal);
 			}
-			userHistoryDao.createStamp(userHistory, maxBooks);
+			userHistoryDao.createStamp(bookId, userId, maxBooks);
 			
 		} catch (Exception e) {
 			System.err.println("Wrong opened book history data:" + data);

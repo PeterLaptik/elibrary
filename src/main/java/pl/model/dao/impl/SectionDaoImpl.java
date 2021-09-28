@@ -19,6 +19,9 @@ import pl.model.session.HibernateSessionFactory;
 public class SectionDaoImpl implements SectionDao {
 	private static final long serialVersionUID = 2624986924936925684L;
 
+	@EJB
+	SectionCache cache;
+	
 	static {
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Transaction transaction = session.beginTransaction();
@@ -33,8 +36,6 @@ public class SectionDaoImpl implements SectionDao {
 		transaction.commit();
 	}
 	
-	@EJB
-	SectionCache cache;
 	
 	public SectionDaoImpl() {
 		
