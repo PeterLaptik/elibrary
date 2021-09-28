@@ -3,14 +3,18 @@ package pl.model.dao.impl;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import pl.model.dao.BookmarkDao;
+import pl.model.entities.Book;
 import pl.model.entities.Bookmark;
 import pl.model.entities.BookmarkId;
+import pl.model.entities.User;
 import pl.model.session.HibernateSessionFactory;
 
 @Stateless
@@ -18,12 +22,10 @@ public class BookmarkDaoImpl implements BookmarkDao {
 	private static final long serialVersionUID = -3755751197696808384L;
 
 	@Override
-	public void createBookmark(Bookmark bookmark) {
+	public void createBookmark(Bookmark bookmark, int bookId, int userId) {
 		if(bookmark==null)
 			return;
-		
-		int userId = bookmark.getUser().getId();
-		int bookId = bookmark.getBook().getId();
+
 		bookmark.setId(new BookmarkId(userId, bookId, bookmark.getName()));
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Transaction transaction = session.beginTransaction();
@@ -36,6 +38,10 @@ public class BookmarkDaoImpl implements BookmarkDao {
 		
 		List<Bookmark> bookmarks = query.list();
 		if(bookmarks.size()==0) {
+			User user = getUserById(userId, session);
+			Book book = getBookById(bookId, session);
+			bookmark.setUser(user);
+			bookmark.setBook(book);
 			session.save(bookmark);
 		} else {
 			Bookmark existingBookmark = bookmarks.get(0);
@@ -107,5 +113,24 @@ public class BookmarkDaoImpl implements BookmarkDao {
 		query.executeUpdate();
 		transaction.commit();
 		session.close();
+	}
+	
+	private User getUserById(int userId, Session session) {
+		Query<User> query = session.createQuery("FROM User WHERE id = :param", User.class);
+		query.setParameter("param", userId);
+		List<User> users = query.list();
+		return users.size()>0 ? users.get(0) : null;
+	}
+	
+	private Book getBookById(int bookId, Session session) {
+		Book book = null;
+		Query<Book> query = session.createQuery("FROM Book WHERE id = :param", Book.class);
+		query.setParameter("param", bookId);
+		try {
+			book = query.getSingleResult();
+		} catch (Exception e) {
+			System.err.println("Error: book not found. book_id=" + bookId);
+		}
+		return book;
 	}
 }

@@ -8,6 +8,7 @@ import javax.ejb.Stateless;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.internal.SessionCreationOptions;
 import org.hibernate.query.Query;
 
 import pl.model.cache.SectionCache;
@@ -34,6 +35,7 @@ public class SectionDaoImpl implements SectionDao {
 			session.save(rootSection);
 		}
 		transaction.commit();
+		session.close();
 	}
 	
 	
@@ -49,13 +51,21 @@ public class SectionDaoImpl implements SectionDao {
 		return addChild(rootSection, section);
 	}
 
-	public boolean addChild(Section parent, Section child) {
-		if((parent==null)||(child==null))
+	public boolean addChild(Section proxyParent, Section child) {
+		if((proxyParent==null)||(child==null))
 			return false;
 		
 		// Create and write child
 		Session session = HibernateSessionFactory.getSession().openSession();
 		Transaction transaction = session.beginTransaction();
+		// Get parent db-object
+		Query<Section> query = session.createQuery("FROM Section WHERE section_id = :param", Section.class);
+		query.setParameter("param", proxyParent.getId());
+		List<Section> parentResult = query.getResultList();
+		if(parentResult.size()<1)
+			return false;
+				
+		Section parent = parentResult.get(0);
 		List<Section> children = parent.getChildren();
 		if(children==null) {
 			children = new ArrayList<Section>();
@@ -113,11 +123,9 @@ public class SectionDaoImpl implements SectionDao {
 	public Section findSectionById(int id) {
 		Section result = null;
 		Session session = HibernateSessionFactory.getSession().openSession();
-		//Transaction transaction = session.beginTransaction();
 		Query<Section> query = session.createQuery("FROM Section WHERE section_id = :param", Section.class);
 		query.setParameter("param", id);
 		List<Section> list = query.getResultList();
-		//transaction.commit();
 		session.close();
 		if(list.size()>0)
 			result = list.get(0);

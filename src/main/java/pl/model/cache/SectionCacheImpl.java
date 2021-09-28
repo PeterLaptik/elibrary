@@ -75,8 +75,10 @@ public class SectionCacheImpl implements SectionCache {
 			Query<Section> query = session.createQuery("FROM Section WHERE section_name = :param", Section.class);
 			query.setParameter("param", parent.name);
 			List<Section> list = query.getResultList();
-			if (list.size() < 1)
+			if (list.size() < 1) {
+				session.close();
 				return;
+			}
 
 			Section sectionObject = list.get(0);
 			List<Section> children = sectionObject.getChildren();

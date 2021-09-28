@@ -101,19 +101,15 @@ public class BookmarksResource {
 			JSONObject jsonObject = new JSONObject(data);
 			
 			int userId = session.getUserId();
-			User user = userDao.findUserById(userId);
-			Book book = bookDao.getBookById(bookId);
 			String text = jsonObject.getString("text");
 			int page = jsonObject.getInt("page");
 			if(text==null || text.equals(""))
 				throw new Exception("No bookmark info recieved");
 			
 			Bookmark bookmark = new Bookmark();
-			bookmark.setUser(user);
-			bookmark.setBook(book);
 			bookmark.setPage(page);
 			bookmark.setName(text);
-			bookmarkDao.createBookmark(bookmark);
+			bookmarkDao.createBookmark(bookmark, bookId, userId);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

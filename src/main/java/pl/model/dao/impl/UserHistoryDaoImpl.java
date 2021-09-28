@@ -46,14 +46,14 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 			userHistory = new UserHistory();
 			UserHistoryId uhid = new UserHistoryId(userId, bookId);
 			userHistory.setId(uhid);
-			User user = userDao.findUserById(userId);
-			Book book = bookDao.getBookById(bookId);
+			User user = getUserById(userId, session);
+			Book book = getBookById(bookId, session);
 			userHistory.setUser(user);
 			userHistory.setBook(book);
 			session.save(userHistory);
 			// Purge history
-			if(maxRecords!=null && maxRecords>1)
-				purgeHistory(userHistory, session, maxRecords-1);
+			if (maxRecords != null && maxRecords > 1)
+				purgeHistory(userHistory, session, maxRecords - 1);
 		} else {
 			UserHistory existingStamp = stamps.get(0);
 			existingStamp.setLastOpenDate(new Date());
@@ -190,5 +190,24 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 		query.executeUpdate();
 		transaction.commit();
 		session.close();
+	}
+	
+	private User getUserById(int userId, Session session) {
+		Query<User> query = session.createQuery("FROM User WHERE id = :param", User.class);
+		query.setParameter("param", userId);
+		List<User> users = query.list();
+		return users.size()>0 ? users.get(0) : null;
+	}
+	
+	private Book getBookById(int bookId, Session session) {
+		Book book = null;
+		Query<Book> query = session.createQuery("FROM Book WHERE id = :param", Book.class);
+		query.setParameter("param", bookId);
+		try {
+			book = query.getSingleResult();
+		} catch (Exception e) {
+			System.err.println("Error: book not found. book_id=" + bookId);
+		}
+		return book;
 	}
 }

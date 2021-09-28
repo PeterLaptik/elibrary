@@ -7,7 +7,7 @@ import pl.model.entities.Bookmark;
 
 public interface BookmarkDao extends Serializable {
 	
-	void createBookmark(Bookmark bookmark);
+	void createBookmark(Bookmark bookmark, int bookId, int userId);
 	
 	void deleteBookmark(Bookmark bookmark);
 	
