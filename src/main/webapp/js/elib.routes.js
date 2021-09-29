@@ -10,6 +10,7 @@ var router = {
 	pathBookmarksDelete: '/delete',
 	pathSearchByBook: '/search/bookname',
 	pathSearchByAuthor: '/search/author',
+	pathUser: '/user',
 
     getSectionsPath: function() {
         return this.applicationContextPath + this.pathSections;
@@ -61,5 +62,9 @@ var router = {
 	
 	getSearchByAuthor: function() {
 		return this.applicationContextPath + this.pathSearchByAuthor;
-	}
+	},
+	
+	getUserPath: function() {
+        return this.applicationContextPath + this.pathUser;
+    },
 };

@@ -2,14 +2,21 @@
 const app = Vue.createApp({
     data() {
         return { 
+				// Book lists
 				bookList: bookList, 
 				historyList: historyList,
 				searchList: searchList,
+				// State conditions
 				mainState: true,
 				historyState: false,
 				searchState: false,
 				settingsState: false,
-				isMenuShowed: true
+				isMenuShowed: true,
+				// user info
+				userName: '',
+				userLogin: '',
+				registrationDate: '',
+				isUserAdmin: false
 		}
     },
 
@@ -118,6 +125,22 @@ const app = Vue.createApp({
                 let loadedData = JSON.parse(xhr.response);
                 historyList.books = loadedData.books;
                 this.callBackObject.$forceUpdate();
+            }
+		},
+		
+		loadUserInfo: function() {
+			let xhr = new XMLHttpRequest();
+            xhr.open('GET', router.getUserPath());
+            xhr.send();
+            xhr.callBackObject = this;
+
+            xhr.onload = function () {
+                let loadedData = JSON.parse(xhr.response);
+                app.userName = loadedData.name;
+				app.userLogin = loadedData.login;
+				app.registrationDate = loadedData.registration;
+				app.isUserAdmin = loadedData.isAdmin;
+				console('isAdmin:' + app.isUserAdmin);
             }
 		}
     },

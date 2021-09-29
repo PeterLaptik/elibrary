@@ -139,6 +139,7 @@ public class User {
 		jsonBuilder.add("name", name);
 		jsonBuilder.add("login", login);
 		jsonBuilder.add("registration", registrationDate.toString());
+		jsonBuilder.add("isAdmin", admin);
 		return jsonBuilder.build();
 	}
 }

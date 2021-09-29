@@ -5,6 +5,10 @@
 	version="3.0">
 	<!-- Application settings parameters -->
 	<display-name>elibrary</display-name>
+	<context-param>
+		<param-name>fileUploadDirectory</param-name>
+		<param-value>C:/Java/web-library/</param-value>
+	</context-param>
 	<!-- Pages mappings -->
 	<!-- Welcom page -->
 	<welcome-file-list>
@@ -112,10 +116,6 @@
 		<url-pattern>*.xhtml</url-pattern>
 	</servlet-mapping>
 	<!-- Primefaces file uploading -->
-	<context-param>
-		<param-name>fileUploadDirectory</param-name>
-		<param-value>C:/Java/tmp/</param-value>
-	</context-param>
 	<context-param>
 		<param-name>primefaces.UPLOADER</param-name>
 		<param-value>commons</param-value>

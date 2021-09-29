@@ -183,6 +183,11 @@ li {
 	background-image: linear-gradient(to right, #CCCCCC, #EEEEFF);
 }
 
+#settings-page {
+	padding-left: 250px;
+	transition: 0.5s;
+}
+
 /** Loader animations **/
 #spinner-anim {
 	display: none; /* Hidden by default */

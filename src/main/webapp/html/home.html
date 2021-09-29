@@ -12,6 +12,7 @@
 	<script src="js/elib.books.pages.js"></script>
 	<script src="js/elib.pages.navigators.js"></script>
 
+	<!-- Chapters tree elements -->
 	<script type="text/x-template" id="item-template">
 		<li div>
 			<div
@@ -41,6 +42,11 @@
 			app.isMenuShowed=true;
 			document.getElementById("mySidenav").style.width = "250px";
 	     	document.getElementById("topBar").style.left = "250px";
+	     	
+	     	let settings = document.getElementById("settings-page");
+	     	if(settings)
+	     		settings.style.paddingLeft = "250px";
+	     	
 	     	let element = document.getElementById("book-list");
 	     	if(element)
 	     		element.style.paddingLeft = "250px";
@@ -58,6 +64,11 @@
 	   		app.isMenuShowed=false;
 	     	document.getElementById("mySidenav").style.width = "0";
 	     	document.getElementById("topBar").style.left = "0";
+	     	
+	     	let settings = document.getElementById("settings-page");
+	     	if(settings)
+	     		settings.style.paddingLeft = "0";
+	     	
 	     	let element = document.getElementById("book-list");
 	     	if(element) {
 	     		element.style.paddingLeft = "10px";
@@ -93,7 +104,6 @@
 	<body>
 		<div id="mySidenav" class="sidenav">
 			<div class="sidepanelline">
-				
 				<p><a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a></p>
 			</div>
 			<div id="book-navigator">
@@ -111,7 +121,7 @@
 				<a href="#" v-bind:class="{activenotepad: historyState}" v-on:click="setHistoryState();">History</a>
 				<a href="#" v-bind:class="{activenotepad: searchState}" v-on:click="setSearchState();">Search</a>
 				<a href="#" v-bind:class="{activenotepad: settingsState}" v-on:click="setSettingsState();">Settings</a>
-				<a href="admin/stats.xhtml">Admin</a>
+				<a v-if="isUserAdmin" href="admin/stats.xhtml">Admin</a>
 				<a href="#" onclick="logOut()">Logout</a>
 			</div>
 			<!-- Book list -->
@@ -226,23 +236,39 @@
 			</div>
 			<!-- Settings -->
 			<div v-if="settingsState" id="settings-page">
-				<p>User name:</p>
+				<table>
+					<tr>
+						<td>User name:</td>
+						<td>{{userName}}</td>
+					</tr>
+					<tr>
+						<td>User login:</td>
+						<td>{{userLogin}}</td>
+					</tr>
+					<tr>
+						<td>Registration date:</td>
+						<td>{{registrationDate}}</td>
+					</tr>
+				</table>
+				<p>
+					<button>Change password</button>
+				</p>
 			</div>
 			<!-- Spinner -->
 			<div id="spinner-anim">
 				<div id="loader-animation"></div>
 			</div>
-	  
 		</div>
 
 		<script>
-			let bookList = {books: []};
-
+			// Section tree list
 			let sectionsTree = {
 				name: "Sections", id: 0,
 				children: [{ name: "loading...", id: 1 }]
 			};
-
+			
+			// Book list for selected section
+			let bookList = {books: []};
 			let currentSectionId = -1;
 			let currentPage = 0;
 
@@ -279,10 +305,10 @@
 				window.open(router.getReader(id, format), "_blank");
 			}
 			
-			// History
+			// History list
 			let historyList = {books: []};
 
-			// Search
+			// Search list
 			let searchList = {books: []};
 			
 			let searchChoice = null;
@@ -307,9 +333,11 @@
 				app.searchBooks(searchPage);
 			}
 		</script>
-		
 		<script src="js/elib.routes.js"></script>
 		<script src="js/elib.book.navigator.js"></script>
 		<script src="js/elib.books.list.js"></script>
+		<script>
+			app.loadUserInfo();
+		</script>
 	</body>
 </html>

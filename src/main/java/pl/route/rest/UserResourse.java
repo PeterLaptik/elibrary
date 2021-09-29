@@ -24,7 +24,7 @@ public class UserResourse {
 	
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
-	Response getUserInfo(@CookieParam(UserSession.FIELD_SESSION_UUID) Cookie cookie) {
+	public Response getUserInfo(@CookieParam(UserSession.FIELD_SESSION_UUID) Cookie cookie) {
 		UserSession session = sessionCache.findSessionByUuid(cookie.getValue());
 		if(session==null)
 			return Response.serverError().build();
@@ -32,7 +32,6 @@ public class UserResourse {
 		User user = userDao.findUserById(session.getUserId());
 		if(user==null)
 			return Response.serverError().build();
-		
 		
 		return Response.ok(user.toJson())
     			.header("Access-Control-Allow-Origin", "*")
