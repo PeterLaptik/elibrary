@@ -22,6 +22,9 @@ import pl.model.dao.SectionDao;
 import pl.model.entities.Section;
 import pl.model.session.HibernateSessionFactory;
 
+/**
+ * SectionCache implementation
+ */
 @Startup
 @Singleton
 public class SectionCacheImpl implements SectionCache {

@@ -153,7 +153,6 @@ li {
 
 #history-lines {
 	padding-left: 250px;
-	/* 	border: 1px solid #818181; */
 	display: block;
 	transition: 0.5s;
 }
@@ -163,16 +162,13 @@ li {
 	width: 100%;
 }
 
-#input-text {
-	width: auto;
-}
-
 .item {
 	transition: 0.5s;
 }
 
 #search-button {
 	background-image: linear-gradient(to right, #FFFFFF, #EEEEFF);
+	border-width: thin;
 }
 
 #search-choice {
@@ -180,12 +176,38 @@ li {
 }
 
 #input-text {
+	width: auto;
 	background-image: linear-gradient(to right, #CCCCCC, #EEEEFF);
+	border-width: thin;
 }
 
+#pass-input-old, #pass-input-new, #pass-input-new-repeat, #pass-input-name {
+	width: auto;
+	background-image: linear-gradient(to right, #CCCCCC, #EEEEFF);
+	border-width: thin;
+}
+
+/** Settings notepad **/
 #settings-page {
-	padding-left: 250px;
+	padding-left: 260px;
 	transition: 0.5s;
+}
+
+#settings-table {
+	font-size: 18px;
+	color: #333333;
+}
+
+#pass-button-change, #pass-button-change-name {
+	display: block;
+	background-image: linear-gradient(to right, #FFFFFF, #EEEEFF);
+	align-content: center;
+	border-width: thin;
+}
+
+#changingPassword {
+	font-size: 18px;
+	color: #333333;
 }
 
 /** Loader animations **/

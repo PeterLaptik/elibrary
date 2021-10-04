@@ -6,6 +6,9 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+/**
+ * Compound key for bookmark entity
+ */
 @Embeddable
 public class BookmarkId implements Serializable {
 	private static final long serialVersionUID = -624636710140119450L;

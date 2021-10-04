@@ -8,6 +8,9 @@ import pl.credentials.beans.UserRegBean;
 import pl.model.dao.UserDao;
 import pl.model.entities.User;
 
+/**
+ * Checks registration data and executes registration
+ */
 @LocalBean
 @Stateful
 public class RegistrationManager {

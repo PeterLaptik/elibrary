@@ -7,7 +7,7 @@
 	<display-name>elibrary</display-name>
 	<context-param>
 		<param-name>fileUploadDirectory</param-name>
-		<param-value>C:/Java/web-library/</param-value>
+		<param-value>C:/Java/tmp/</param-value>
 	</context-param>
 	<!-- Pages mappings -->
 	<!-- Welcom page -->

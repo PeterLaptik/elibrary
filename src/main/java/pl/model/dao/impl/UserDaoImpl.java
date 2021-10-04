@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import pl.credentials.PasswordEncoder;
 import pl.credentials.PasswordProcessor;
 import pl.model.dao.BookmarkDao;
 import pl.model.dao.UserDao;
@@ -24,6 +25,9 @@ public class UserDaoImpl implements UserDao {
 	
 	@EJB
 	private BookmarkDao bookmarkDao;
+	
+	@EJB
+	private PasswordEncoder passwordProcessor;
 	
 	@Override
 	public boolean create(User user) {
@@ -83,7 +87,7 @@ public class UserDaoImpl implements UserDao {
 	}
 	
 	@Override
-	public boolean deleteUser(User user) {
+	public boolean delete(User user) {
 		if(user==null)
 			return false;
 		
@@ -109,8 +113,8 @@ public class UserDaoImpl implements UserDao {
 	}
 	
 	private void createHashes(User user) {
-		user.setSalt(PasswordProcessor.generateStaticSalt());
-		user.setPassword(PasswordProcessor.createPasswordHash(user.getPassword(), user.getSalt()));
+		user.setSalt(passwordProcessor.generateStaticSalt());
+		user.setPassword(passwordProcessor.createPasswordHash(user.getPassword(), user.getSalt()));
 	}
 
 	@Override
@@ -130,5 +134,28 @@ public class UserDaoImpl implements UserDao {
 		}
 		session.close();
 		return result;
+	}
+
+	@Override
+	public boolean update(User user) {
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Transaction transaction = session.getTransaction();
+		Query<User> query = session.createQuery("FROM User WHERE id = :param", User.class);
+		query.setParameter("param", user.getId());
+		List<User> users = query.list();
+		if(users.size()<1) {
+			transaction.commit();
+			session.close();
+			return false;
+		}
+		transaction.begin();
+		User foundUser = users.get(0);
+		foundUser.setName(user.getName());
+		foundUser.setPassword(user.getPassword());
+		foundUser.setSalt(user.getSalt());
+		session.update(foundUser);
+		transaction.commit();
+		session.close();
+		return true;
 	}
 }

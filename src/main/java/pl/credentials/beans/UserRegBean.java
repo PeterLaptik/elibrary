@@ -4,6 +4,9 @@ import java.io.Serializable;
 import javax.ejb.Local;
 import javax.ejb.Stateful;
 
+/**
+ * User registration data holder
+ */
 @Local
 @Stateful
 public class UserRegBean implements Serializable {

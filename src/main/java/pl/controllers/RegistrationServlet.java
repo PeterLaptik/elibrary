@@ -2,6 +2,7 @@ package pl.controllers;
 
 import java.io.IOException;
 
+import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,13 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import pl.credentials.RegistrationManager;
 import pl.credentials.beans.UserRegBean;
+import pl.route.IRoutes;
 
+/**
+ * Executes registration procedure
+ */
 @WebServlet("/register")
 public class RegistrationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private final String PARAM_ACION = "action";
-	private final String ACTION_REGISTER = "register";
 	private final String ACTION_CANCEL = "cancel";
 	private static final String MSG_SHOW = "MSG_SHOW";
 	
@@ -34,6 +38,9 @@ public class RegistrationServlet extends HttpServlet {
 	
 	@Inject
 	RegistrationManager mgr;
+	
+	@EJB
+	IRoutes router;
 	
     public RegistrationServlet() {
         super();
@@ -60,7 +67,7 @@ public class RegistrationServlet extends HttpServlet {
 		
 		if(!mgr.isCredentialsOk(user)) {
 			request.setAttribute(MSG_SHOW, mgr.getErrorString());
-			request.getRequestDispatcher("registration").forward(request, response);
+			request.getRequestDispatcher(router.getRegister()).forward(request, response);
 			return;
 		}
 		

@@ -10,6 +10,10 @@ import javax.ejb.Startup;
 import pl.model.dao.UserSessionDao;
 import pl.model.entities.UserSession;
 
+/**
+ * Active sessions holder.
+ * SessionCache implementation
+ */
 @Startup
 @Singleton
 public class SessionCacheImpl implements SessionCache {

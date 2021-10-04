@@ -45,7 +45,7 @@
 	     	
 	     	let settings = document.getElementById("settings-page");
 	     	if(settings)
-	     		settings.style.paddingLeft = "250px";
+	     		settings.style.paddingLeft = "260px";
 	     	
 	     	let element = document.getElementById("book-list");
 	     	if(element)
@@ -139,8 +139,8 @@
 								ISSN:{{book.codeIssn}}</td>
 					</tr>
 					<tr>
-						<td><span id="book-format">Format: {{book.format}}
-								&nbsp;&nbsp;</span> <span id="book-link"> <a href='#'
+						<td><span id="book-format">Format: {{book.format}}&nbsp;&nbsp;</span> 
+							<span id="book-link"> <a href='#'
 								:book-name="book.id" :book-format="book.format"
 								onclick="openBook(this.getAttribute(`book-name`), this.getAttribute(`book-format`))">Open</a>
 							</span> 
@@ -157,7 +157,7 @@
 						</td>
 					</tr>
 				</table>
-				<div id=pageNavigator></div>
+				<div id="pageNavigator"></div>
 			</div>
 			<!-- Book history -->
 			<div v-if="historyState" id="history-lines">
@@ -195,7 +195,6 @@
 						<option value="book">book</option>
 						<option value="author">author</option>
 					</select>
-					&nbsp;
 					<button id="search-button" name="textOk" onclick="executeSearch()">OK</button>
 				</p>
 				<div>
@@ -231,12 +230,12 @@
 							</td>
 						</tr>
 					</table>
-					<div id=pageSearchNavigator></div>
+					<div id="pageSearchNavigator"></div>
 				</div>
 			</div>
 			<!-- Settings -->
 			<div v-if="settingsState" id="settings-page">
-				<table>
+				<table id="settings-table">
 					<tr>
 						<td>User name:</td>
 						<td>{{userName}}</td>
@@ -251,8 +250,61 @@
 					</tr>
 				</table>
 				<p>
-					<button>Change password</button>
+					<button id="pass-button-change-name" onclick="setChangeName();">Change user name</button>
 				</p>
+				<p>
+					<button id="pass-button-change" onclick="setChangePassword();">Change password</button>
+				</p>
+				<div v-if="changingPassword" style="align-items: center;">
+					<p>&nbsp;</p>
+					<table id="pass-change-data">
+						<tr><td colspan="2" style="text-align: center;">Set new password:</td></tr>
+						<tr>
+							<td>Current password </td>
+							<td><input id="pass-input-old" name="old-pass" type="password"
+								maxlength="50" /></td>
+						</tr>
+						<tr>
+							<td>New password</td>
+							<td><input id="pass-input-new" name="new-pass" type="password"
+								maxlength="50" /></td>
+						</tr>
+						<tr>
+							<td>Repeat new password</td>
+							<td><input id="pass-input-new-repeat" name="repeat-pass" type="password"
+								maxlength="50" /></td>
+						</tr>
+						<tr>
+							<td align="center">
+								<button id="pass-button-change" onclick="changePasswordCancel();">Cancel</button>
+							</td>
+							<td align="center">
+								<button id="pass-button-change" onclick="changePasswordOk();">OK</button>
+							</td>
+						</tr>
+					</table>
+					<p>{{message}}</p>
+				</div>
+				<div v-if="changingName" style="align-items: center;">
+					<p>&nbsp;</p>
+					<table id="pass-change-data">
+						<tr><td colspan="2" style="text-align: center;">Set new user name:</td></tr>
+						<tr>
+							<td>New user name </td>
+							<td><input id="pass-input-name" name="new-name" type="text"
+								maxlength="10" /></td>
+						</tr>
+						<tr>
+							<td align="center">
+								<button id="pass-button-change" onclick="undoChangeName();">Cancel</button>
+							</td>
+							<td align="center">
+								<button id="pass-button-change" onclick="setNewName();">OK</button>
+							</td>
+						</tr>
+					</table>
+					<p>{{message}}</p>
+				</div>
 			</div>
 			<!-- Spinner -->
 			<div id="spinner-anim">
@@ -337,7 +389,87 @@
 		<script src="js/elib.book.navigator.js"></script>
 		<script src="js/elib.books.list.js"></script>
 		<script>
+			// User info and settings
+			// Password change
 			app.loadUserInfo();
+			
+			let setChangePassword = function() {
+				app.message = '';
+				app.changingPassword = true;
+				app.changingName = false;
+			}
+			
+			let undoSetPassword = function() {
+				app.message = '';
+				app.changingPassword = false;
+				app.changingName = false;
+			}
+			
+			let changePasswordOk = function() {
+				let xhr = new XMLHttpRequest();
+				
+				let oldPass = document.getElementById('pass-input-old').value;
+				let newPass = document.getElementById('pass-input-new').value;
+				let newPassR = document.getElementById('pass-input-new-repeat').value;
+				
+				if(newPass!=newPassR){
+					app.message = "Values of new password do not match!";
+					return;
+				}
+				app.message = '';
+				
+				let object = {"oldPass": oldPass, "newPass": newPass};
+		        xhr.open('POST', router.getUserPath());
+		        xhr.setRequestHeader('Content-Type', 'application/json');
+		        xhr.send(JSON.stringify(object));
+		        xhr.callBackObject = this;
+
+		        xhr.onload = function () {
+		            let loadedData = xhr.response;
+		            app.message = loadedData;
+		    	}
+			}
+			
+			let changePasswordCancel = function() {
+				app.changingPassword = false;
+			}
+			
+			// User name change
+			let setChangeName = function() {
+				app.message = '';
+				app.changingPassword = false;
+				app.changingName = true;
+			}
+			
+			let undoChangeName = function() {
+				app.message = '';
+				app.changingPassword = false;
+				app.changingName = false;
+			}
+			
+			
+			let setNewName = function() {
+				let xhr = new XMLHttpRequest();
+				let newName = document.getElementById('pass-input-name').value;
+				
+				if(!newName){
+					app.message = "Wrong value!";
+					return;
+				}
+				app.message = '';
+				
+				let object = {"newName": newName};
+		        xhr.open('POST', router.getUserPath());
+		        xhr.setRequestHeader('Content-Type', 'application/json');
+		        xhr.send(JSON.stringify(object));
+		        xhr.callBackObject = this;
+
+		        xhr.onload = function () {
+		            let loadedData = xhr.response;
+		            app.loadUserInfo();
+		            app.message = loadedData;
+		    	}
+			}
 		</script>
 	</body>
 </html>

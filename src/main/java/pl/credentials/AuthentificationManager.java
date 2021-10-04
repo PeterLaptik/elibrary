@@ -30,6 +30,9 @@ public class AuthentificationManager implements IAuthentification {
 	@EJB
 	private SessionCache sessions;
 	
+	@EJB
+	private PasswordEncoder passwordProcessor;
+	
 	@Override
 	public Cookie login(String login, String pass) {
 		Cookie sessionCookie = null;
@@ -37,7 +40,7 @@ public class AuthentificationManager implements IAuthentification {
 		if(foundUser==null)
 			return sessionCookie;
 		
-		String hash = PasswordProcessor.createPasswordHash(pass, foundUser.getSalt());
+		String hash = passwordProcessor.createPasswordHash(pass, foundUser.getSalt());
 		if(hash.equals(foundUser.getPassword())) {
 			sessionDao.purgeSessionsForUser(foundUser.getId());
 			UserSession session = new UserSession(foundUser);

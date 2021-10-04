@@ -40,7 +40,7 @@ public class UserTest {
 		UserDao dao = TestInjectionMock.getUserDao();
 		User user = dao.findUserByLogin(testLogin);
 		if(user!=null)
-			dao.deleteUser(user);
+			dao.delete(user);
 	}
 	
 	@Test
@@ -107,7 +107,7 @@ public class UserTest {
 		UserSession session = sDao.findSessionByUserId(foundUser.getId());
 		Assert.assertNotNull(session);
 		// Delete user
-		Assert.assertTrue(uDao.deleteUser(foundUser));
+		Assert.assertTrue(uDao.delete(foundUser));
 		// Check if the session has been deleted after user
 		session = sDao.findSessionByUserId(foundUser.getId());
 		Assert.assertNull(session);

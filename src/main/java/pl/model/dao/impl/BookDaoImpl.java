@@ -242,7 +242,13 @@ public class BookDaoImpl implements BookDao {
 
 	@Override
 	public List<Book> searchByAuthorBooks(String likeValue, int windowCapacity, int pageNumber) {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = HibernateSessionFactory.getSession().openSession();
+		Query<Book> query = session.createQuery("FROM Book WHERE authors like :param ORDER BY authors", Book.class)
+				.setFirstResult(windowCapacity*pageNumber)
+				.setMaxResults(windowCapacity);
+		query.setParameter("param", '%' + likeValue + '%');
+		List<Book> books = query.list();
+		session.close();
+		return books;
 	}
 }

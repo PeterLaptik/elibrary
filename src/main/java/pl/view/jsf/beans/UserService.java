@@ -92,7 +92,7 @@ public class UserService implements Serializable {
 		if(selectedUser==null)
 			return;
 		
-		userDao.deleteUser(selectedUser);
+		userDao.delete(selectedUser);
 		selectedUser = null;
 	}
 }

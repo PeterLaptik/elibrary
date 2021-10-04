@@ -6,17 +6,20 @@ const app = Vue.createApp({
 				bookList: bookList, 
 				historyList: historyList,
 				searchList: searchList,
-				// State conditions
+				// Main page state conditions
 				mainState: true,
 				historyState: false,
 				searchState: false,
 				settingsState: false,
 				isMenuShowed: true,
-				// user info
+				// user info states
 				userName: '',
 				userLogin: '',
 				registrationDate: '',
-				isUserAdmin: false
+				isUserAdmin: false,
+				changingPassword: false,
+				changingName: false,
+				message: ''
 		}
     },
 
@@ -110,6 +113,8 @@ const app = Vue.createApp({
 			this.historyState = false;
 			this.searchState = false;
 			this.settingsState = false;
+			this.changingPassword = false;
+			message = '';
 		},
 		
 		loadHistory: function() {
@@ -140,7 +145,6 @@ const app = Vue.createApp({
 				app.userLogin = loadedData.login;
 				app.registrationDate = loadedData.registration;
 				app.isUserAdmin = loadedData.isAdmin;
-				console('isAdmin:' + app.isUserAdmin);
             }
 		}
     },

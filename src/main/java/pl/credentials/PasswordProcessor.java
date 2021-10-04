@@ -4,9 +4,18 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-public class PasswordProcessor {
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+
+/**
+ * Password encoder implementation
+ */
+@Singleton
+@Startup
+public class PasswordProcessor implements PasswordEncoder {
+	private static final long serialVersionUID = -6207835897404050306L;
 	private static final int SALT_LENGTH = 10;
-	private static final int SALT_DYNAMIC_POSITION = 16;
+	private static final int SALT_DYNAMIC_POSITION = 3;
 	
 	public PasswordProcessor() {
 		
@@ -18,7 +27,7 @@ public class PasswordProcessor {
 	 * @param salt
 	 * @return MD5 hash
 	 */
-	public static synchronized String createPasswordHash(String password, String salt) {
+	public String createPasswordHash(String password, String salt) {
 		String result = generateMd5For(password + salt);
 		String dynamicSalt = getDynamicSalt(result);
 		return generateMd5For(dynamicSalt);
@@ -29,7 +38,7 @@ public class PasswordProcessor {
 	 * @param val - value to hash
 	 * @return MD5-hash (string value)
 	 */
-	public static synchronized String generateMd5For(String val) {
+	public String generateMd5For(String val) {
 		StringBuilder sb = new StringBuilder();
 		try {
 			MessageDigest digest = MessageDigest.getInstance("MD5");
@@ -47,7 +56,7 @@ public class PasswordProcessor {
 	 * Generates random string (length = 'SALT_LENGTH')
 	 * @return salt
 	 */
-	public static synchronized String generateStaticSalt() {
+	public String generateStaticSalt() {
 		SecureRandom random = new SecureRandom();
 		StringBuilder sb = new StringBuilder();
 		int counter = 0;
@@ -68,7 +77,7 @@ public class PasswordProcessor {
 	 * @param val - hash value
 	 * @return salt
 	 */
-	private static synchronized String getDynamicSalt(String val) {
+	private String getDynamicSalt(String val) {
 		return val.length()>SALT_DYNAMIC_POSITION ? val.substring(SALT_DYNAMIC_POSITION) : ""; 
 	}
 }

@@ -3,8 +3,6 @@ package pl.controllers;
 import java.io.IOException;
 
 import javax.ejb.EJB;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import pl.credentials.IAuthentification;
 import pl.route.IRoutes;
 
-
+/**
+ * Start page.
+ * Check whether a session exists.
+ * Redirects to home if the session exists, otherwise redirects to login page
+ */
 @WebServlet("start")
 public class StartServlet extends HttpServlet {
 	private static final long serialVersionUID = 3274802373502246333L;

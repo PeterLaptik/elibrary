@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import pl.credentials.IAuthentification;
 import pl.route.IRoutes;
 
+/**
+ * Executes login procedure
+ */
 //@WebServlet("/logging")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = -8299013065276922113L;

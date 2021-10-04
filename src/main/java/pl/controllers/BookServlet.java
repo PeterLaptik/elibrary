@@ -11,7 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import pl.route.IRoutes;
 
-
+/**
+ * Redirects to selected book opened in an appropriate book reader.
+ * 'GET' parameters:
+ * id - book id
+ * ext - book extension (like .djvu, .pdf)
+ */
 @WebServlet("book")
 public class BookServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -51,5 +56,4 @@ public class BookServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.sendRedirect(router.getHome());
 	}
-
 }

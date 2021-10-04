@@ -1,8 +1,6 @@
 package pl.model.entities;
 
 import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -11,9 +9,6 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
-import pl.model.cache.objects.SectionNode;
 
 @Entity
 @Table (name="bookmarks")
@@ -21,6 +16,9 @@ public class Bookmark {
 	public static final String FIELD_COLUMN_NAME = "bookmark_text";
 	public static final String FIELD_COLUMN_PAGE = "page_number";
 	
+	/**
+	 * Compound key. Includes book_id, user_id and bookmark text.
+	 */
 	@EmbeddedId
 	private BookmarkId id;
 	

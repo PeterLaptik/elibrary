@@ -15,8 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import pl.credentials.IAuthentification;
 import pl.route.IRoutes;
 
-
-public class UserFilter implements Filter{
+/**
+ * Allows connection only if a session exists
+ */
+public class UserFilter implements Filter {
 	private String loginPage = "";
 	
 	@EJB
