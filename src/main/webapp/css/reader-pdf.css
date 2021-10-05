@@ -1,0 +1,89 @@
+@charset "UTF-8";
+
+body {
+	margin: 0;
+	font-size: 0.9rem;
+	background-color: black;
+}
+
+div {
+	text-align: center;
+}
+
+.canvas {
+	padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    border: medium;
+    background-color: black;
+}
+
+#toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #000000;
+	color: #fff;
+	padding: 0.5em;
+	position: fixed;
+	width:100vw;
+   	height:5vh;
+   	bottom:0;
+   	margin: 0px;
+   	opacity: 1;
+    transition: 0.5s, opacity 0.5s linear;
+    overflow: hidden;
+}
+
+.bookmarks-button {
+	align-items: center;
+	width:100vw;
+	top: 0;
+	position: fixed;
+	background-color: #000000;
+}
+
+@keyframes fade {
+  0%,100% { opacity: 0 }
+  50% { opacity: 1 }
+}
+
+#prev, #next, #zoom-in, #zoom-out {
+	font-size: 36px;
+}
+
+#page-box {
+	border: thin;
+	color: white;
+}
+
+#modal-page {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	padding-top: 200px;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(150, 150, 150);
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+#modal-button-page {
+  	background-color: #808080;
+  	border: none;
+  	color: white;
+  	text-align: center;
+  	text-decoration: none;
+  	display: inline-block;
+  	transition: 0.5s
+}
+
+#modal-button-page:hover {
+	background-color: #408080;
+	cursor: pointer;
+}

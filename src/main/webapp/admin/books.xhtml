@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+	<h:head>
+		<title>E-library: admin</title>
+	 	<link rel="stylesheet" type="text/css" href="css/books.css" />
+	 	<h:outputStylesheet library="primefaces-omega" name="theme.css" />
+	 	<h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
+	</h:head>
+	<h:body>
+	<div>
+	 	<h:form>
+			<div class="topMenu">
+				<p:tabMenu activeIndex="2">
+				 	<p:menuitem value="Stats" outcome="/admin/stats.xhtml"></p:menuitem>
+					<p:menuitem value="Users" outcome="/admin/users.xhtml"></p:menuitem>
+					<p:menuitem value="Books" outcome="/admin/books.xhtml"></p:menuitem>
+					<p:menuitem value="Home" url="../home"></p:menuitem>
+				</p:tabMenu>
+			</div>
+		</h:form>
+	</div>
+	<div>
+		<h:form id="form_top_button">
+			<div class="uploadButton">
+				<p:commandButton value="Load book"
+					onclick="PF('createBookDlg').show()" update=":books_form:books" />
+				<h:outputText id="sectionName" style="font-size: 1.2em;"
+					value="  Section: #{sectionService.nodeName}" />
+			</div>
+		</h:form>
+	</div>
+	 	<h:form id="sections_form">
+			<div class="leftMenu">
+				<div>
+					<p:treeTable id="nodes" value="#{sectionService.root}" var="node"
+						selectionMode="single" expanded="true"
+						selection="#{sectionService.selectedNode}">
+						<p:column headerText="Section">
+							<h:outputText value="#{node.name}" />
+						</p:column>
+						<p:ajax event="select" listener="#{sectionService.onNodeSelect}" 
+								update=":books_form:books :form_top_button:sectionName"
+								onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
+					</p:treeTable>
+					<p:contextMenu for="nodes">
+						<p:menuitem value="Insert books" action="#{sectionService.insertBooks}" update=":books_form:books"/>
+						<p:menuitem value="Add section" onclick="PF('inputDlg').show()" />
+						<p:menuitem value="Delete section" update="nodes"
+							action="#{sectionService.deleteNode}" />
+					</p:contextMenu>
+				</div>
+			</div>
+		</h:form>
+		<h:form id="books_form">
+			<div class="booksContent">
+				<p:dataTable id="books" var="book" value="#{sectionService.books}" 
+	 						selection="#{sectionService.selectedBooks}" rowKey="#{book.id}" 
+	 						selectionMode="multi"
+	 						stickyHeader="true" stickyTopAt=".topMenu">
+		 			<p:column style="width:50px;" headerText="id">
+	                	<h:outputText value="#{book.id}" />
+		            </p:column>
+		            <p:column headerText="Name">
+		                <h:outputText value="#{book.name}" />
+		            </p:column>
+		            <p:column headerText="Authors">
+		                <h:outputText value="#{book.authors}" />
+		            </p:column>
+		            <p:column headerText="Code">
+		                <h:outputText value="#{book.codeUdc}" />
+		            </p:column>
+		            <p:column headerText="Magazine">
+		                <h:outputText value="#{book.magazine}" />
+		            </p:column>
+		            <p:column headerText="Filename">
+		                <h:outputText value="#{book.fileName}" />
+		            </p:column>
+		            <p:column headerText="Created">
+		                <h:outputText value="#{book.bookCreated}">
+		                	<f:convertDateTime pattern="dd.MM.yyyy" />
+		                </h:outputText>
+		            </p:column>
+		        </p:dataTable>
+		        <!-- Popup menu for books -->
+		        <p:contextMenu for="books">
+		        	<p:menuitem value="Sort by name" update="books" action="#{sectionService.sortByName}"/>
+		        	<p:menuitem value="Sort by author" update="books" action="#{sectionService.sortByAuthor}"/>
+		        	<p:menuitem value="Sort by code" update="books" action="#{sectionService.sortByCode}"/>
+		        	<p:menuitem value="Sort by id" update="books" action="#{sectionService.sortById}"/>
+		        	<p:menuitem value="Move selected books" update="books" action="#{sectionService.cutBooks}"/>
+		            <p:menuitem value="Delete selected books" onclick="PF('dlgc').show()" update="books"/>
+		        </p:contextMenu>
+			</div>
+		        
+		        <!-- Confirm dialogue for book delete -->
+		        <p:dialog header="Confirm" widgetVar="dlgc" minHeight="40" width="350" 
+		        		modal="true" showEffect="fade">
+				    <p class="p-m-0">Delete selected record?</p>
+				    <f:facet name="footer">
+				    	<p:commandButton value="Yes" style="width: 5rem" 
+					    	action="#{sectionService.deleteSelectedBooks}" 
+					    	onclick="hide()" update=":books_form:books"/>
+				        <p:commandButton value="No" styleClass="ui-button-flat p-mr-2" style="width: 6rem" onclick="hide()"/>
+				    </f:facet>
+				</p:dialog>
+		</h:form>
+
+		<!-- Book create dialogue -->
+		<p:dialog id="createBookDialog" for="books" header="Create book"
+			widgetVar="createBookDlg" responsive="true" showEffect="fade"
+			update=":books_form:books" modal="true">
+			<h:form>
+				<table>
+					<tr>
+						<td>Name</td>
+						<td><p:inputText id="bookName"
+								value="#{sectionService.bookService.name}" /></td>
+					</tr>
+					<tr>
+						<td>Authors</td>
+						<td><p:inputText id="bookAuthors"
+								value="#{sectionService.bookService.authors}" /></td>
+					</tr>
+					<tr>
+						<td>Code universal decimal</td>
+						<td><p:inputText id="bookCodeDecimal"
+								value="#{sectionService.bookService.codeUdc}" /></td>
+					</tr>
+					<tr>
+						<td>Code ISBN</td>
+						<td><p:inputText id="bookCodeIsbn"
+								value="#{sectionService.bookService.codeIsbn}" /></td>
+					</tr>
+					<tr>
+						<td>Code ISSN</td>
+						<td><p:inputText id="bookCodeIssn"
+								value="#{sectionService.bookService.codeIssn}" /></td>
+					</tr>
+					<tr>
+						<td>Description</td>
+						<td><p:inputText id="bookDescr"
+								value="#{sectionService.bookService.description}" /></td>
+					</tr>
+					<tr>
+						<td>Magazine</td>
+						<td><p:inputText id="magazine"
+								value="#{sectionService.bookService.magazine}" /></td>
+					</tr>
+					<tr>
+						<td>Publisher</td>
+						<td><p:inputText id="publisher"
+								value="#{sectionService.bookService.publisher}" /></td>
+					</tr>
+					<tr>
+						<td>City</td>
+						<td><p:inputText id="city"
+								value="#{sectionService.bookService.city}" /></td>
+					</tr>
+					<tr>
+						<td>Year</td>
+							<td><p:inputText id="year"
+								value="#{sectionService.bookService.publicationYear}" 
+								onkeydown="return event.keyCode &gt;= 48 &amp;&amp; event.keyCode &lt;= 57 || event.keyCode == 8"/>
+							</td>
+					</tr>
+				</table>
+				<p:fileUpload mode="advanced" multiple="false" sizeLimit="136314880"
+					invalidSizeMessage="Maximum file size allowed is 130 MB"
+					invalidFileMessage="only gif | jpg | jpeg | png is allowed"
+					fileUploadListener="#{sectionService.bookService.uploadBook}"
+					allowTypes="/(\.|\/)(pdf|djvu|djv)$/"
+					closable="true" />
+				<p:commandButton value="OK" style="float: right;"
+					actionListener="#{sectionService.appendBook}"
+					onclick="PF('createBookDlg').hide()" 
+					update=":books_form:books"/>
+			</h:form>
+		</p:dialog>
+	
+		<!-- Dialogue for section creating -->
+	 	<p:dialog id="inputDialog" for="nodes" header="Add section" widgetVar="inputDlg" 
+	 			minHeight="40" width="350" showEffect="fade">
+	        	<h:form>
+				    <p class="p-m-0">Input section name:</p>
+				    <p:inputText value="#{sectionService.sectionName}"/>
+				    <p:commandButton value="OK" onclick="dialog.hide();"
+				    actionListener="#{sectionService.appendNode}"/>
+			    </h:form>
+		</p:dialog>
+		
+		<!-- AJAX waiting clock -->
+		<p:dialog widgetVar="statusDialog" modal="false" draggable="false" closable="false" resizable="false" showHeader="false">
+	        <div class="p-text-center">
+	            <i class="pi pi-clock fa-2x" aria-hidden="true"></i>
+	        </div>
+	    </p:dialog>
+	 </h:body>
+</html>

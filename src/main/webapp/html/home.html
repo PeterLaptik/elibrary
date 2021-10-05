@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>E-Library</title>
+		<link rel="stylesheet" type="text/css" href="css/home.css" />
+		<link rel="stylesheet" type="text/css" href="css/book.css" />
+	</head>
+
+	<script src="js/sweetalert2.all.min.js"></script>
+	<script src="js/vue.global.js"></script>
+	<script src="js/elib.books.pages.js"></script>
+	<script src="js/elib.pages.navigators.js"></script>
+
+	<!-- Chapters tree elements -->
+	<script type="text/x-template" id="item-template">
+		<li div>
+			<div
+				:class="getStyleClass()"
+		   		@click="toggle"
+		   		@dblclick="toggle"
+		   		@mouseover="hover = true"
+		   		@mouseleave="hover = false">
+				{{ item.name }}
+	  		</div>
+	  		<ul v-show="isOpen" v-if="isFolder">
+				<tree-item
+					class="item"
+		   			v-for="(child, index) in item.children"
+		   			:key="index"
+		   			:item="child">
+				</tree-item>
+			</ul>
+		</li>
+	</script>
+
+	<script>
+		// Navigation bar behaviour (show/hide)
+		let visibleNavigationBar = true;
+		
+		function openNav() {
+			app.isMenuShowed=true;
+			document.getElementById("mySidenav").style.width = "250px";
+	     	document.getElementById("topBar").style.left = "250px";
+	     	
+	     	let settings = document.getElementById("settings-page");
+	     	if(settings)
+	     		settings.style.paddingLeft = "260px";
+	     	
+	     	let element = document.getElementById("book-list");
+	     	if(element)
+	     		element.style.paddingLeft = "250px";
+	     	element = document.getElementById("history-lines");
+	     	if(element)
+	     		element.style.paddingLeft = "250px";
+	     	
+	     	let elements = document.getElementsByClassName("bookLine");
+	     	for(let element of elements) {
+	     		element.style.width = "calc(100vw - 260px);";
+	     	}
+	   	}
+	
+	   	function closeNav() {
+	   		app.isMenuShowed=false;
+	     	document.getElementById("mySidenav").style.width = "0";
+	     	document.getElementById("topBar").style.left = "0";
+	     	
+	     	let settings = document.getElementById("settings-page");
+	     	if(settings)
+	     		settings.style.paddingLeft = "0";
+	     	
+	     	let element = document.getElementById("book-list");
+	     	if(element) {
+	     		element.style.paddingLeft = "10px";
+	     		element.style.width = "100vh;"
+	     	}
+	     	element = document.getElementById("history-lines");
+	     	if(element)
+	     		element.style.paddingLeft = "10px";
+	     	
+	     	let elements = document.getElementsByClassName("bookLine");
+	     	for(let i=0; i<elements.length; i++) {
+	     		elements[i].style.width = "100vh;";
+	     	}
+	   	}
+	   	
+	   	function logOut(){
+			Swal.fire({
+				text: 'Logout from the library?',
+			   	showCancelButton: true,
+			   	confirmButtonText: 'Yes',
+			   	cancelButtonText: 'No'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					window.location.href = "logout"
+				} else if (result.dismiss === Swal.DismissReason.cancel) {
+				   // do nothing
+				}
+			})
+		}
+	</script>
+	
+	<body>
+		<div id="mySidenav" class="sidenav">
+			<div class="sidepanelline">
+				<p><a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a></p>
+			</div>
+			<div id="book-navigator">
+				<ul>
+					<tree-item class="item" :item="sectionsTree"></tree-item>
+				</ul>
+			</div>
+		</div>
+
+		<div id='main-page'>
+			<!-- Main menu -->
+			<div id="topBar" class="topbar">
+				<a v-if="!isMenuShowed" href="#menu" id="showMenu" onclick="openNav()">Menu</a>
+				<a href="#" v-bind:class="{activenotepad: mainState}" v-on:click="setMainState();">Home</a>
+				<a href="#" v-bind:class="{activenotepad: historyState}" v-on:click="setHistoryState();">History</a>
+				<a href="#" v-bind:class="{activenotepad: searchState}" v-on:click="setSearchState();">Search</a>
+				<a href="#" v-bind:class="{activenotepad: settingsState}" v-on:click="setSettingsState();">Settings</a>
+				<a v-if="isUserAdmin" href="admin/stats.xhtml">Admin</a>
+				<a href="#" onclick="logOut()">Logout</a>
+			</div>
+			<!-- Book list -->
+			<div id="book-list" v-if="mainState">
+				<table v-for="book in bookList.books" class="bookLine">
+					<tr>
+						<td class="book_name">{{book.name}}</td>
+					</tr>
+					<tr>
+						<td class="book_author">{{book.author}}</td>
+					</tr>
+					<tr>
+						<td>UDC:{{book.codeUdc}}&nbsp;&nbsp; 
+								ISBN:{{book.codeIsbn}}&nbsp;&nbsp; 
+								ISSN:{{book.codeIssn}}</td>
+					</tr>
+					<tr>
+						<td><span id="book-format">Format: {{book.format}}&nbsp;&nbsp;</span> 
+							<span id="book-link"> <a href='#'
+								:book-name="book.id" :book-format="book.format"
+								onclick="openBook(this.getAttribute(`book-name`), this.getAttribute(`book-format`))">Open</a>
+							</span> 
+						<span> 
+							<a href='#' id="book-download" style="float: right;">Download</a>
+						</span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<button type="button" class="collapsible">&#10000; Show
+								description</button>
+							<div class="book_description">{{book.description}}</div>
+						</td>
+					</tr>
+				</table>
+				<div id="pageNavigator"></div>
+			</div>
+			<!-- Book history -->
+			<div v-if="historyState" id="history-lines">
+				<table v-for="book in historyList.books" id="history-line">
+					<tr>
+						<td class="book_name">{{book.name}}</td>
+					</tr>
+					<tr>
+						<td class="book_author">{{book.author}}</td>
+					</tr>
+					<tr>
+						<td>UDC:{{book.codeUdc}}&nbsp;&nbsp; ISBN:{{book.codeIsbn}}
+							&nbsp;&nbsp; ISSN:{{book.codeIssn}}</td>
+					</tr>
+					<tr>
+						<td>
+							<span id="book-format">Format: {{book.format}}
+								&nbsp;&nbsp;</span> <span id="book-link"> <a href='#'
+								:book-name="book.id" :book-format="book.format"
+								onclick="openBook(this.getAttribute(`book-name`), this.getAttribute(`book-format`))">Open</a>
+							</span> 
+							<span> 
+								<a href='#' id="book-download" style="float: right;">Download</a>
+							</span>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<!-- Book search -->
+			<div v-if="searchState" id="history-lines">
+				<p style="text-align: center"> Search &nbsp;
+					<input id="input-text" name="input-search" type="text"
+						maxlength="50" />
+					<select name="choice-type" id="search-choice">
+						<option value="book">book</option>
+						<option value="author">author</option>
+					</select>
+					<button id="search-button" name="textOk" onclick="executeSearch()">OK</button>
+				</p>
+				<div>
+					<table v-for="book in searchList.books" class="bookLine">
+						<tr>
+							<td class="book_name">{{book.name}}</td>
+						</tr>
+						<tr>
+							<td class="book_author">{{book.author}}</td>
+						</tr>
+						<tr>
+							<td>UDC:{{book.codeUdc}}&nbsp;&nbsp; 
+								ISBN:{{book.codeIsbn}}&nbsp;&nbsp; 
+								ISSN:{{book.codeIssn}}
+							</td>
+						</tr>
+						<tr>
+							<td><span id="book-format">Format: {{book.format}}
+									&nbsp;&nbsp;</span> <span id="book-link"> <a href='#'
+									:book-name="book.id" :book-format="book.format"
+									onclick="openBook(this.getAttribute(`book-name`), this.getAttribute(`book-format`))">Open</a>
+								</span> 
+							<span> 
+								<a href='#' id="book-download" style="float: right;">Download</a>
+							</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<button type="button" class="collapsible">&#10000; Show
+									description</button>
+								<div class="book_description">{{book.description}}</div>
+							</td>
+						</tr>
+					</table>
+					<div id="pageSearchNavigator"></div>
+				</div>
+			</div>
+			<!-- Settings -->
+			<div v-if="settingsState" id="settings-page">
+				<table id="settings-table">
+					<tr>
+						<td>User name:</td>
+						<td>{{userName}}</td>
+					</tr>
+					<tr>
+						<td>User login:</td>
+						<td>{{userLogin}}</td>
+					</tr>
+					<tr>
+						<td>Registration date:</td>
+						<td>{{registrationDate}}</td>
+					</tr>
+				</table>
+				<p>
+					<button id="pass-button-change-name" onclick="setChangeName();">Change user name</button>
+				</p>
+				<p>
+					<button id="pass-button-change" onclick="setChangePassword();">Change password</button>
+				</p>
+				<div v-if="changingPassword" style="align-items: center;">
+					<p>&nbsp;</p>
+					<table id="pass-change-data" style="border-top: 1px solid #050505;">
+						<tr><td colspan="2" style="text-align: center;">Set new password:</td></tr>
+						<tr>
+							<td>Current password </td>
+							<td><input id="pass-input-old" name="old-pass" type="password"
+								maxlength="50" /></td>
+						</tr>
+						<tr>
+							<td>New password</td>
+							<td><input id="pass-input-new" name="new-pass" type="password"
+								maxlength="50" /></td>
+						</tr>
+						<tr>
+							<td>Repeat new password</td>
+							<td><input id="pass-input-new-repeat" name="repeat-pass" type="password"
+								maxlength="50" /></td>
+						</tr>
+						<tr>
+							<td align="center">
+								<button id="pass-button-change" onclick="changePasswordCancel();">Cancel</button>
+							</td>
+							<td align="center">
+								<button id="pass-button-change" onclick="changePasswordOk();">OK</button>
+							</td>
+						</tr>
+					</table>
+					<p>{{message}}</p>
+				</div>
+				<div v-if="changingName" style="align-items: center;">
+					<p>&nbsp;</p>
+					<table id="pass-change-data" style="border-top: 1px solid #050505;">
+						<tr><td colspan="2" style="text-align: center;">Set new user name:</td></tr>
+						<tr>
+							<td>New user name </td>
+							<td><input id="pass-input-name" name="new-name" type="text"
+								maxlength="10" /></td>
+						</tr>
+						<tr>
+							<td align="center">
+								<button id="pass-button-change" onclick="undoChangeName();">Cancel</button>
+							</td>
+							<td align="center">
+								<button id="pass-button-change" onclick="setNewName();">OK</button>
+							</td>
+						</tr>
+					</table>
+					<p>{{message}}</p>
+				</div>
+			</div>
+			<!-- Spinner -->
+			<div id="spinner-anim">
+				<div id="loader-animation"></div>
+			</div>
+		</div>
+
+		<script>
+			// Section tree list
+			let sectionsTree = {
+				name: "Sections", id: 0,
+				children: [{ name: "loading...", id: 1 }]
+			};
+			
+			// Book list for selected section
+			let bookList = {books: []};
+			let currentSectionId = -1;
+			let currentPage = 0;
+
+			let updateBookList = function(sectionId) {
+				let coll = document.getElementsByClassName("collapsible");
+				for (i = 0; i < coll.length; i++) {
+					if(coll[i].classList.contains("active"))
+						coll[i].classList.toggle("active");
+					var content = coll[i].nextElementSibling;
+					content.style.display = "none";
+				}
+				app.updateBooks(sectionId, currentPage);
+			}
+
+			let updateCollapsibles = function() {
+				let coll = document.getElementsByClassName("collapsible");
+				for (i = 0; i < coll.length; i++) {
+					if(coll[i].hasAttachedListener!=true) {
+						coll[i].addEventListener("click", function() {
+							this.classList.toggle("active");
+							var content = this.nextElementSibling;
+							if (content.style.display === "block") {
+								content.style.display = "none";
+							} else {
+								content.style.display = "block";
+							}
+						});
+					}
+					coll[i].hasAttachedListener = true;
+				}
+			}
+			
+			let openBook = function(id, format) {
+				window.open(router.getReader(id, format), "_blank");
+			}
+			
+			// History list
+			let historyList = {books: []};
+
+			// Search list
+			let searchList = {books: []};
+			
+			let searchChoice = null;
+			let searchVal = null;
+			let searchPage = 0;
+			
+			let executeSearch = function() {
+				searchPage = 0;
+				searchChoice = document.getElementById('search-choice').value;
+				searchVal = document.getElementById('input-text').value;
+				app.searchBooks();
+			}
+			
+			let updateSearchBookList = function(sectionId) {
+				let coll = document.getElementsByClassName("collapsible");
+				for (i = 0; i < coll.length; i++) {
+					if(coll[i].classList.contains("active"))
+						coll[i].classList.toggle("active");
+					var content = coll[i].nextElementSibling;
+					content.style.display = "none";
+				}
+				app.searchBooks(searchPage);
+			}
+		</script>
+		<script src="js/elib.routes.js"></script>
+		<script src="js/elib.book.navigator.js"></script>
+		<script src="js/elib.books.list.js"></script>
+		<script src="js/elib.users.js"></script>
+	</body>
+</html>

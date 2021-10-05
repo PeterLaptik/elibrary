@@ -6,14 +6,31 @@
 
     <groupId>pl</groupId>
     <artifactId>elibrary</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>war</packaging>
-    <name>Servlet 3 Webapp with Jetty Plugin</name>
+    <name>Elibrary web-application</name>
 
     <properties>
         <version.java>1.8</version.java>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.servlet>3.0.1</version.servlet>
+        <ejb.version>3.2</ejb.version>
+        <jsf.version>2.2.20</jsf.version>
+        <javax.faces.api.version>2.3</javax.faces.api.version>
+        <jboss.weld.version>3.1.Final</jboss.weld.version>
+        <junit.version>4.12</junit.version>
+        <hibernate.version>5.4.31.Final</hibernate.version>
+        <postgres.connector.ver>42.2.20</postgres.connector.ver>
+        <primefaces.version>7.0</primefaces.version>
+        <primefaces.themes.version>1.0.10</primefaces.themes.version>
+        <jersey.version>2.34</jersey.version>
+        <json.version>1.0.4</json.version>
+        <maven.compiler.version>3.6.1</maven.compiler.version>
+        <plugin.maven.war.version>3.0.0</plugin.maven.war.version>
+        <plugin.maven.surefire.version>2.20.1</plugin.maven.surefire.version>
+        <apache.commons.version>1.4</apache.commons.version>
+		<apache.commons.io.version>2.6</apache.commons.io.version>
+		<owasp.verion>2.2.3.0</owasp.verion>
     </properties>
 
     <dependencyManagement>
@@ -27,7 +44,7 @@
           <dependency>
               <groupId>junit</groupId>
               <artifactId>junit</artifactId>
-              <version>4.12</version>
+              <version>${junit.version}</version>
               <scope>test</scope>
           </dependency>
       </dependencies>
@@ -42,19 +59,106 @@
         <dependency>
 		    <groupId>org.hibernate</groupId>
 		    <artifactId>hibernate-core</artifactId>
-		    <version>5.4.31.Final</version>
+		    <version>${hibernate.version}</version>
 		</dependency>
 		<!--  JDBC Connector  -->
 		<dependency>
 		    <groupId>org.postgresql</groupId>
 		    <artifactId>postgresql</artifactId>
-		    <version>42.2.20</version>
+		    <version>${postgres.connector.ver}</version>
 		</dependency>
+		<!-- EJB -->
+		<dependency>
+		    <groupId>javax.ejb</groupId>
+		    <artifactId>javax.ejb-api</artifactId>
+		    <version>${ejb.version}</version>
+		</dependency>
+		<!-- Injections -->
+		<dependency>
+		    <groupId>org.jboss.weld</groupId>
+		    <artifactId>weld-api</artifactId>
+		    <version>${jboss.weld.version}</version>
+		</dependency>
+		<!-- Java faces -->
+		<dependency>
+		    <groupId>javax.faces</groupId>
+		    <artifactId>javax.faces-api</artifactId>
+		    <version>${javax.faces.api.version}</version>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+	        <groupId>com.sun.faces</groupId>
+	        <artifactId>jsf-api</artifactId>
+	        <version>${jsf.version}</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>com.sun.faces</groupId>
+	        <artifactId>jsf-impl</artifactId>
+	        <version>${jsf.version}</version>
+	    </dependency>
+	    <dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>${primefaces.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.primefaces.themes</groupId>
+		    <artifactId>bootstrap</artifactId>
+		    <version>${primefaces.themes.version}</version>
+		</dependency>
+		
+		<!-- File uploading -->
+		<dependency>
+		   <groupId>commons-fileupload</groupId>
+		   <artifactId>commons-fileupload</artifactId>
+		   <version>${apache.commons.version}</version>
+		</dependency>
+		<dependency>
+	        <groupId>commons-io</groupId>
+	        <artifactId>commons-io</artifactId>
+	        <version>${apache.commons.io.version}</version>
+	    </dependency>
+	    <dependency>
+		    <groupId>org.owasp.esapi</groupId>
+		    <artifactId>esapi</artifactId>
+		    <version>${owasp.verion}</version>
+		</dependency>
+		<!-- REST -->
+		<dependency>
+		    <groupId>org.glassfish.jersey.core</groupId>
+		    <artifactId>jersey-client</artifactId>
+		    <version>${jersey.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.glassfish.jersey.containers</groupId>
+		    <artifactId>jersey-container-servlet</artifactId>
+		    <version>${jersey.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.glassfish.jersey.inject</groupId>
+		    <artifactId>jersey-hk2</artifactId>
+		    <version>${jersey.version}</version>
+		</dependency>
+		<!-- JSON -->
+		<dependency>
+		   <groupId>org.glassfish</groupId>
+		   <artifactId>javax.json</artifactId>
+		   <version>${json.version}</version>
+		</dependency>
+		<!-- Testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
+    
+    <repositories>
+        <repository>
+            <id>prime-repo</id>
+            <name>PrimeFaces Maven Repository</name>
+            <url>http://repository.primefaces.org</url>
+        </repository>
+    </repositories>
 
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
@@ -62,32 +166,28 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>${maven.compiler.version}</version>
                 <configuration>
                     <source>${version.java}</source>
                     <target>${version.java}</target>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.4.3.v20170317</version>
-                <configuration>
-                    <stopKey>C</stopKey>
-                    <stopPort>34343</stopPort>
-                    <httpConnector>
-                        <port>8080</port>
-                    </httpConnector>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>${plugin.maven.war.version}</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
+            <plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-surefire-plugin</artifactId>
+			    <version>${plugin.maven.surefire.version}</version>
+			    <configuration>
+			         <skipTests>false</skipTests>
+			    </configuration>
+			</plugin>
         </plugins>
     </build>
 </project>

@@ -1,0 +1,199 @@
+@charset "UTF-8";
+
+/** Links, bookmarks, bookmarks navigation and modal windows **/
+/** Common for all readers **/
+
+.sidenav {
+	height: 100%;
+  	width: 0px;
+  	position: fixed;
+  	z-index: 1;
+  	top: 0;
+  	right: 0;
+  	background-color: #000000;
+  	overflow-x: hidden;
+  	padding-top: 60px;
+  	transition: 0.5s;
+}
+
+/* The navigation menu links */
+.sidenav a {
+  	padding: 8px 8px 8px 32px;
+  	text-decoration: none;
+  	font-size: 25px;
+  	color: #818181;
+  	display: inline;
+  	transition: 0.5s;
+}
+
+.sidenav a:hover {
+  	color: green;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+  	position: absolute;
+  	top: 0;
+  	left: 0px;
+  	font-size: 36px;
+}
+
+.bookmarks-button {
+	text-align: center;
+	font-size: 25px;
+	color: #FFFFFF;
+	top: 0;
+/*     margin-right: 15px; */
+    transition: 0.5s;
+}
+
+.bookmarks-button a:hover {
+  	color: green;
+}
+
+#lightscheme-button {
+	border: none;
+	font-size: 25px;
+	background-color: #000000;
+	color: white;
+	transition: 0.5s;
+}
+
+#lightscheme-button:hover {
+  	color: green;
+  	cursor: pointer;
+}
+
+#darkscheme-button {
+	border: none;
+	font-size: 25px;
+	background-color: #000000;
+	color: yellow;
+	transition: 0.5s;
+}
+
+#darkscheme-button:hover {
+  	color: green;
+  	cursor: pointer;
+}
+
+a {
+	transition: 0.5s;
+	font-size: 24px;
+}
+
+a:link {
+  	color: white;
+  	background-color: transparent;
+  	text-decoration: none;
+  	padding-top: 0px;
+}
+
+a:visited {
+  	color: white;
+  	background-color: transparent;
+  	text-decoration: none;
+}
+
+a:hover {
+  	color: green;
+  	background-color: transparent;
+  	text-decoration: none;
+}
+
+a:active {
+  	color: white;
+  	background-color: transparent;
+  	text-decoration: none;
+}
+
+/**** Modal dialogue ****/
+#modal-dialogue {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	padding-top: 200px;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(150, 150, 150);
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.modal-content {
+	margin-left: auto;
+  	margin-right: auto;
+	position: relative;
+	background-color: #fefefe;
+	margin: auto;
+	padding: 0;
+	border: 1px solid #888;
+	width: 25%;
+	background-color: rgb(200, 200, 200);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0
+		rgba(0, 0, 0, 0.19);
+	-webkit-animation-name: animatetop;
+	-webkit-animation-duration: 0.4s;
+	animation-name: animatetop;
+	animation-duration: 0.4s
+}
+
+p {
+	margin: 0px;
+}
+
+.close-dlg {
+	font-size: 24px;
+	margin-right: 5px;
+	margin-top: 5px;
+}
+
+.close-dlg:hover,
+.close-dlg:focus {
+  	color: #ff0080;
+  	text-decoration: none;
+  	cursor: pointer;
+  	font-size: 24px;
+}
+
+.modal-content.p {
+	margin: center;
+}
+
+input {
+	width: 90%;
+	height: 30px;
+	padding-left: 10px;
+	box-sizing: border-box;
+}
+
+#modal-button {
+  	background-color: #808080;
+  	border: none;
+  	color: white;
+  	text-align: center;
+  	text-decoration: none;
+  	display: inline-block;
+  	transition: 0.5s
+}
+
+#modal-button:hover {
+	background-color: #408080;
+	cursor: pointer;
+}
+
+@-webkit-keyframes animatetop {
+  	from {top:-300px; opacity:0} 
+  	to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+  	from {top:-300px; opacity:0}
+  	to {top:0; opacity:1}
+}
+
+#app, #side-nav {
+	text-align: left;
+}

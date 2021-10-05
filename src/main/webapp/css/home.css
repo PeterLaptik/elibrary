@@ -1,0 +1,248 @@
+@charset "UTF-8";
+/* The side navigation menu */
+body {
+	height: 100%;
+	background-image: linear-gradient(to right, #F8F8F8 75%, #EEEEFF);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+
+.activenotepad {
+  background-color: #ccc;
+  background-image: linear-gradient(to top, #FFFFFF, #CCCCCC);
+  text-shadow: 0px -2px #CCCCCC;
+}
+
+.sidenav {
+	height: 100%;
+	width: 250px;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-image: linear-gradient(to right, #FFFFFF, #888888 60%);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	overflow-x: hidden;
+	padding-top: 60px; 
+	transition: 0.5s;
+	background-repeat: no-repeat;
+	background-attachment: fixed;;
+	transition: 0.5s;
+}
+
+#showMenu {
+	font-size: 25px;
+}
+
+/* The navigation menu links */
+.sidenav a {
+	padding: 8px 8px 8px 32px;
+	text-decoration: none;
+	font-size: 25px;
+	color: #333333;
+	display: block;
+	transition: 0.5s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+	color: #0000FF;
+}
+
+.sidepanelline {
+	height: 57px;
+	width: 250px;
+	background-image: linear-gradient(to right, #EEFFEE, #888888);
+	position: absolute;
+	top: 0;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+	position: absolute;
+	top: 0;
+	right: 10px;
+	font-size: 36px;
+	margin-left: 50px;
+}
+
+#book-list {
+	transition: 0.5s;
+	padding-left: 250px;
+	/*   width: calc(100vw - 260px); */
+}
+
+#book-navigator {
+	font-size: 25px;
+	color: #333333;
+}
+
+@media screen and (max-height: 450px) {
+	.sidenav {
+		padding-top: 15px;
+	}
+	.sidenav a {
+		font-size: 18px;
+	}
+	.sidenav {
+		font-size: 10px;
+	}
+}
+
+.topbar {
+	overflow: hidden;
+	top: 0;
+	height: 57px;
+	width: 100vw;
+	position: fixed;
+	padding-top: 0px;
+	left: 250px;
+	background-image: linear-gradient(to right, #888888, #EEEEFF);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	z-index: 1;
+	transition: 0.5s;
+}
+
+.topbar a {
+	text-decoration: none;
+	text-align: center;
+	float: left;
+	padding: 14px 16px;
+	font-size: 25px;
+	color: #333333;
+	display: block;
+	transition: 0.5s;
+}
+
+.topbar a:hover {
+	color: #0000FF;
+}
+
+#main-page {
+	margin-top: 70px;
+}
+
+.bold {
+	color: #0000FF;
+	cursor: pointer;
+}
+
+.selected {
+	color: #000000;
+	text-shadow: 2px 2px #CCCCCC;
+	cursor: pointer;
+}
+
+::marker {
+	color: blue;
+	font-size: 1.2em;
+}
+
+ul {
+	padding-left: 20px;
+	list-style-type: none;
+}
+
+li {
+	margin-bottom: 0px;
+}
+
+#history-lines {
+	padding-left: 250px;
+	display: block;
+	transition: 0.5s;
+}
+
+#history-line {
+	border-bottom: 1px solid #FFFFFF;
+	width: 100%;
+}
+
+.item {
+	transition: 0.5s;
+}
+
+#search-button {
+	background-image: linear-gradient(to right, #FFFFFF, #EEEEFF);
+	border-width: thin;
+}
+
+#search-choice {
+	background-image: linear-gradient(to right, #EEEEFF, #FFFFFF);
+}
+
+#input-text {
+	width: auto;
+	background-image: linear-gradient(to right, #CCCCCC, #EEEEFF);
+	border-width: thin;
+}
+
+#pass-input-old, #pass-input-new, #pass-input-new-repeat, #pass-input-name {
+	width: auto;
+	background-image: linear-gradient(to right, #CCCCCC, #EEEEFF);
+	border-width: thin;
+}
+
+/** Settings notepad **/
+#settings-page {
+	padding-left: 260px;
+	transition: 0.5s;
+}
+
+#settings-table {
+	font-size: 18px;
+	color: #333333;
+}
+
+#pass-button-change, #pass-button-change-name {
+	display: block;
+	background-image: linear-gradient(to right, #FFFFFF, #EEEEFF);
+	align-content: center;
+	border-width: thin;
+}
+
+#changingPassword {
+	font-size: 18px;
+	color: #333333;
+}
+
+/** Loader animations **/
+#spinner-anim {
+	display: none;
+	position: fixed;
+	z-index: 0;
+	padding-top: 50vh;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(50, 50, 50);
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+#loader-animation {
+	border: 8px solid #EEEEFF;
+	border-radius: 50%;
+	border-top: 8px solid #CCCCCC;
+	width: 9px;
+	height: 9px;
+	margin-left: auto;
+  	margin-right: auto;
+	-webkit-animation: spin 2s linear infinite;
+	animation: spin 2s linear infinite;
+	display: block;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

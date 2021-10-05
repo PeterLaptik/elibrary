@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+	 <h:head>
+	 	<title>E-library: admin</title>
+	 	<link rel="stylesheet" type="text/css" href="css/books.css" />
+	 	<h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
+	 	<h:outputStylesheet library="primefaces-omega" name="theme.css" />
+	 </h:head>
+	 <h:body>
+	 	<div class="topMenu">
+	 		<p:tabMenu activeIndex="1">
+	 			<p:menuitem value="Stats" outcome="/admin/stats.xhtml"></p:menuitem>
+		        <p:menuitem value="Users" outcome="/admin/users.xhtml"></p:menuitem>
+		        <p:menuitem value="Books" outcome="/admin/books.xhtml"></p:menuitem>
+		        <p:menuitem value="Home" url="../home"></p:menuitem>
+		    </p:tabMenu>
+	 	</div>
+	 	
+	 	<div class="usersTable">
+	 		<h:form id="form">
+	 			<p:dataTable id="users" var="user" value="#{userService.users}" 
+	 						selection="#{userService.selectedUser}" rowKey="#{user.id}" selectionMode="single">
+		 			<p:column style="width:50px;" headerText="id">
+	                	<h:outputText value="#{user.id}" />
+		            </p:column>
+		            <p:column headerText="Name">
+		                <h:outputText value="#{user.name}" />
+		            </p:column>
+		            <p:column headerText="Login">
+		                <h:outputText value="#{user.login}" />
+		            </p:column>
+		            <p:column style="width:120px;" headerText="Registration date">
+		                <h:outputText value="#{user.registrationDate}">
+		                	<f:convertDateTime pattern="dd.MM.yyyy" />
+		                </h:outputText>
+		            </p:column>
+		            <p:column style="width:50px;" headerText="Is admin">
+		                <h:outputText value="#{user.admin}" />
+		            </p:column>
+		        </p:dataTable>
+		        
+		        <!-- Popup menu -->
+		        <p:contextMenu for="users">
+		        	<p:menuitem value="Sort by name" update="users" action="#{userService.sortByName}"/>
+		        	<p:menuitem value="Sort by login" update="users" action="#{userService.sortByLogin}"/>
+		        	<p:menuitem value="Sort by id" update="users" action="#{userService.sortById}"/>
+		        	<p:menuitem value="Sort admins" update="users" action="#{userService.sortByIsAdmin}"/>
+		            <p:menuitem value="Grant admin rights" update="users" action="#{userService.grantAdminRights}"/>
+		            <p:menuitem value="Remove admin rights" update="users" action="#{userService.removeAdminRights}"/>
+		            <p:menuitem value="Delete user" update="users" onclick="PF('confirmDlg').show()"/>
+		        </p:contextMenu>
+		        
+		        <p:dialog header="Confirm" widgetVar="confirmDlg" minHeight="40" width="350" showEffect="fade">
+				    <p class="p-m-0">Delete selected record?</p>
+				    <f:facet name="footer">
+				    	<p:commandButton value="Yes" style="width: 5rem" action="#{userService.deleteSelectedUser}" onclick="hide()"/>
+				        <p:commandButton value="No" styleClass="ui-button-flat p-mr-2" style="width: 6rem" onclick="hide()"/>
+				    </f:facet>
+				</p:dialog>
+	 		</h:form>
+	 	</div>
+	 </h:body>
+</html>
