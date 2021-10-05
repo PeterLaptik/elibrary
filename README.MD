@@ -1,4 +1,4 @@
-### Elibrary web application
+### E-library web application (raw prototype)
 Use maven for building.  
 Additional dependencies information see in src\main\webapp\js\README.MD
 
