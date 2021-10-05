@@ -7,12 +7,10 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import pl.model.cache.SectionCache;
-import pl.model.cache.SectionCacheImpl;
-import pl.model.dao.BookDao;
-import pl.model.dao.SectionDao;
-import pl.model.entities.Book;
-import pl.model.entities.Section;
+import pl.elibrary.model.dao.BookDao;
+import pl.elibrary.model.dao.SectionDao;
+import pl.elibrary.model.entities.Book;
+import pl.elibrary.model.entities.Section;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SectionsTest {

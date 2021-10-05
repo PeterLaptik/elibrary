@@ -2,30 +2,33 @@ package elibrary.model;
 
 import java.lang.reflect.Field;
 
-import pl.credentials.AuthentificationManager;
-import pl.model.cache.SectionCache;
-import pl.model.cache.SectionCacheImpl;
-import pl.model.cache.SessionCache;
-import pl.model.cache.SessionCacheImpl;
-import pl.model.dao.BookDao;
-import pl.model.dao.SectionDao;
-import pl.model.dao.UserDao;
-import pl.model.dao.impl.BookDaoImpl;
-import pl.model.dao.impl.BookmarkDaoImpl;
-import pl.model.dao.impl.SectionDaoImpl;
-import pl.model.dao.impl.UserDaoImpl;
-import pl.model.dao.impl.UserHistoryDaoImpl;
-import pl.model.dao.impl.UserSessionDaoImpl;
+import pl.elibrary.credentials.AuthentificationManager;
+import pl.elibrary.credentials.PasswordEncoder;
+import pl.elibrary.credentials.PasswordProcessor;
+import pl.elibrary.model.cache.SectionCache;
+import pl.elibrary.model.cache.SectionCacheImpl;
+import pl.elibrary.model.cache.SessionCache;
+import pl.elibrary.model.cache.SessionCacheImpl;
+import pl.elibrary.model.dao.BookDao;
+import pl.elibrary.model.dao.SectionDao;
+import pl.elibrary.model.dao.UserDao;
+import pl.elibrary.model.dao.impl.BookDaoImpl;
+import pl.elibrary.model.dao.impl.BookmarkDaoImpl;
+import pl.elibrary.model.dao.impl.SectionDaoImpl;
+import pl.elibrary.model.dao.impl.UserDaoImpl;
+import pl.elibrary.model.dao.impl.UserHistoryDaoImpl;
+import pl.elibrary.model.dao.impl.UserSessionDaoImpl;
 
 public class TestInjectionMock {
-
+	private static PasswordEncoder passwordProcessor = new PasswordProcessor();
+	
 	public static AuthentificationManager getAuthManager() {
 		AuthentificationManager mgr = new AuthentificationManager();
 		try {
 			// User DAO
 			Field field = mgr.getClass().getDeclaredField("userDao");
 			field.setAccessible(true);
-			field.set(mgr, new UserDaoImpl());
+			field.set(mgr, getUserDao());
 			// Session DAO
 			field = mgr.getClass().getDeclaredField("sessionDao");
 			field.setAccessible(true);
@@ -38,6 +41,10 @@ public class TestInjectionMock {
 			field = mgr.getClass().getDeclaredField("sessions");
 			field.setAccessible(true);
 			field.set(mgr, sessionsCache);
+			// Password processor
+			field = mgr.getClass().getDeclaredField("passwordProcessor");
+			field.setAccessible(true);
+			field.set(mgr, passwordProcessor);
 		} catch (NoSuchFieldException e) {
 			e.printStackTrace();
 		} catch (SecurityException e) {
@@ -80,6 +87,10 @@ public class TestInjectionMock {
 			field = userDao.getClass().getDeclaredField("bookmarkDao");
 			field.setAccessible(true);
 			field.set(userDao, new BookmarkDaoImpl());
+			// Password processor
+			field = userDao.getClass().getDeclaredField("passwordProcessor");
+			field.setAccessible(true);
+			field.set(userDao, passwordProcessor);
 		} catch (NoSuchFieldException e) {
 			e.printStackTrace();
 		} catch (SecurityException e) {

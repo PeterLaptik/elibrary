@@ -7,7 +7,6 @@
 	</head>
 
 	<script src="js/sweetalert2.all.min.js"></script>
-	<script src="js/sweetalert2.all.min.js"></script>
 	<script src="js/vue.global.js"></script>
 	<script src="js/elib.books.pages.js"></script>
 	<script src="js/elib.pages.navigators.js"></script>
@@ -84,7 +83,6 @@
 	     	}
 	   	}
 	   	
-	   	// TODO update
 	   	function logOut(){
 			Swal.fire({
 				text: 'Logout from the library?',
@@ -257,7 +255,7 @@
 				</p>
 				<div v-if="changingPassword" style="align-items: center;">
 					<p>&nbsp;</p>
-					<table id="pass-change-data">
+					<table id="pass-change-data" style="border-top: 1px solid #050505;">
 						<tr><td colspan="2" style="text-align: center;">Set new password:</td></tr>
 						<tr>
 							<td>Current password </td>
@@ -287,7 +285,7 @@
 				</div>
 				<div v-if="changingName" style="align-items: center;">
 					<p>&nbsp;</p>
-					<table id="pass-change-data">
+					<table id="pass-change-data" style="border-top: 1px solid #050505;">
 						<tr><td colspan="2" style="text-align: center;">Set new user name:</td></tr>
 						<tr>
 							<td>New user name </td>
@@ -388,88 +386,6 @@
 		<script src="js/elib.routes.js"></script>
 		<script src="js/elib.book.navigator.js"></script>
 		<script src="js/elib.books.list.js"></script>
-		<script>
-			// User info and settings
-			// Password change
-			app.loadUserInfo();
-			
-			let setChangePassword = function() {
-				app.message = '';
-				app.changingPassword = true;
-				app.changingName = false;
-			}
-			
-			let undoSetPassword = function() {
-				app.message = '';
-				app.changingPassword = false;
-				app.changingName = false;
-			}
-			
-			let changePasswordOk = function() {
-				let xhr = new XMLHttpRequest();
-				
-				let oldPass = document.getElementById('pass-input-old').value;
-				let newPass = document.getElementById('pass-input-new').value;
-				let newPassR = document.getElementById('pass-input-new-repeat').value;
-				
-				if(newPass!=newPassR){
-					app.message = "Values of new password do not match!";
-					return;
-				}
-				app.message = '';
-				
-				let object = {"oldPass": oldPass, "newPass": newPass};
-		        xhr.open('POST', router.getUserPath());
-		        xhr.setRequestHeader('Content-Type', 'application/json');
-		        xhr.send(JSON.stringify(object));
-		        xhr.callBackObject = this;
-
-		        xhr.onload = function () {
-		            let loadedData = xhr.response;
-		            app.message = loadedData;
-		    	}
-			}
-			
-			let changePasswordCancel = function() {
-				app.changingPassword = false;
-			}
-			
-			// User name change
-			let setChangeName = function() {
-				app.message = '';
-				app.changingPassword = false;
-				app.changingName = true;
-			}
-			
-			let undoChangeName = function() {
-				app.message = '';
-				app.changingPassword = false;
-				app.changingName = false;
-			}
-			
-			
-			let setNewName = function() {
-				let xhr = new XMLHttpRequest();
-				let newName = document.getElementById('pass-input-name').value;
-				
-				if(!newName){
-					app.message = "Wrong value!";
-					return;
-				}
-				app.message = '';
-				
-				let object = {"newName": newName};
-		        xhr.open('POST', router.getUserPath());
-		        xhr.setRequestHeader('Content-Type', 'application/json');
-		        xhr.send(JSON.stringify(object));
-		        xhr.callBackObject = this;
-
-		        xhr.onload = function () {
-		            let loadedData = xhr.response;
-		            app.loadUserInfo();
-		            app.message = loadedData;
-		    	}
-			}
-		</script>
+		<script src="js/elib.users.js"></script>
 	</body>
 </html>

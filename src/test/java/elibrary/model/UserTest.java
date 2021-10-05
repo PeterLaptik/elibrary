@@ -1,7 +1,5 @@
 package elibrary.model;
 
-import java.lang.reflect.Field;
-
 import javax.servlet.http.Cookie;
 
 import org.junit.Assert;
@@ -10,15 +8,13 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import pl.credentials.AuthentificationManager;
-import pl.model.cache.SessionCache;
-import pl.model.cache.SessionCacheImpl;
-import pl.model.dao.UserDao;
-import pl.model.dao.UserSessionDao;
-import pl.model.dao.impl.UserDaoImpl;
-import pl.model.dao.impl.UserSessionDaoImpl;
-import pl.model.entities.User;
-import pl.model.entities.UserSession;
+import pl.elibrary.credentials.AuthentificationManager;
+import pl.elibrary.model.dao.UserDao;
+import pl.elibrary.model.dao.UserSessionDao;
+import pl.elibrary.model.dao.impl.UserDaoImpl;
+import pl.elibrary.model.dao.impl.UserSessionDaoImpl;
+import pl.elibrary.model.entities.User;
+import pl.elibrary.model.entities.UserSession;
 
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -45,7 +41,7 @@ public class UserTest {
 	
 	@Test
 	public void test1_userCreatingTestDefDao() {
-		UserDao dao = new UserDaoImpl();
+		UserDao dao = TestInjectionMock.getUserDao();
 		Assert.assertTrue(dao.create(UserTest.user));
 		// Trying to add a user with duplicating login
 		Assert.assertFalse(dao.create(UserTest.user));
